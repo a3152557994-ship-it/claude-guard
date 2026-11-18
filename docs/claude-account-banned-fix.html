@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Claude 账号被封 (Account Suspended / Disabled) 原因自查、聊天记录抢救与防封指南 | Claude Guard</title>
+  <meta name="description" content="详解 2026 年 Claude Pro / Max 与 Claude Code 突发封号 (Your account has been disabled) 的 4 大底层风控原因：ASN 机房共享 IP、Asia/Shanghai 时区跨洲错位、WebRTC 泄露与虚拟卡连坐，附本地数据抢救与根治方案。" />
+  <meta name="keywords" content="Claude封号,Your account has been disabled,Account Suspended,Claude解封,Claude申诉,Claude防封" />
+  <link rel="canonical" href="https://a3152557994-ship-it.github.io/claude-guard/claude-account-banned-fix.html" />
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"TechArticle","headline":"Claude 账号被封 (Account Suspended / Disabled) 原因自查、聊天记录抢救与防封指南","description":"详解 2026 年 Claude Pro / Max 与 Claude Code 突发封号 (Your account has been disabled) 的 4 大底层风控原因：ASN 机房共享 IP、Asia/Shanghai 时区跨洲错位、WebRTC 泄露与虚拟卡连坐，附本地数据抢救与根治方案。","datePublished":"2026-11-18","dateModified":"2026-11-18","author":{"@type":"Organization","name":"Claude Guard Open-Source Lab"},"mainEntityOfPage":"https://a3152557994-ship-it.github.io/claude-guard/claude-account-banned-fix.html"},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Claude 被封号后发邮件给 support@anthropic.com 申诉有用吗？","acceptedAnswer":{"@type":"Answer","text":"如果是自有正规卡订阅且因节点跳变误封，用英文发邮件至 support@anthropic.com 说明正常开发用途有一定解封概率；但如果是闲鱼买的批量注册号、拼车号或黑卡代充号，申诉通过率接近 0，建议直接切换至 AWS Bedrock / Google Vertex AI 或配置独享静态住宅 IP 环境。"}},{"@type":"Question","name":"为什么我买了所谓的「原生 IP 节点」还是被封？","acceptedAnswer":{"@type":"Answer","text":"很多机场标称的「原生 IP」其实只是广播到美国的机房 Hosting ASN（通过 ASN 号一查便知），而且你的浏览器依然向网页暴露了 Asia/Shanghai 东八区时区和 WebRTC 真实内网信息。"}}]}]}</script>
+  <style>
+    :root { --bg:#070b14; --surface:#0f1629; --border:#233256; --text:#f8fafc; --muted:#94a3b8; --amber:#f59e0b; --emerald:#10b981; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--bg); color:var(--text); font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif; line-height:1.7; }
+    .wrap { max-width:920px; margin:0 auto; padding:28px 18px 64px; }
+    .top { display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); padding-bottom:16px; margin-bottom:24px; flex-wrap:wrap; gap:10px; }
+    .btn { display:inline-block; padding:8px 14px; border-radius:8px; font-weight:700; font-size:13.5px; text-decoration:none; background:#1e293b; color:#f8fafc; border:1px solid var(--border); }
+    .btn-amber { background:linear-gradient(135deg,#f59e0b,#d97706); color:#070b14; border-color:transparent; }
+    .btn-emerald { background:linear-gradient(135deg,#10b981,#059669); color:#042f1e; border-color:transparent; }
+    h1 { font-size:clamp(24px,3.5vw,34px); line-height:1.3; margin:0 0 14px; }
+    h2 { font-size:21px; color:#fbbf24; margin:28px 0 12px; border-bottom:1px solid var(--border); padding-bottom:8px; }
+    h3 { font-size:17px; color:#38bdf8; margin:18px 0 8px; }
+    .lead-box { background:var(--surface); border-left:4px solid var(--emerald); padding:16px 18px; border-radius:10px; margin-bottom:24px; font-size:15px; }
+    pre { background:#050811; border:1px solid var(--border); padding:14px; border-radius:10px; overflow-x:auto; color:#a7f3d0; font-size:13px; }
+    code { background:#162038; padding:2px 6px; border-radius:4px; font-size:13px; color:#fbbf24; }
+    pre code { background:transparent; padding:0; color:inherit; }
+    table { width:100%; border-collapse:collapse; margin:14px 0; font-size:13.5px; background:var(--surface); }
+    th, td { border:1px solid var(--border); padding:10px 12px; text-align:left; }
+    th { background:#162038; color:#fbbf24; }
+    .cta-box { background:linear-gradient(135deg,#172554,#0f172a); border:1px solid #38bdf8; border-radius:14px; padding:22px; margin:30px 0; }
+    .faq-item { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:14px 16px; margin-bottom:12px; }
+    .faq-q { font-weight:700; color:#fbbf24; margin-bottom:6px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <nav class="top">
+      <a href="./index.html" style="color:#f8fafc;text-decoration:none;font-weight:800;font-size:18px;">🛡️ Claude Guard 防封与备份中心</a>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <a class="btn btn-amber" href="./index.html">🔍 打开 10 秒封号风险雷达</a>
+        <a class="btn btn-emerald" href="./downloads/claude-code-kit.zip" download>⚡ 下载 5 源切换脚本包</a>
+        <a class="btn" href="./downloads/claude-guard-mv3.zip" download>🧩 下载 MV3 防丢备份插件</a>
+      </div>
+    </nav>
+
+    <article>
+      <div style="color:var(--muted);font-size:13px;margin-bottom:8px;">最后更新：2026-11-18 · 100% 本地开源技术指南</div>
+      <h1>Claude 账号被封 (Account Suspended / Disabled) 原因自查、聊天记录抢救与防封指南</h1>
+
+      <div class="lead-box">
+        <strong>💡 核心结论（40秒速读）：</strong>Claude 账号突发封禁（提示 Your account has been disabled 或 Account automated review）90% 以上并非因为提问内容违规，而是由「机房共享 ASN IP（如 Cloudflare AS13335 / Vultr AS20473）」、「欧美 IP 暴露东八区 Asia/Shanghai 系统时区」、「WebRTC 真实 IP 穿透」或「多人拼车/劣质虚拟卡段连坐」触发的自动化环境风控。
+      </div>
+
+      
+        <section>
+          <h2>一、 为什么你的 Claude 账号刚注册或刚充 Pro 就被秒封？</h2>
+          
+          <p>Anthropic 的自动化风控系统会对每次会话的网络层（ASN/IP）、传输层（TLS/WebRTC）、应用层（浏览器 Intl 时区、语言、Canvas 指纹、Claude Code 遥测）及支付层（Stripe 卡段信誉）进行实时综合评分：</p>
+          <table>
+            <thead>
+              <tr><th>风控维度</th><th>高危秒封特征（几乎必封）</th><th>安全稳连标准（推荐配置）</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>出口 IP 与 ASN 属性</td><td>Cloudflare (AS13335)、Vultr (AS20473)、DigitalOcean (AS14061)、搬瓦工等千人共用机房节点</td><td>独享双 ISP 原生静态住宅宽带 (Comcast / AT&T / Verizon 等 Residential ISP)</td></tr>
+              <tr><td>系统时区与语言指纹</td><td>挂美国/英国 IP，但 JS 读取 Intl 时区直出 <code>Asia/Shanghai (UTC+8)</code>，首选语言 <code>zh-CN</code></td><td>使用独立防关联容器将时区、WebGL、语言 (<code>en-US</code>) 与出口 IP 地区 100% 锁定对齐</td></tr>
+              <tr><td>终端遥测 (Claude Code)</td><td>默认开启 Statsig 遥测、错误上报与非必要后台请求</td><td>在 <code>~/.claude/settings.json</code> 写入 <code>DISABLE_TELEMETRY=1</code> 或改走 AWS Bedrock 企业通道</td></tr>
+              <tr><td>账号与支付方式</td><td>闲鱼多人拼车号、高危虚拟卡代充、频繁切换 5 个以上国家节点</td><td>一人一号独享固定节点，或通过美区 App Store 礼品卡内购 / 官方合规 API 按量计费</td></tr>
+            </tbody>
+          </table>
+        
+        </section>
+
+        <section>
+          <h2>二、 10 秒查清你当前环境的封号危险分（纯本地零上传）</h2>
+          
+          <p>不要凭感觉猜节点干不干净。你可以直接在浏览器打开 <a href="./index.html"><strong>Claude Guard 10 秒封号风险自检雷达</strong></a>，或在终端运行一行命令完成本地排查：</p>
+          <pre>curl -fsSL https://a3152557994-ship-it.github.io/claude-guard/install.sh | bash</pre>
+          <p>工具会自动检测你的出口 ASN 是否命中高危数据中心黑名单、测试 WebRTC STUN 是否泄露国内真实 IP，并检查 <code>~/.claude/settings.json</code> 是否开启了隐私防遥测加固。</p>
+        
+        </section>
+
+        <section>
+          <h2>三、 账号被封前如何防止几个月的 Project 代码与文书丢失？</h2>
+          
+          <p>一旦账号出现 <code>Account Suspended</code>，登录页会直接拦截，此时再去安装普通的「手动点击导出插件」已经无法进入对话列表。正确做法是平时装好 <a href="./downloads/claude-guard-mv3.zip"><strong>Claude Guard MV3 本地自动防丢备份插件</strong></a>：</p>
+          <ul>
+            <li>每次对话自动在浏览器本地存储（<code>chrome.storage.local</code>）增量保存 Markdown 与 Artifacts 代码块；</li>
+            <li>万一旧号受限或达到 5 小时限流上限，可一键导出<strong>「新账号 1 秒接续上下文恢复 Prompt」</strong>，粘贴进新账号或 Cursor / Bedrock 即可无缝继续开发。</li>
+          </ul>
+        
+        </section>
+
+      <div class="cta-box">
+        <h3 style="margin-top:0;color:#fbbf24;">🧰 立即免费使用 Claude Guard 全套自救工具（100% 纯本地运行）</h3>
+        <p style="margin:6px 0 14px;color:#cbd5e1;font-size:14px;">无需注册登录、不上传任何对话隐私，30 秒完成环境体检、防遥测加固与对话自动本地备份：</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <a class="btn btn-amber" href="./index.html">📡 1. 在线测当前 IP ASN 与时区风险分</a>
+          <a class="btn btn-emerald" href="./downloads/claude-code-kit.zip" download>⚡ 2. 下载 Claude Code 5源秒切包 (.zip)</a>
+          <a class="btn" href="./downloads/claude-guard-mv3.zip" download>🧩 3. 下载浏览器对话自动防丢插件 (.zip)</a>
+        </div>
+      </div>
+
+      <section>
+        <h2>常见问题解答 (FAQ)</h2>
+        
+          <div class="faq-item">
+            <div class="faq-q">Q: Claude 被封号后发邮件给 support@anthropic.com 申诉有用吗？</div>
+            <div style="color:#cbd5e1;font-size:14px;">A: 如果是自有正规卡订阅且因节点跳变误封，用英文发邮件至 support@anthropic.com 说明正常开发用途有一定解封概率；但如果是闲鱼买的批量注册号、拼车号或黑卡代充号，申诉通过率接近 0，建议直接切换至 AWS Bedrock / Google Vertex AI 或配置独享静态住宅 IP 环境。</div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-q">Q: 为什么我买了所谓的「原生 IP 节点」还是被封？</div>
+            <div style="color:#cbd5e1;font-size:14px;">A: 很多机场标称的「原生 IP」其实只是广播到美国的机房 Hosting ASN（通过 ASN 号一查便知），而且你的浏览器依然向网页暴露了 Asia/Shanghai 东八区时区和 WebRTC 真实内网信息。</div>
+          </div>
+      </section>
+
+      <section style="margin-top:32px;background:var(--surface);padding:18px;border-radius:12px;border:1px solid var(--border);">
+        <h3 style="margin-top:0;">📚 Claude 防封与不断流系列深度指南</h3>
+        <ul style="margin:0;padding-left:20px;line-height:2;">
+          <li><a href="./index.html" style="color:#fbbf24;font-weight:700;text-decoration:none;">👉 返回主页：Claude 10 秒封号风险自检雷达 & settings.json 生成台</a></li>
+          <li><a href="./claude-account-banned-fix.html" style="color:#fbbf24;text-decoration:none;font-weight:600;">Claude 账号被封 (Account Suspended / Disabled) 原因自查、聊天记录抢救与防封指南</a></li>
+<li><a href="./claude-code-bedrock-vertex-setup.html" style="color:#38bdf8;text-decoration:none;font-weight:600;">Claude Code 接入 AWS Bedrock 与 Google Vertex AI 零封号配置教程 (含 settings.json)</a></li>
+<li><a href="./cc-switch-multi-provider-guide.html" style="color:#38bdf8;text-decoration:none;font-weight:600;">cc-switch 多源切换教程：Claude Code 遭遇 5 小时限流如何 1 秒切备用源不断活</a></li>
+<li><a href="./claude-chat-artifact-exporter.html" style="color:#38bdf8;text-decoration:none;font-weight:600;">Claude 聊天记录与 Artifacts 代码块自动本地备份导出工具 (Markdown / JSON / Obsidian)</a></li>
+<li><a href="./claude-static-residential-ip-guide.html" style="color:#38bdf8;text-decoration:none;font-weight:600;">Claude 防封网络环境指南：如何检测机房 ASN (AS13335) 与配置双 ISP 静态住宅 IP</a></li>
+        </ul>
+      </section>
+    </article>
+  </div>
+</body>
+</html>

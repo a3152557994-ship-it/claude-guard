@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Claude 防封网络环境指南：如何检测机房 ASN (AS13335) 与配置双 ISP 静态住宅 IP | Claude Guard</title>
+  <meta name="description" content="为什么用了代理还是被 Claude 封号？详解数据中心机房 ASN (Hosting) 与原生家庭宽带 (Residential ISP) 的底层区别，教你用 Claude Guard 10 秒检测 WebRTC 泄露与时区错位，并配置静态住宅 IP + 指纹浏览器隔离环境。" />
+  <meta name="keywords" content="Claude静态住宅IP,IP纯净度检测,AS13335封号,WebRTC泄露检测,AdsPower配置Claude,原生住宅IP" />
+  <link rel="canonical" href="https://a3152557994-ship-it.github.io/claude-guard/claude-static-residential-ip-guide.html" />
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"TechArticle","headline":"Claude 防封网络环境指南：如何检测机房 ASN (AS13335) 与配置双 ISP 静态住宅 IP","description":"为什么用了代理还是被 Claude 封号？详解数据中心机房 ASN (Hosting) 与原生家庭宽带 (Residential ISP) 的底层区别，教你用 Claude Guard 10 秒检测 WebRTC 泄露与时区错位，并配置静态住宅 IP + 指纹浏览器隔离环境。","datePublished":"2026-11-18","dateModified":"2026-11-18","author":{"@type":"Organization","name":"Claude Guard Open-Source Lab"},"mainEntityOfPage":"https://a3152557994-ship-it.github.io/claude-guard/claude-static-residential-ip-guide.html"},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"我既有网页版需求，又用 Claude Code 写代码，怎么搭配最省钱？","acceptedAnswer":{"@type":"Answer","text":"最省钱稳妥的组合是：终端 Claude Code 直接用我们的 cc-switch 脚本切到 AWS Bedrock 或 Google Vertex AI（按 Token 计费，不挑 IP 永不封号）；网页版用 Claude Guard 插件做好本地实时备份。"}}]}]}</script>
+  <style>
+    :root { --bg:#070b14; --surface:#0f1629; --border:#233256; --text:#f8fafc; --muted:#94a3b8; --amber:#f59e0b; --emerald:#10b981; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--bg); color:var(--text); font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif; line-height:1.7; }
+    .wrap { max-width:920px; margin:0 auto; padding:28px 18px 64px; }
+    .top { display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); padding-bottom:16px; margin-bottom:24px; flex-wrap:wrap; gap:10px; }
+    .btn { display:inline-block; padding:8px 14px; border-radius:8px; font-weight:700; font-size:13.5px; text-decoration:none; background:#1e293b; color:#f8fafc; border:1px solid var(--border); }
+    .btn-amber { background:linear-gradient(135deg,#f59e0b,#d97706); color:#070b14; border-color:transparent; }
+    .btn-emerald { background:linear-gradient(135deg,#10b981,#059669); color:#042f1e; border-color:transparent; }
+    h1 { font-size:clamp(24px,3.5vw,34px); line-height:1.3; margin:0 0 14px; }
+    h2 { font-size:21px; color:#fbbf24; margin:28px 0 12px; border-bottom:1px solid var(--border); padding-bottom:8px; }
+    h3 { font-size:17px; color:#38bdf8; margin:18px 0 8px; }
+    .lead-box { background:var(--surface); border-left:4px solid var(--emerald); padding:16px 18px; border-radius:10px; margin-bottom:24px; font-size:15px; }
+    pre { background:#050811; border:1px solid var(--border); padding:14px; border-radius:10px; overflow-x:auto; color:#a7f3d0; font-size:13px; }
+    code { background:#162038; padding:2px 6px; border-radius:4px; font-size:13px; color:#fbbf24; }
+    pre code { background:transparent; padding:0; color:inherit; }
+    table { width:100%; border-collapse:collapse; margin:14px 0; font-size:13.5px; background:var(--surface); }
+    th, td { border:1px solid var(--border); padding:10px 12px; text-align:left; }
+    th { background:#162038; color:#fbbf24; }
+    .cta-box { background:linear-gradient(135deg,#172554,#0f172a); border:1px solid #38bdf8; border-radius:14px; padding:22px; margin:30px 0; }
+    .faq-item { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:14px 16px; margin-bottom:12px; }
+    .faq-q { font-weight:700; color:#fbbf24; margin-bottom:6px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <nav class="top">
+      <a href="./index.html" style="color:#f8fafc;text-decoration:none;font-weight:800;font-size:18px;">🛡️ Claude Guard 防封与备份中心</a>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <a class="btn btn-amber" href="./index.html">🔍 打开 10 秒封号风险雷达</a>
+        <a class="btn btn-emerald" href="./downloads/claude-code-kit.zip" download>⚡ 下载 5 源切换脚本包</a>
+        <a class="btn" href="./downloads/claude-guard-mv3.zip" download>🧩 下载 MV3 防丢备份插件</a>
+      </div>
+    </nav>
+
+    <article>
+      <div style="color:var(--muted);font-size:13px;margin-bottom:8px;">最后更新：2026-11-18 · 100% 本地开源技术指南</div>
+      <h1>Claude 防封网络环境指南：如何检测机房 ASN (AS13335) 与配置双 ISP 静态住宅 IP</h1>
+
+      <div class="lead-box">
+        <strong>💡 核心结论（40秒速读）：</strong>决定 Claude 网页端存活率的核心网络指标不是 ping 延迟，而是出口 IP 的 ASN 运营商属性（Residential ISP 原生家宽 vs Hosting 数据中心机房）以及浏览器本地时区、WebRTC 公网 IP 是否与出口 IP 归属地 100% 一致。
+      </div>
+
+      
+        <section>
+          <h2>一、 3 秒看懂：机房 Hosting IP 与静态住宅 Residential ISP 的区别</h2>
+          
+          <ul>
+            <li><strong>高危数据中心机房 ASN（Hosting）</strong>：如 <code>AS13335 (Cloudflare)</code>、<code>AS14061 (DigitalOcean)</code>、<code>AS20473 (Choopa/Vultr)</code>、<code>AS24940 (Hetzner)</code>。这类 IP 段本来是给服务器用的，背后往往挂着成百上千个代理用户，是风控系统重点监控和批量封禁的对象。</li>
+            <li><strong>高信誉原生静态住宅 ISP（Residential）</strong>：如美西 <code>Comcast (AS7922)</code>、<code>AT&T (AS7018)</code>、<code>Verizon</code> 等当地居民宽带运营商分配的静态 IP。在风控系统眼中属于真实家庭宽带用户。</li>
+          </ul>
+        
+        </section>
+
+        <section>
+          <h2>二、 网页版 Claude Pro / Max 长期稳连黄金三步法</h2>
+          
+          <ol>
+            <li><strong>第一步：先做 10 秒免费体检</strong> —— 打开 <a href="./index.html"><strong>Claude Guard 在线体检雷达</strong></a>，检查当前出口 ASN、WebRTC 穿透与 <code>Intl</code> 时区得分；</li>
+            <li><strong>第二步：配置独享静态住宅 IP</strong> —— 若长期重度使用网页版 Pro/Max，建议准备一个固定地区（如美西或新加坡）的独享静态住宅 ISP 代理；</li>
+            <li><strong>第三步：绑定独立浏览器环境</strong> —— 使用防关联指纹浏览器（或专用独立 Chrome Profile）固定代理端口，将时区锁定为代理所在地时区（如 <code>America/Los_Angeles</code>），首选语言设为 <code>en-US</code>，并装上 <a href="./downloads/claude-guard-mv3.zip"><strong>Claude Guard 防丢插件</strong></a> 实时备份对话。</li>
+          </ol>
+        
+        </section>
+
+      <div class="cta-box">
+        <h3 style="margin-top:0;color:#fbbf24;">🧰 立即免费使用 Claude Guard 全套自救工具（100% 纯本地运行）</h3>
+        <p style="margin:6px 0 14px;color:#cbd5e1;font-size:14px;">无需注册登录、不上传任何对话隐私，30 秒完成环境体检、防遥测加固与对话自动本地备份：</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <a class="btn btn-amber" href="./index.html">📡 1. 在线测当前 IP ASN 与时区风险分</a>
+          <a class="btn btn-emerald" href="./downloads/claude-code-kit.zip" download>⚡ 2. 下载 Claude Code 5源秒切包 (.zip)</a>
+          <a class="btn" href="./downloads/claude-guard-mv3.zip" download>🧩 3. 下载浏览器对话自动防丢插件 (.zip)</a>
+        </div>
+      </div>
+
+      <section>
+        <h2>常见问题解答 (FAQ)</h2>
+        
+          <div class="faq-item">
+            <div class="faq-q">Q: 我既有网页版需求，又用 Claude Code 写代码，怎么搭配最省钱？</div>
+            <div style="color:#cbd5e1;font-size:14px;">A: 最省钱稳妥的组合是：终端 Claude Code 直接用我们的 cc-switch 脚本切到 AWS Bedrock 或 Google Vertex AI（按 Token 计费，不挑 IP 永不封号）；网页版用 Claude Guard 插件做好本地实时备份。</div>
+          </div>
+      </section>
+
+      <section style="margin-top:32px;background:var(--surface);padding:18px;border-radius:12px;border:1px solid var(--border);">
+        <h3 style="margin-top:0;">📚 Claude 防封与不断流系列深度指南</h3>
+        <ul style="margin:0;padding-left:20px;line-height:2;">
+          <li><a href="./index.html" style="color:#fbbf24;font-weight:700;text-decoration:none;">👉 返回主页：Claude 10 秒封号风险自检雷达 & settings.json 生成台</a></li>
+          <li><a href="./claude-account-banned-fix.html" style="color:#38bdf8;text-decoration:none;font-weight:600;">Claude 账号被封 (Account Suspended / Disabled) 原因自查、聊天记录抢救与防封指南</a></li>
+<li><a href="./claude-code-bedrock-vertex-setup.html" style="color:#38bdf8;text-decoration:none;font-weight:600;">Claude Code 接入 AWS Bedrock 与 Google Vertex AI 零封号配置教程 (含 settings.json)</a></li>
+<li><a href="./cc-switch-multi-provider-guide.html" style="color:#38bdf8;text-decoration:none;font-weight:600;">cc-switch 多源切换教程：Claude Code 遭遇 5 小时限流如何 1 秒切备用源不断活</a></li>
+<li><a href="./claude-chat-artifact-exporter.html" style="color:#38bdf8;text-decoration:none;font-weight:600;">Claude 聊天记录与 Artifacts 代码块自动本地备份导出工具 (Markdown / JSON / Obsidian)</a></li>
+<li><a href="./claude-static-residential-ip-guide.html" style="color:#fbbf24;text-decoration:none;font-weight:600;">Claude 防封网络环境指南：如何检测机房 ASN (AS13335) 与配置双 ISP 静态住宅 IP</a></li>
+        </ul>
+      </section>
+    </article>
+  </div>
+</body>
+</html>

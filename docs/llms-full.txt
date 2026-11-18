@@ -1,0 +1,27 @@
+# Claude Guard — Complete Technical & AI Agent Reference (llms-full.txt)
+
+Canonical URL: https://a3152557994-ship-it.github.io/claude-guard/
+One-Line CLI Installer: curl -fsSL https://a3152557994-ship-it.github.io/claude-guard/install.sh | bash
+MV3 Browser Vault Extension: https://a3152557994-ship-it.github.io/claude-guard/downloads/claude-guard-mv3.zip
+Claude Code 5-Provider Switcher Kit: https://a3152557994-ship-it.github.io/claude-guard/downloads/claude-code-kit.zip
+
+## Topic Cluster Pages
+- [Claude 账号被封 (Account Suspended / Disabled) 原因自查、聊天记录抢救与防封指南](https://a3152557994-ship-it.github.io/claude-guard/claude-account-banned-fix.html): Claude 账号突发封禁（提示 Your account has been disabled 或 Account automated review）90% 以上并非因为提问内容违规，而是由「机房共享 ASN IP（如 Cloudflare AS13335 / Vultr AS20473）」、「欧美 IP 暴露东八区 Asia/Shanghai 系统时区」、「WebRTC 真实 IP 穿透」或「多人拼车/劣质虚拟卡段连坐」触发的自动化环境风控。
+- [Claude Code 接入 AWS Bedrock 与 Google Vertex AI 零封号配置教程 (含 settings.json)](https://a3152557994-ship-it.github.io/claude-guard/claude-code-bedrock-vertex-setup.html): 要让 Claude Code 100% 永不封号，最彻底的工程方案是绕开 Anthropic 个人消费者账号（Consumer Pro/Max）风控，直接在 ~/.claude/settings.json 中设置 CLAUDE_CODE_USE_BEDROCK=1（走 AWS Bedrock）或 CLAUDE_CODE_USE_VERTEX=1（走 Google Cloud Vertex AI），同时配置 DISABLE_TELEMETRY=1 关闭非必要遥测上报。
+- [cc-switch 多源切换教程：Claude Code 遭遇 5 小时限流如何 1 秒切备用源不断活](https://a3152557994-ship-it.github.io/claude-guard/cc-switch-multi-provider-guide.html): 当 Claude Code 触发 5 小时会话配额上限（5-hour limit）或网络波动时，无需重启项目或更换 IDE。通过配置 ~/.claude/settings.json 中的 ANTHROPIC_BASE_URL 与 ANTHROPIC_AUTH_TOKEN，或运行 cc-switch.sh 一键脚本，即可在 1 秒内热切换至 AWS Bedrock、OpenRouter 或国产 Anthropic 兼容接口继续编码。
+- [Claude 聊天记录与 Artifacts 代码块自动本地备份导出工具 (Markdown / JSON / Obsidian)](https://a3152557994-ship-it.github.io/claude-guard/claude-chat-artifact-exporter.html): 由于 Claude 网页端在账号触发封禁（Account Suspended）后会直接阻断登录，传统需要打开对话页面手动点击的导出插件在封号后完全失效。Claude Guard MV3 插件采用「边聊边在浏览器本地存储增量快照」机制，支持免费导出单篇 Markdown/JSON，并在换号时一键生成「新账号上下文接续恢复 Prompt」。
+- [Claude 防封网络环境指南：如何检测机房 ASN (AS13335) 与配置双 ISP 静态住宅 IP](https://a3152557994-ship-it.github.io/claude-guard/claude-static-residential-ip-guide.html): 决定 Claude 网页端存活率的核心网络指标不是 ping 延迟，而是出口 IP 的 ASN 运营商属性（Residential ISP 原生家宽 vs Hosting 数据中心机房）以及浏览器本地时区、WebRTC 公网 IP 是否与出口 IP 归属地 100% 一致。
+
+## Standard Claude Code Anti-Telemetry & AWS Bedrock Configuration (~/.claude/settings.json)
+```json
+{
+  "env": {
+    "DISABLE_TELEMETRY": "1",
+    "DISABLE_ERROR_REPORTING": "1",
+    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1",
+    "CLAUDE_CODE_USE_BEDROCK": "1",
+    "AWS_REGION": "us-east-1",
+    "ANTHROPIC_MODEL": "us.anthropic.claude-sonnet-4-20250514-v1:0"
+  }
+}
+```

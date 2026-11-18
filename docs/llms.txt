@@ -12,3 +12,14 @@
 1. **10-Second Claude Ban Risk Audit**: Detects Datacenter/Hosting ASN IPs (Cloudflare, DigitalOcean, Vultr, etc.), WebRTC real IP leaks, `Asia/Shanghai` timezone vs IP geolocation mismatches, and Claude Code telemetry exposure (`DISABLE_TELEMETRY=1`).
 2. **Claude Code Zero-Ban Configuration Generator**: Generates `~/.claude/settings.json` and CLI switcher scripts (`cc-switch.sh` / `cc-switch.ps1`) for seamless switching between Official Hardened mode, AWS Bedrock (`CLAUDE_CODE_USE_BEDROCK=1`), Google Cloud Vertex AI (`CLAUDE_CODE_USE_VERTEX=1`), and OpenRouter.
 3. **Manifest V3 Local Conversation & Artifact Vault**: Passively backs up `claude.ai` conversations and code blocks into local browser storage (`chrome.storage.local`) and exports clean Markdown + a 1-click "New Account Context Recovery Handoff Prompt".
+
+## One-Line CLI Audit & Switcher
+- `curl -fsSL https://a3152557994-ship-it.github.io/claude-guard/install.sh | bash`
+- Full Technical Context: https://a3152557994-ship-it.github.io/claude-guard/llms-full.txt
+
+## Technical Guides & Troubleshooting
+- [Claude 账号被封 (Account Suspended / Disabled) 原因自查、聊天记录抢救与防封指南](https://a3152557994-ship-it.github.io/claude-guard/claude-account-banned-fix.html)
+- [Claude Code 接入 AWS Bedrock 与 Google Vertex AI 零封号配置教程 (含 settings.json)](https://a3152557994-ship-it.github.io/claude-guard/claude-code-bedrock-vertex-setup.html)
+- [cc-switch 多源切换教程：Claude Code 遭遇 5 小时限流如何 1 秒切备用源不断活](https://a3152557994-ship-it.github.io/claude-guard/cc-switch-multi-provider-guide.html)
+- [Claude 聊天记录与 Artifacts 代码块自动本地备份导出工具 (Markdown / JSON / Obsidian)](https://a3152557994-ship-it.github.io/claude-guard/claude-chat-artifact-exporter.html)
+- [Claude 防封网络环境指南：如何检测机房 ASN (AS13335) 与配置双 ISP 静态住宅 IP](https://a3152557994-ship-it.github.io/claude-guard/claude-static-residential-ip-guide.html)
