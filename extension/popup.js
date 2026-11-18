@@ -6,10 +6,36 @@ import {
 } from "./guard-core.js";
 
 const WEB_RADAR_URL = "https://a3152557994-ship-it.github.io/claude-guard/";
+const FREE_VAULT_LIMIT = 20;
+const isZh = (navigator.language || "").toLowerCase().startsWith("zh");
+const tr = (zh, en) => (isZh ? zh : en);
 
 let proActive = false;
 let vaultList = [];
 let currentChat = null;
+
+function applyI18nLabels() {
+  if (!isZh) return;
+  document.getElementById("tierBadge").textContent = "免费畅享版 (含20场归档)";
+  document.getElementById("lblEnvTitle").textContent = "🔍 浏览器环境风控监测";
+  document.getElementById("affProxyLink").textContent = "🌐 获取纯净静态住宅IP";
+  document.getElementById("affBrowserLink").textContent = "🔒 隔离时区指纹";
+  document.getElementById("openWebRadarLink").textContent = "📡 完整体检";
+  document.getElementById("lblCurTitle").textContent = "💬 当前对话与代码快照";
+  document.getElementById("refreshBtn").textContent = "刷新";
+  document.getElementById("exportMdBtn").textContent = "📥 导出 .md (免费)";
+  document.getElementById("exportJsonBtn").textContent = "导出 .json";
+  document.getElementById("stageVaultBtn").textContent = "🛡️ 存入保险箱";
+  document.getElementById("lblVaultTitle").textContent = "📦 本地防丢保险箱 (20场内全免费)";
+  document.getElementById("lblVaultDesc").textContent =
+    "免费一键导出全量 Markdown +「新号 1 秒接续上下文恢复 Prompt」，不怕限流或封号丢进度。";
+  document.getElementById("exportMigrationBtn").textContent =
+    "🚀 一键导出全量归档 + 新号无缝恢复包 (20场内免费)";
+  document.getElementById("clearVaultBtn").textContent = "清空";
+  document.getElementById("lblProTitle").textContent = "🔑 重度无限容量解锁 (>20场 · ¥15 / $4.99 终身)";
+  document.getElementById("licenseInput").placeholder = "粘贴 OPC1. 离线激活码...";
+  document.getElementById("verifyBtn").textContent = "激活";
+}
 
 function triggerDownload(text, filename, mimeType = "text/markdown;charset=utf-8") {
   const blob = new Blob([text], { type: mimeType });
@@ -29,7 +55,7 @@ function runLocalEnvCheck() {
   const languages = navigator.languages ? Array.from(navigator.languages) : [navigator.language || "en-US"];
 
   const report = evaluateClaudeRisk({
-    ip: "本地检测",
+    ip: "local",
     countryCode: "US",
     timezone: tz,
     utcOffsetMinutes,
@@ -42,16 +68,18 @@ function runLocalEnvCheck() {
 
   if (report.riskLevel === "CRITICAL" || tz.includes("Shanghai") || tz.includes("Chongqing") || utcOffsetMinutes === 480) {
     badgeEl.className = "env-pill crit";
-    badgeEl.textContent = `⚠️ 时区暴露 (${tz})`;
-    detailEl.textContent = `检测到本地时区为 ${tz} (UTC+8)，首选语言 ${languages[0]}。若挂欧美节点直连极易触发跨洲指纹风控！`;
-  } else if (report.riskLevel === "WARNING") {
-    badgeEl.className = "env-pill warn";
-    badgeEl.textContent = `中度注意 (${ report.survivalScore }分)`;
-    detailEl.textContent = `当前时区 ${tz} · 语言 ${languages[0]}。建议点击下方链接做完整 ASN 机房与 WebRTC 穿透检测。`;
+    badgeEl.textContent = tr(`⚠️ 时区暴露 (${tz})`, `⚠️ TZ Mismatch (${tz})`);
+    detailEl.textContent = tr(
+      `检测到东八区时区 ${tz}，若挂欧美节点直连易触发跨洲异常！建议配置下方静态住宅 IP 与时区隔离。`,
+      `Local timezone ${tz} conflicts with US/EU proxies. Use a dedicated Static ISP IP & isolated browser profile below.`
+    );
   } else {
     badgeEl.className = "env-pill safe";
-    badgeEl.textContent = `🟢 指纹协调 (${ report.survivalScore }分)`;
-    detailEl.textContent = `当前时区 ${tz} · 语言 ${languages[0]}，本地浏览器时区与语言未见明显东八区冲突。`;
+    badgeEl.textContent = tr(`🟢 指纹正常`, `🟢 Locale Matched`);
+    detailEl.textContent = tr(
+      `当前时区 ${tz} · 语言 ${languages[0]}。可点下方「完整体检」核查机房 ASN。`,
+      `Timezone ${tz} · Locale ${languages[0]}. Click 'Full ASN Audit' to check datacenter IP score.`
+    );
   }
 }
 
@@ -66,9 +94,9 @@ async function loadState() {
     if (res.valid) {
       proActive = true;
       const badge = document.getElementById("tierBadge");
-      badge.textContent = "Pro 终身版";
+      badge.textContent = tr("Pro 无限容量版", "Pro Unlimited");
       badge.classList.add("pro");
-      document.getElementById("licenseMsg").textContent = `✅ Pro 已永久激活 (${res.payload.p})`;
+      document.getElementById("licenseMsg").textContent = tr(`✅ 已激活无限容量`, `✅ Unlimited Vault Active`);
     }
   }
 }
@@ -82,11 +110,11 @@ async function captureActiveTab() {
     if (!tab?.id || !tab.url || /^(chrome|edge|about):/i.test(tab.url)) {
       currentChat = {
         id: "/demo-session",
-        title: "示例对话（请在 claude.ai 或任意网页点击图标）",
+        title: tr("内置演示会话（在 claude.ai 打开即可自动抓取）", "Demo Session (Open claude.ai to capture live)"),
         url: "https://claude.ai/chat/demo",
         capturedAt: new Date().toISOString(),
         messages: [
-          { role: "user", text: "Help me configure Claude Code with AWS Bedrock so my account never gets suspended." },
+          { role: "user", text: "Configure Claude Code with AWS Bedrock so my account never gets suspended." },
           { role: "assistant", text: "Set CLAUDE_CODE_USE_BEDROCK=1 and DISABLE_TELEMETRY=1 in ~/.claude/settings.json." },
         ],
         artifacts: [
@@ -98,32 +126,33 @@ async function captureActiveTab() {
         ],
       };
       titleEl.textContent = currentChat.title;
-      metaEl.textContent = `${currentChat.messages.length} 条消息 · ${currentChat.artifacts.length} 个代码块 (内置演示快照)`;
+      metaEl.textContent = tr(
+        `${currentChat.messages.length} 条消息 · ${currentChat.artifacts.length} 个代码块`,
+        `${currentChat.messages.length} msgs · ${currentChat.artifacts.length} code blocks`
+      );
       return;
     }
 
-    await chrome.scripting.executeScript({
-      target: { tabId: tab.id },
-      files: ["content.js"],
-    });
-
+    await chrome.scripting.executeScript({ target: { tabId: tab.id }, files: ["content.js"] });
     const resp = await chrome.tabs.sendMessage(tab.id, { type: "CAPTURE_CURRENT_CHAT" });
     if (resp?.ok && resp.data) {
       currentChat = resp.data;
-      titleEl.textContent = currentChat.title || "当前页面会话";
-      metaEl.textContent = `${currentChat.messages.length} 条消息段落 · ${currentChat.artifacts.length} 个代码块/Artifacts`;
+      titleEl.textContent = currentChat.title || "Session";
+      metaEl.textContent = tr(
+        `${currentChat.messages.length} 条消息 · ${currentChat.artifacts.length} 个代码块`,
+        `${currentChat.messages.length} msgs · ${currentChat.artifacts.length} code blocks`
+      );
     }
-  } catch (err) {
-    titleEl.textContent = "当前页面受浏览器保护（已加载演示快照）";
+  } catch (_err) {
     currentChat = {
-      id: "/fallback-session",
-      title: "Claude Guard Local Backup Demo",
+      id: "/fallback",
+      title: "Claude Guard Local Backup",
       url: "https://claude.ai/chat/local",
       capturedAt: new Date().toISOString(),
-      messages: [{ role: "user", text: "Backup my Claude project context locally." }],
+      messages: [{ role: "user", text: "Backup project context locally." }],
       artifacts: [],
     };
-    metaEl.textContent = `${currentChat.messages.length} 条消息 · 可直接测试导出与保险箱`;
+    titleEl.textContent = currentChat.title;
   }
 }
 
@@ -138,60 +167,66 @@ document.getElementById("exportMdBtn").addEventListener("click", () => {
   if (!currentChat) return;
   const md = formatConversationMarkdown(currentChat);
   const safeName = (currentChat.title || "claude-chat").replace(/[^a-zA-Z0-9\u4e00-\u9fa5_-]+/g, "-").slice(0, 40);
-  triggerDownload(md, `${safeName}.md`, "text/markdown;charset=utf-8");
-  document.getElementById("currentStatus").textContent = "✅ 已免费导出当前对话 Markdown！";
+  triggerDownload(md, `${safeName}.md`);
+  document.getElementById("currentStatus").textContent = tr("✅ 已免费导出 Markdown！", "✅ Exported Markdown!");
 });
 
 document.getElementById("exportJsonBtn").addEventListener("click", () => {
   if (!currentChat) return;
   const safeName = (currentChat.title || "claude-chat").replace(/[^a-zA-Z0-9\u4e00-\u9fa5_-]+/g, "-").slice(0, 40);
   triggerDownload(JSON.stringify(currentChat, null, 2), `${safeName}.json`, "application/json;charset=utf-8");
-  document.getElementById("currentStatus").textContent = "✅ 已免费导出当前对话 JSON！";
+  document.getElementById("currentStatus").textContent = tr("✅ 已免费导出 JSON！", "✅ Exported JSON!");
 });
 
 document.getElementById("stageVaultBtn").addEventListener("click", async () => {
   if (!currentChat) return;
-  const existingIdx = vaultList.findIndex((x) => x.url === currentChat.url && x.title === currentChat.title);
-  if (existingIdx >= 0) {
-    vaultList[existingIdx] = currentChat;
-  } else {
-    vaultList.unshift(currentChat);
+  if (!proActive && vaultList.length >= FREE_VAULT_LIMIT) {
+    document.getElementById("currentStatus").className = "status err";
+    document.getElementById("currentStatus").textContent = tr(
+      `免费版最多保存 ${FREE_VAULT_LIMIT} 场会话，可先免费导出清空或激活下方无限版。`,
+      `Free vault holds ${FREE_VAULT_LIMIT} chats. Export & clear for free, or unlock Unlimited below.`
+    );
+    return;
   }
+  const idx = vaultList.findIndex((x) => x.url === currentChat.url && x.title === currentChat.title);
+  if (idx >= 0) vaultList[idx] = currentChat;
+  else vaultList.unshift(currentChat);
   await chrome.storage.local.set({ claude_guard_vault: vaultList });
   document.getElementById("vaultCount").textContent = String(vaultList.length);
-  document.getElementById("currentStatus").textContent = `🛡️ 已存入本地保险箱（当前共守护 ${vaultList.length} 场对话）！`;
+  document.getElementById("currentStatus").className = "status";
+  document.getElementById("currentStatus").textContent = tr(
+    `🛡️ 已存入保险箱 (${vaultList.length}/${proActive ? "∞" : FREE_VAULT_LIMIT})`,
+    `🛡️ Saved to local vault (${vaultList.length}/${proActive ? "∞" : FREE_VAULT_LIMIT})`
+  );
 });
 
 document.getElementById("exportMigrationBtn").addEventListener("click", () => {
   const msgEl = document.getElementById("vaultMsg");
-  if (!proActive) {
-    msgEl.className = "status err";
-    msgEl.textContent = `🔒 你的保险箱已有 ${vaultList.length} 场对话。请在下方输入 OPC1. 激活码解锁全量打包与新号秒级恢复 Prompt（¥15 终身买断）。`;
-    return;
-  }
   const sourceList = vaultList.length > 0 ? vaultList : currentChat ? [currentChat] : [];
   if (sourceList.length === 0) {
     msgEl.className = "status err";
-    msgEl.textContent = "保险箱为空，请先点击上方「🛡️ 存入防丢保险箱」。";
+    msgEl.textContent = tr("保险箱为空，请先点上方存入。", "Vault is empty.");
+    return;
+  }
+  if (!proActive && sourceList.length > FREE_VAULT_LIMIT) {
+    msgEl.className = "status err";
+    msgEl.textContent = tr("超过 20 场大容量归档请激活下方无限版。", "Unlock Unlimited below for >20 chats.");
     return;
   }
   const bundle = buildMigrationBundle(sourceList);
-  triggerDownload(
-    bundle.markdownArchive,
-    `claude-vault-migration-${bundle.conversationCount}chats.md`,
-    "text/markdown;charset=utf-8"
-  );
+  triggerDownload(bundle.markdownArchive, `claude-migration-${bundle.conversationCount}chats.md`);
   msgEl.className = "status";
-  msgEl.textContent = `✅ 已导出 ${bundle.conversationCount} 场对话 + 新号无缝接续 Prompt！`;
+  msgEl.textContent = tr(
+    `✅ 已免费导出 ${bundle.conversationCount} 场对话 + 新号恢复 Prompt！`,
+    `✅ Exported ${bundle.conversationCount} chats + Context Handoff Prompt!`
+  );
 });
 
 document.getElementById("clearVaultBtn").addEventListener("click", async () => {
   vaultList = [];
   await chrome.storage.local.set({ claude_guard_vault: [] });
   document.getElementById("vaultCount").textContent = "0";
-  const msgEl = document.getElementById("vaultMsg");
-  msgEl.className = "status";
-  msgEl.textContent = "已清空本地保险箱。";
+  document.getElementById("vaultMsg").textContent = tr("已清空。", "Cleared.");
 });
 
 document.getElementById("verifyBtn").addEventListener("click", async () => {
@@ -202,24 +237,16 @@ document.getElementById("verifyBtn").addEventListener("click", async () => {
     proActive = true;
     await chrome.storage.local.set({ opc1_token: token });
     const badge = document.getElementById("tierBadge");
-    badge.textContent = "Pro 终身版";
+    badge.textContent = tr("Pro 无限容量版", "Pro Unlimited");
     badge.classList.add("pro");
     msgEl.className = "status";
-    msgEl.textContent = `✅ 验签成功！已永久解锁全量导出与新号迁移包 (${res.payload.p})`;
+    msgEl.textContent = tr("✅ 已永久解锁无限容量归档！", "✅ Unlimited Vault unlocked forever!");
   } else {
     msgEl.className = "status err";
-    msgEl.textContent = `❌ 激活码无效：${res.reason}`;
+    msgEl.textContent = `❌ ${res.reason}`;
   }
 });
 
-document.getElementById("buyKeyLink").addEventListener("click", (e) => {
-  e.preventDefault();
-  const subject = encodeURIComponent("[购买激活码] Claude Guard Pro 终身买断 (¥15 / $4.99)");
-  const body = encodeURIComponent(
-    "你好！我想购买 Claude Guard (`claude-guard`) 浏览器防丢备份插件 Pro 终身激活码 (¥15 / $4.99)。\n接收激活码邮箱："
-  );
-  chrome.tabs.create({ url: `mailto:3152557994@qq.com?cc=a3152557994@gmail.com&subject=${subject}&body=${body}` });
-});
-
+applyI18nLabels();
 runLocalEnvCheck();
 loadState().then(captureActiveTab);
