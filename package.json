@@ -1,0 +1,23 @@
+{
+  "name": "claude-guard",
+  "version": "1.0.0",
+  "description": "100% Local Claude Environment Risk Auditor, Claude Code Multi-Provider Switcher (Bedrock/Vertex/Relay), and Manifest V3 Auto-Backup Vault Extension",
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/claude-guard.test.mjs",
+    "build": "node scripts/build-release.mjs"
+  },
+  "keywords": [
+    "claude",
+    "claude-code",
+    "anthropic",
+    "bedrock",
+    "vertex-ai",
+    "cc-switch",
+    "claude-exporter",
+    "claude-backup",
+    "manifest-v3"
+  ],
+  "author": "OPC Studio",
+  "license": "MIT"
+}

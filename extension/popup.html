@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <title>Claude Guard — 本地防丢备份与封号预警</title>
+  <style>
+    :root {
+      --bg: #0b0f19;
+      --card: #131b2e;
+      --border: #23304d;
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+      --amber: #f59e0b;
+      --emerald: #10b981;
+      --rose: #f43f5e;
+      --indigo: #6366f1;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 14px;
+      width: 390px;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Segoe UI", sans-serif;
+      font-size: 13px;
+    }
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 700;
+      font-size: 15px;
+    }
+    .badge {
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 600;
+      background: #1e293b;
+      color: #cbd5e1;
+      border: 1px solid var(--border);
+    }
+    .badge.pro {
+      background: rgba(16, 185, 129, 0.16);
+      color: #34d399;
+      border-color: rgba(16, 185, 129, 0.4);
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 11px;
+      margin-bottom: 10px;
+    }
+    .card-title {
+      font-weight: 700;
+      font-size: 12.5px;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .env-pill {
+      display: inline-block;
+      padding: 2px 7px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .env-pill.safe { background: rgba(16, 185, 129, 0.16); color: #34d399; }
+    .env-pill.warn { background: rgba(245, 158, 11, 0.18); color: #fbbf24; }
+    .env-pill.crit { background: rgba(244, 63, 94, 0.18); color: #fb7185; }
+    .meta {
+      color: var(--muted);
+      font-size: 11.5px;
+      line-height: 1.45;
+    }
+    .actions {
+      display: flex;
+      gap: 6px;
+      margin-top: 8px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: #1e293b;
+      color: var(--text);
+      padding: 6px 10px;
+      border-radius: 7px;
+      font-size: 12px;
+      font-weight: 600;
+      transition: opacity 0.15s;
+    }
+    .btn:hover { opacity: 0.9; }
+    .btn-primary {
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      color: #0b0f19;
+      border-color: transparent;
+    }
+    .btn-emerald {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #052e16;
+      border-color: transparent;
+    }
+    .btn-full {
+      width: 100%;
+      text-align: center;
+      padding: 7px 10px;
+    }
+    .input-row {
+      display: flex;
+      gap: 6px;
+      margin-top: 6px;
+    }
+    input[type="text"] {
+      flex: 1;
+      background: #090d16;
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 6px;
+      padding: 6px 8px;
+      font-size: 11.5px;
+    }
+    .status {
+      margin-top: 6px;
+      font-size: 11.5px;
+      color: #34d399;
+      line-height: 1.4;
+    }
+    .status.err { color: #fb7185; }
+    .link {
+      color: #fbbf24;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .link:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="brand">
+      <span>🛡️ Claude Guard</span>
+    </div>
+    <span id="tierBadge" class="badge">免费基础版</span>
+  </div>
+
+  <!-- 1. 实时环境与时区监控 -->
+  <div class="card">
+    <div class="card-title">
+      <span>🔍 当前浏览器环境风控状态</span>
+      <span id="envBadge" class="env-pill warn">检测中...</span>
+    </div>
+    <div id="envDetail" class="meta">正在读取本地 Intl 时区与语言指纹...</div>
+    <div style="margin-top:6px;font-size:11.5px;">
+      <a id="openWebRadarLink" class="link" href="#">👉 打开 10 秒完整 IP/ASN/WebRTC 深度体检与防断流配置台 →</a>
+    </div>
+  </div>
+
+  <!-- 2. 当前会话单篇免费导出 + 存入保险箱 -->
+  <div class="card">
+    <div class="card-title">
+      <span>💬 当前页面对话与代码快照</span>
+      <button id="refreshBtn" class="btn" style="padding:2px 7px;font-size:11px;" type="button">刷新抓取</button>
+    </div>
+    <div id="currentTitle" style="font-weight:600;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">正在扫描当前标签页...</div>
+    <div id="currentMeta" class="meta">0 条消息 · 0 个代码块/Artifacts</div>
+    <div class="actions">
+      <button id="exportMdBtn" class="btn btn-primary" type="button">📥 导出 Markdown (免费)</button>
+      <button id="exportJsonBtn" class="btn" type="button">导出 .json</button>
+      <button id="stageVaultBtn" class="btn btn-emerald" type="button">🛡️ 存入防丢保险箱</button>
+    </div>
+    <div id="currentStatus" class="status"></div>
+  </div>
+
+  <!-- 3. 本地自动防丢保险箱 & Pro 一键迁移包 -->
+  <div class="card">
+    <div class="card-title">
+      <span>📦 本地防丢保险箱（防封号秒丢记录）</span>
+      <span style="color:#fbbf24;font-size:11.5px;">已守护 <strong id="vaultCount">0</strong> 场对话</span>
+    </div>
+    <div class="meta">一旦旧号突然被封无法登录，可一键导出全量历史 + <strong>「新号 1 秒接续上下文恢复 Prompt」</strong>。</div>
+    <div class="actions">
+      <button id="exportMigrationBtn" class="btn btn-primary btn-full" type="button">🚀 一键导出全量归档 + 新号无缝迁移包 (Pro)</button>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px;">
+      <span id="vaultMsg" class="status" style="margin-top:0;"></span>
+      <button id="clearVaultBtn" class="btn" style="padding:2px 6px;font-size:10.5px;color:#94a3b8;" type="button">清空保险箱</button>
+    </div>
+  </div>
+
+  <!-- 4. 离线 Ed25519 激活码验签 -->
+  <div class="card" style="margin-bottom:0;">
+    <div class="card-title">
+      <span>🔑 Pro 终身买断激活 (¥15 / $4.99 · 一次付清包更新)</span>
+    </div>
+    <div class="input-row">
+      <input id="licenseInput" type="text" placeholder="粘贴 OPC1. 离线激活码..." />
+      <button id="verifyBtn" class="btn btn-emerald" type="button">激活</button>
+    </div>
+    <div id="licenseMsg" class="status"></div>
+    <div class="meta" style="margin-top:5px;">
+      零云端上传 · 纯本地 Ed25519 验签 · <a id="buyKeyLink" class="link" href="#">点此获取 ¥15 终身激活码 →</a>
+    </div>
+  </div>
+
+  <script type="module" src="popup.js"></script>
+</body>
+</html>

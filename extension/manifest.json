@@ -1,0 +1,21 @@
+{
+  "manifest_version": 3,
+  "name": "Claude Guard — 对话自动本地防丢备份 & 封号环境预警",
+  "version": "1.0.0",
+  "description": "100% 本地自动增量备份 Claude 对话与 Artifacts 代码块，实时检测时区/IP跳变风险，支持一键导出新号上下文迁移包（零云端上传）。",
+  "permissions": ["storage", "activeTab", "scripting"],
+  "action": {
+    "default_title": "Claude Guard 防丢备份与环境预警",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}
