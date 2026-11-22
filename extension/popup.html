@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Claude Guard</title>
+  <title>Chat Vault &amp; Env Guard for Claude</title>
   <style>
     :root {
       --bg: #0b0f19;
@@ -13,68 +13,70 @@
       --amber: #f59e0b;
       --emerald: #10b981;
       --rose: #f43f5e;
+      --blue: #3b82f6;
     }
     * { box-sizing: border-box; }
     body {
       margin: 0;
-      padding: 14px;
-      width: 395px;
+      padding: 13px;
+      width: 400px;
       background: var(--bg);
       color: var(--text);
       font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Segoe UI", sans-serif;
-      font-size: 13px;
+      font-size: 12.5px;
     }
-    .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
-    .brand { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 15px; }
+    .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 9px; }
+    .brand { display: flex; align-items: center; gap: 6px; font-weight: 700; font-size: 14px; }
     .badge { padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 600; background: #1e293b; color: #cbd5e1; border: 1px solid var(--border); }
     .badge.pro { background: rgba(16, 185, 129, 0.16); color: #34d399; border-color: rgba(16, 185, 129, 0.4); }
-    .card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 11px; margin-bottom: 10px; }
-    .card-title { font-weight: 700; font-size: 12.5px; margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between; }
-    .env-pill { display: inline-block; padding: 2px 7px; border-radius: 6px; font-size: 11px; font-weight: 600; }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 10px; margin-bottom: 9px; }
+    .card-title { font-weight: 700; font-size: 12px; margin-bottom: 5px; display: flex; align-items: center; justify-content: space-between; }
+    .env-pill { display: inline-block; padding: 2px 7px; border-radius: 6px; font-size: 10.5px; font-weight: 600; }
     .env-pill.safe { background: rgba(16, 185, 129, 0.16); color: #34d399; }
     .env-pill.warn { background: rgba(245, 158, 11, 0.18); color: #fbbf24; }
     .env-pill.crit { background: rgba(244, 63, 94, 0.18); color: #fb7185; }
-    .meta { color: var(--muted); font-size: 11.5px; line-height: 1.45; }
-    .actions { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
-    .btn { cursor: pointer; border: 1px solid var(--border); background: #1e293b; color: var(--text); padding: 6px 10px; border-radius: 7px; font-size: 11.5px; font-weight: 600; text-decoration: none; display: inline-block; }
-    .btn:hover { opacity: 0.9; }
+    .meta { color: var(--muted); font-size: 11.2px; line-height: 1.45; }
+    .actions { display: flex; gap: 5px; margin-top: 7px; flex-wrap: wrap; }
+    .btn { cursor: pointer; border: 1px solid var(--border); background: #1e293b; color: var(--text); padding: 5px 9px; border-radius: 7px; font-size: 11px; font-weight: 600; text-decoration: none; display: inline-block; }
+    .btn:hover { opacity: 0.92; }
     .btn-primary { background: linear-gradient(135deg, #f59e0b, #d97706); color: #0b0f19; border-color: transparent; }
     .btn-emerald { background: linear-gradient(135deg, #10b981, #059669); color: #052e16; border-color: transparent; }
-    .btn-full { width: 100%; text-align: center; padding: 7px 10px; }
-    .input-row { display: flex; gap: 6px; margin-top: 6px; }
-    input[type="text"] { flex: 1; background: #090d16; border: 1px solid var(--border); color: var(--text); border-radius: 6px; padding: 6px 8px; font-size: 11.5px; }
-    .status { margin-top: 6px; font-size: 11.5px; color: #34d399; line-height: 1.4; }
+    .btn-blue { background: linear-gradient(135deg, #3b82f6, #2563eb); color: #fff; border-color: transparent; }
+    .btn-full { width: 100%; text-align: center; padding: 6.5px 10px; }
+    .input-row { display: flex; gap: 5px; margin-top: 6px; }
+    input[type="text"] { flex: 1; background: #090d16; border: 1px solid var(--border); color: var(--text); border-radius: 6px; padding: 5.5px 8px; font-size: 11.2px; }
+    .status { margin-top: 5px; font-size: 11px; color: #34d399; line-height: 1.4; }
     .status.err { color: #fb7185; }
-    .link { color: #fbbf24; text-decoration: none; font-weight: 600; }
   </style>
 </head>
 <body>
   <div class="header">
-    <div class="brand"><span>🛡️ Claude Guard v1.1</span></div>
+    <div class="brand"><span>🛡️ Chat Vault &amp; Guard v1.2</span></div>
     <span id="tierBadge" class="badge">Free (20 Vault Slots)</span>
   </div>
 
-  <!-- 1. Environment Check + Native Affiliate Remedy -->
+  <!-- 1. Environment Check + Playbook + Isolate Remedy -->
   <div class="card">
     <div class="card-title">
       <span id="lblEnvTitle">🔍 Environment Risk Monitor</span>
       <span id="envBadge" class="env-pill warn">Checking...</span>
     </div>
-    <div id="envDetail" class="meta">Scanning local Intl timezone & locale...</div>
-    <div class="actions" style="margin-top:7px;">
-      <a id="affProxyLink" class="btn btn-primary" href="https://proxy-seller.com/?partner=CLAUDEGUARD" target="_blank" rel="noopener">🌐 Clean Static ISP IP</a>
-      <a id="affBrowserLink" class="btn" href="https://www.adspower.com/share?code=claudeguard" target="_blank" rel="noopener">🔒 Isolate Timezone</a>
-      <a id="openWebRadarLink" class="btn" href="#">📡 Full ASN Audit</a>
+    <div id="envDetail" class="meta">Scanning local Intl timezone &amp; locale...</div>
+    <div class="actions">
+      <a id="openPlaybookLink" class="btn btn-blue" href="#" target="_blank" rel="noopener">📖 2026 Anti-Ban Guide</a>
+      <a id="affBrowserLink" class="btn btn-primary" href="#" target="_blank" rel="noopener">🔒 Isolate Timezone</a>
+      <a id="affShareLink" class="btn" href="#" target="_blank" rel="noopener">🛡️ Managed Pro</a>
+      <a id="openWebRadarLink" class="btn" href="#" target="_blank" rel="noopener">📡 Full ASN Audit</a>
     </div>
   </div>
 
   <!-- 2. Current Session Free Export + Save to Local Vault -->
   <div class="card">
     <div class="card-title">
-      <span id="lblCurTitle">💬 Current Chat & Artifacts</span>
-      <button id="refreshBtn" class="btn" style="padding:2px 7px;font-size:11px;" type="button">Refresh</button>
+      <span id="lblCurTitle">💬 Current Chat &amp; Code Artifacts</span>
+      <button id="refreshBtn" class="btn" style="padding:2px 7px;font-size:10.5px;" type="button">Refresh</button>
     </div>
-    <div id="currentTitle" style="font-weight:600;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Scanning active tab...</div>
+    <div id="currentTitle" style="font-weight:600;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Scanning active tab...</div>
     <div id="currentMeta" class="meta">0 messages · 0 code blocks</div>
     <div class="actions">
       <button id="exportMdBtn" class="btn btn-primary" type="button">📥 Export .md (Free)</button>
@@ -87,23 +89,27 @@
   <!-- 3. Local Auto-Vault & Context Handoff (Free up to 20 chats!) -->
   <div class="card">
     <div class="card-title">
-      <span id="lblVaultTitle">📦 Local Auto-Vault (Free up to 20)</span>
-      <span style="color:#fbbf24;font-size:11.5px;"><strong id="vaultCount">0</strong> / 20 saved</span>
+      <span id="lblVaultTitle">📦 Local Auto-Vault (Free ≤20)</span>
+      <span style="color:#fbbf24;font-size:11px;"><strong id="vaultCount">0</strong> / 20 saved</span>
     </div>
-    <div id="lblVaultDesc" class="meta">Export full archive + 1-click "New Account Context Recovery Prompt" anytime—even if an old account gets rate-limited or suspended.</div>
+    <div id="lblVaultDesc" class="meta">Export full archive + 1-click "New Account Context Recovery Prompt" anytime—zero cloud upload.</div>
     <div class="actions">
       <button id="exportMigrationBtn" class="btn btn-emerald btn-full" type="button">🚀 Export All + Context Recovery Prompt (Free ≤20)</button>
     </div>
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:5px;">
       <span id="vaultMsg" class="status" style="margin-top:0;"></span>
-      <button id="clearVaultBtn" class="btn" style="padding:2px 6px;font-size:10.5px;color:#94a3b8;" type="button">Clear</button>
+      <button id="clearVaultBtn" class="btn" style="padding:2px 6px;font-size:10px;color:#94a3b8;" type="button">Clear</button>
     </div>
   </div>
 
-  <!-- 4. Optional Unlimited Vault Key (>20 chats) -->
+  <!-- 4. Unlimited Vault Key & All-Access Pass -->
   <div class="card" style="margin-bottom:0;">
     <div class="card-title">
-      <span id="lblProTitle">🔑 Unlimited Vault Pass (>20 Chats · $4.99 / ¥15 Once)</span>
+      <span id="lblProTitle">🔑 Unlimited Vault (&gt;20 Chats · $4.99 / ¥15 Once)</span>
+    </div>
+    <div class="actions" style="margin-top:4px;margin-bottom:6px;">
+      <a id="buySingleBtn" class="btn btn-primary" href="#" target="_blank" rel="noopener">🛒 Get Key (¥15 / $4.99)</a>
+      <a id="buyBundleBtn" class="btn btn-blue" href="#" target="_blank" rel="noopener">🎁 16-in-1 All-Access Pass (¥39)</a>
     </div>
     <div class="input-row">
       <input id="licenseInput" type="text" placeholder="Paste OPC1. offline license key..." />

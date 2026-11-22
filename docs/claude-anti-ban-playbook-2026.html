@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>2026 Claude 防封号、美区礼品卡订阅与封后退款自救实战全书 (免费开源版)</title>
+  <meta name="description" content="2026最新Claude封号排查与防封实战手册：30秒排除ANTHROPIC_API_KEY假封号乌龙、美区免税州Apple礼品卡绕过Stripe风控、Claude Code接入AWS Bedrock与Vertex AI零封号通道、以及reportaproblem封后追回订阅费与英文申诉模板。" />
+  <link rel="canonical" href="https://a3152557994-ship-it.github.io/claude-guard/claude-anti-ban-playbook-2026.html" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "2026 Claude 防封号、稳态订阅与封后退款自救实战手册",
+    "datePublished": "2026-11-22",
+    "dateModified": "2026-11-22",
+    "author": { "@type": "Organization", "name": "OPC Tools Studio" },
+    "url": "https://a3152557994-ship-it.github.io/claude-guard/claude-anti-ban-playbook-2026.html"
+  }
+  </script>
+  <style>
+    :root {
+      --bg: #070b14;
+      --card: #111827;
+      --border: #1f2937;
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+      --amber: #f59e0b;
+      --emerald: #10b981;
+      --blue: #3b82f6;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.72;
+      font-size: 15px;
+    }
+    .wrap { max-width: 900px; margin: 0 auto; padding: 24px 18px 64px; }
+    .topbar {
+      display: flex; flex-wrap: wrap; gap: 10px; justify-content: space-between; align-items: center;
+      padding-bottom: 16px; margin-bottom: 20px; border-bottom: 1px solid var(--border);
+    }
+    .btn {
+      display: inline-block; padding: 8px 14px; border-radius: 8px; font-size: 13px; font-weight: 600;
+      text-decoration: none; border: 1px solid var(--border); background: #1e293b; color: var(--text); cursor: pointer;
+    }
+    .btn-amber { background: linear-gradient(135deg, #f59e0b, #d97706); color: #070b14; border-color: transparent; }
+    .btn-emerald { background: linear-gradient(135deg, #10b981, #059669); color: #052e16; border-color: transparent; }
+    .btn-blue { background: linear-gradient(135deg, #3b82f6, #2563eb); color: #fff; border-color: transparent; }
+    article {
+      background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 26px 24px;
+    }
+    h1 { font-size: 25px; line-height: 1.35; margin-top: 0; color: #fff; }
+    h2 { font-size: 19px; color: #fbbf24; border-left: 4px solid #f59e0b; padding-left: 10px; margin-top: 28px; }
+    h3 { font-size: 16px; color: #60a5fa; margin-top: 18px; }
+    a { color: #38bdf8; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    blockquote {
+      background: rgba(30, 41, 59, 0.65); border-left: 4px solid #3b82f6;
+      margin: 14px 0; padding: 12px 16px; border-radius: 0 8px 8px 0; color: #cbd5e1;
+    }
+    table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 13.5px; display: block; overflow-x: auto; }
+    th { background: #030712; color: #fbbf24; text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); }
+    td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    code { background: #1e293b; color: #fda4af; padding: 2px 6px; border-radius: 5px; font-size: 13px; font-family: "SF Mono", Menlo, monospace; }
+    pre { background: #030712; border: 1px solid var(--border); padding: 14px; border-radius: 10px; overflow-x: auto; }
+    pre code { background: transparent; color: #e2e8f0; padding: 0; }
+    hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .cta-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 14px; margin-top: 26px; }
+    .cta-card { background: #0f172a; border: 1px solid #334155; border-radius: 12px; padding: 18px; display: flex; flex-direction: column; justify-content: space-between; }
+    .price { font-size: 22px; font-weight: 800; color: #34d399; margin: 6px 0; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <a class="btn" href="./index.html">← 返回 10 秒封号风险体检台</a>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <a class="btn btn-amber" href="./downloads/Claude-2026-Anti-Ban-Playbook.pdf" download>📥 免费下载高清 PDF 离线版 (1.1MB)</a>
+        <a class="btn btn-emerald" href="./downloads/claude-guard-mv3.zip" download>🧩 下载防丢备份插件 v1.2</a>
+      </div>
+    </div>
+
+    <article>
+      <h1>2026 Claude 防封号、稳态订阅与封后退款自救实战手册</h1>
+<blockquote>
+<p><strong>适用人群</strong>：Claude Pro ($20) / Max ($100–$200) 订阅用户、Claude Code 开发者、学术写作与高频重度用户</p>
+<p><strong>核心原则</strong>：先排假封号乌龙 → 绕开 Stripe 虚拟卡雷区 → 锁死网络与时区指纹 → 提前备好零封号备用源与本地防丢备份</p>
+<p><strong>在线 10 秒环境风险自检台（免费免登录）</strong>：<a href="https://a3152557994-ship-it.github.io/claude-guard/" target="_blank" rel="noopener">https://a3152557994-ship-it.github.io/claude-guard/</a></p>
+</blockquote>
+<hr/>
+<h2>0. 三秒速查：为什么别人用一年没事，你刚充钱就秒封？</h2>
+<p>Anthropic 在 2025–2026 年将风控升级为<strong>「ASN 机房库识别 + 设备时区交叉校验 + Stripe 卡段连坐 + Claude Code 客户端遥测」</strong>四重联防，申诉解封率不足 <strong>5%</strong>。</p>
+<table><thead><tr><th>操作方式</th><th>封号概率</th><th>暴毙原因拆解</th></tr></thead><tbody>
+<tr><td>普通机场节点 + 某宝代充 / 廉价成品号</td><td><strong>95%（极危）</strong></td><td>万人共用机房 ASN（一人越狱全员连坐）+ 黑卡/虚拟卡段回滚一锅端</td></tr>
+<tr><td>网页端绑海外虚拟信用卡（VCC）直充</td><td><strong>70%（高危）</strong></td><td>大量公开虚拟卡 BIN 段已被 Stripe 标记，极易触发扣款秒封或 Persona KYC</td></tr>
+<tr><td>个人 Pro/Max 账号塞进第三方套壳客户端</td><td><strong>85%（高危）</strong></td><td>OAuth 凭证异常调用触发服务端自动化防滥用规则，直接封禁整个 Organization</td></tr>
+<tr><td><strong>纯净固定住宅 IP + 美区 Apple ID 礼品卡内购</strong></td><td><strong>&lt;5%（极稳）</strong></td><td><strong>苹果接管支付账单隔离 Stripe 风控，万一误封还能走苹果官方通道退回余额</strong></td></tr>
+<tr><td><strong>AWS Bedrock / Google Vertex AI 企业通道</strong></td><td><strong>0%（永不封）</strong></td><td><strong>走亚马逊云 / 谷歌云正规商业 API 按量计费，无个人号地区封禁机制</strong></td></tr>
+</tbody></table>
+<hr/>
+<h2>一、 报错先别弃号！30 秒排查「假封号乌龙」</h2>
+<p>如果在终端使用 <code>Claude Code</code> 或本地工具时突然弹出：</p>
+<p><code>Your organization has been disabled</code> 或 <code>This organization has been disabled</code></p>
+<p><strong>先别以为刚充的 $20 / $200 打水漂了！实测约 30% 属于本地环境变量冲突乌龙：</strong></p>
+<ol>
+<li>打开终端运行检查命令：</li>
+<pre><code>
+   env | grep -i ANTHROPIC
+</code></pre>
+<li><strong>乌龙真相</strong>：如果你以前在 <code>.zshrc</code>、<code>.bashrc</code> 或项目 <code>.env</code> 里填过某个早已欠费/失效的第三方或旧版 <code>ANTHROPIC_API_KEY</code>（或残留了被拉黑的第三方 <code>ANTHROPIC_BASE_URL</code>），它的认证优先级<strong>高于</strong>你刚登录的 Pro/Max OAuth 订阅，会强行覆盖并报错。</li>
+<li><strong>10 秒修复</strong>：</li>
+<pre><code>
+   unset ANTHROPIC_API_KEY
+   unset ANTHROPIC_BASE_URL
+</code></pre>
+<p>再去 <code>~/.zshrc</code>（或 Windows 系统环境变量）中删掉对应旧配置，重新登录即可恢复正常。</p>
+</ol>
+<hr/>
+<h2>二、 网络与设备指纹防封铁律（堵死 80% 封号源头）</h2>
+<p>Anthropic 不仅看你是不是海外 IP，更看这个 IP 的 <strong>ASN（自治系统号）属性</strong> 以及 <strong>浏览器/系统环境是否穿帮</strong>。</p>
+<h3>1. 远离机房数据中心 IP（IDC ASN）</h3>
+<p>绝大多数商业 VPN 与机场即便标着“专线/原生”，底层依然采购自数据中心机房（如 Cloudflare <code>AS13335</code>、Vultr <code>AS20473</code>、DigitalOcean <code>AS14061</code>、Choopa、搬瓦工等）。这类 IP 在风控库里天生带高风险分，新号注册或升级付费极易秒封。</p>
+<ul>
+<li><strong>免费自检方法</strong>：打开 <a href="https://a3152557994-ship-it.github.io/claude-guard/" target="_blank" rel="noopener">Claude Guard 10秒体检台</a>，一键检查当前出口是否命中高危机房 ASN、是否存在 <strong>WebRTC 真实国内公网 IP 泄露</strong>、以及<strong>系统时区是否与 IP 跨洲错位</strong>。</li>
+</ul>
+<h3>2. 长期稳态环境配置标准（黄金组合）</h3>
+<ul>
+<li><strong>固定独享静态原生住宅 IP（ISP Static Residential IP）</strong>：认准归属为海外本土宽带运营商（如 AT&amp;T、Comcast、Verizon、Spectrum 等双 ISP 属性）的固定美西/美东独享住宅 IP，全程固定单节点，<strong>严禁早晚在美/日/港/新之间横跳</strong>（注意：中国香港与大陆均属不支持区域，切勿挂香港节点打开 Claude 或点官方邮件链接）。</li>
+<ul>
+<li><em>常用独享静态住宅 IP 参考通道</em>：<a href="https://proxy-seller.com/" target="_blank" rel="noopener">Proxy-Seller 静态住宅代理</a> / <a href="https://iproyal.com/" target="_blank" rel="noopener">IPRoyal 静态住宅 IP</a>（选 US ISP Static Residential，单月几美元即可独享固定出口）。</li>
+</ul>
+<li><strong>指纹隔离浏览器（防主浏览器插件与时区穿帮）</strong>：日常主力 Chrome 往往挂着国内百度/淘宝 Cookie、中文语言权重与 <code>Asia/Shanghai (UTC+8)</code> 时区。建议单独用一个防关联隔离浏览器环境（如 <a href="https://www.adspower.com/" target="_blank" rel="noopener">AdsPower</a> 或 MoreLogin 免费版单环境）专门跑 Claude：</li>
+<ul>
+<li>自动匹配出口 IP 所在时区（如美西 <code>America/Los_Angeles</code>）；</li>
+<li>浏览器语言设为 <code>en-US</code>；</li>
+<li>开启 WebRTC 替换/禁用，彻底杜绝网页探出本地局域网与真实运营商 IP。</li>
+</ul>
+</ul>
+<hr/>
+<h2>三、 支付防封天花板：绕开网页 Stripe，改走美区 Apple 礼品卡内购</h2>
+<p>网页端直接绑虚拟信用卡（VCC）是重灾区——卡段一旦被他人用于批量开号或拒付，整段卡绑定的所有 Claude 账号会被连坐封禁。<strong>目前公认成功率最高、最抗封的独享方案是通过 iPhone 美区 App Store 内购订阅。</strong></p>
+<h3>为什么 iOS 内购比网页端稳得多？</h3>
+<p>网页端收款方是 <code>Anthropic + Stripe</code>（严查卡段 BIN、账单地址与付款瞬间指纹）；而 iOS 内购收款方是 <strong>Apple</strong>，Anthropic 看不到你的底层支付卡号，只接收苹果发来的有效订阅凭据。</p>
+<h3>保姆级 4 步实操（含免税州避坑细节）</h3>
+<ol>
+<li><strong>准备独享美区 Apple ID（必选免税州邮编！）</strong></li>
+<ul>
+<li>自己注册一个干净美区 Apple ID（切勿买几块钱多人共用的共享号）。</li>
+<li><strong>关键避坑（省税 + 防余额不足失败）</strong>：Apple ID 账单地址务必填写美国 <strong>5 大免税州</strong>（推荐俄勒冈州 Oregon，例如城市 <code>Portland</code>，邮编 <code>97201</code>；或阿拉斯加州、蒙大拿州、特拉华州、新罕布什尔州）。</li>
+<li><em>原因</em>：若填加州或纽约，苹果会额外加收 7%–10% 消费税，$20 的 Pro 实际扣款约 <strong>$21.5–$22</strong>，只充 $20 礼品卡会直接提示余额不足扣费失败！</li>
+</ul>
+<li><strong>支付宝原价汇率买美区 Apple 礼品卡（无需外币卡）</strong></li>
+<ul>
+<li>打开支付宝 → 左上角地区切到<strong>旧金山 / 纽约</strong> → 顶部搜索栏搜小程序 <strong><code>Pockyt Shop</code></strong>（或访问官网 <code>shop.pockyt.io</code>）。</li>
+<li>选择 <strong>App Store &amp; iTunes US</strong>，购买 <strong>$20</strong>（免税州够开 Pro）或 <strong>$25</strong>（留余量更稳）面额，支付宝人民币直接结算，几分钟内拿到 16 位兑换码。</li>
+<li>⚠️ <strong>防苹果风控提醒</strong>：新注册的美区 Apple ID 建议先登录手机挂满 24 小时，且首月<strong>只充 $20–$25 开普通 Pro</strong>，切忌新苹果号上来直接猛充 $200 礼品卡买 Max，否则极易触发苹果自身的防盗刷锁号审核。</li>
+</ul>
+<li><strong>兑换并完成内购</strong></li>
+<ul>
+<li>打开 iPhone 上的 <code>App Store</code>（确认右上角是你的美区 ID，<strong>不要</strong>在手机系统设置 iCloud 处换号，只在 App Store 商店内换号即可，不影响手机通讯录和相册）→ 点头像 → <strong>兑换充值卡或代码（Redeem Gift Card or Code）</strong>。</li>
+<li>下载官方 <code>Claude by Anthropic</code> App，挂好固定美国节点登录你的 Claude 账号，点击升级 <code>Claude Pro</code>，直接用 Apple ID 余额秒过。</li>
+</ul>
+<li><strong>不想按月自动续费怎么关？</strong></li>
+<ul>
+<li>iOS 订阅归苹果管，网页端改不了。付完款后随时可在 iPhone <code>设置 -&gt; Apple ID -&gt; 订阅</code> 中点取消自动续费，当月 Pro 权益照常使用到期满为止。</li>
+</ul>
+</ol>
+<blockquote>
+<p>💡 <strong>懒人省心分支</strong>：如果手头没有 iPhone，或者不想自己折腾美区 ID 与静态住宅 IP，也<strong>千万不要去闲鱼买无售后的个人散户黑卡成品号</strong>。直接走老牌正规合租/代充大平台（如银河录像局 <code>nf.video</code> / GamsGo 等），贵几块钱但带官方质保——万一赶上封号潮，由大平台客服免费补号或按天退差价，自己零折腾。</p>
+</blockquote>
+<hr/>
+<h2>四、 Claude Code 开发者专项加固与「100% 永不封号」通道</h2>
+<p>写代码的重度用户（尤其是 $100 / $200 Max 用户）是近期封号最痛的群体。请严格遵守三条铁律：</p>
+<h3>1. 严禁将个人 Pro/Max 的 OAuth 塞进非官方套壳软件</h3>
+<p>个人订阅包含的使用额度远高于同价位 API Token，因此 Anthropic 对「抓取个人订阅 OAuth 凭证接入第三方客户端 / 逆向中转池」实行零容忍秒封。个人订阅老老实实只在官方网页、官方桌面/手机端与官方原版 <code>claude</code> CLI 中使用。</p>
+<h3>2. 加固本地时区与关闭非必要遥测</h3>
+<p><code>Claude Code</code> 运行时会读取系统环境与时区。长期挂美西代理开发时，建议在 <code>~/.claude/settings.json</code> 或环境变量中关闭非核心遥测上报：</p>
+<pre><code>
+{
+  "env": {
+    "DISABLE_TELEMETRY": "1",
+    "DISABLE_ERROR_REPORTING": "1",
+    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1"
+  }
+}
+</code></pre>
+<p>（可直接下载 <a href="https://a3152557994-ship-it.github.io/claude-guard/downloads/claude-code-kit.zip" target="_blank" rel="noopener">claude-code-kit.zip</a> 运行 <code>cc-switch</code> 一键自动备份并写入配置。）</p>
+<h3>3. 终极稳态解法：AWS Bedrock / Google Vertex AI 企业通道（0% 封号率）</h3>
+<p>如果你靠 Claude Code 吃饭、赶项目死线，绝对输不起半夜突然封号断流，最稳的正规路线是直接把 <code>Claude Code</code> 切到云大厂企业通道：</p>
+<ul>
+<li><strong>AWS Bedrock 模式</strong>：设置 <code>CLAUDE_CODE_USE_BEDROCK=1</code>，走亚马逊云 IAM 商业接口调用最新 Sonnet / Opus，按实际消耗计费，<strong>不存在个人号地区封禁问题</strong>。</li>
+<li><strong>Google Cloud Vertex AI 模式</strong>：设置 <code>CLAUDE_CODE_USE_VERTEX=1</code>，走谷歌云正规接口（新号注册 Google Cloud 赠送的 <strong>$300 体验赠金</strong>可直接抵扣调用费！）。</li>
+<li><strong>5 小时限流无缝热备</strong>：日常用 Pro 写代码，一旦撞上 5 小时额度上限，用 <code>cc-switch</code> 1 秒切到 <code>OpenRouter</code> 或 <code>Bedrock</code> 顶上，不断活、不丢进度。</li>
+</ul>
+<hr/>
+<h2>五、 万一不幸被封：退款追回、英文申诉信与防连坐指南</h2>
+<h3>1. 第一戒律：千万别用国内 IP 或原脏节点点开封号邮件！</h3>
+<p>收到封号提示后，很多人顺手在手机微信/QQ邮箱里没挂代理直接点邮件里的申诉链接，瞬间把真实国内移动基站 IP 送给官方后台坐实“非受支持地区”，彻底焊死解封可能。<strong>所有申诉操作必须在干净美国住宅 IP 下进行。</strong></p>
+<h3>2. 先把钱追回来（按你的付款渠道对号入座）</h3>
+<ul>
+<li><strong>情况 A：你是走 iPhone App Store 内购订阅的（追回率最高！）</strong></li>
+<ol>
+<li>浏览器访问苹果官方问题报告页：<code><a href="https://reportaproblem.apple.com/" target="_blank" rel="noopener">https://reportaproblem.apple.com/</a></code></li>
+<li>登录付款的美区 Apple ID → 选择 <strong>“我想要请求退款 (I'd like to request a refund)”</strong>；</li>
+<li>原因选择 <strong>“购买的内容无法正常使用 / 其他”</strong>，勾选刚扣费的 Claude Pro/Max 订单；</li>
+<li>说明框填写简短英文事实：</li>
+<blockquote>
+<p><code>I subscribed to Claude Pro via App Store, but my account was unexpectedly suspended by the developer right after payment without violating any terms, leaving me completely unable to access the paid service.</code></p>
+</blockquote>
+<li>提交后通常 24–48 小时内苹果审核通过，美元全额退回你的 Apple ID 余额（注意：单账号切勿频繁恶意退款，首次正常维权通过率极高）。</li>
+</ol>
+<li><strong>情况 B：你是走网页端 Stripe 信用卡/虚拟卡订阅的</strong></li>
+<ol>
+<li>先查邮箱垃圾箱是否有来自 Stripe 的自动按比例退款单（部分风控误伤会自动退还当月剩余天数费用）；</li>
+<li>若无自动退款，使用注册邮箱发信至 <code>support@anthropic.com</code>（切勿连发多封刷屏），同时申请人工复核解封与未用周期退款（直接套用下方英文模板）。</li>
+</ol>
+</ul>
+<h3>3. 高礼貌度「人工复审 + 备选退费」双效英文申诉模板</h3>
+<blockquote>
+<p><strong>收件人</strong>：<code>support@anthropic.com</code>（或登录被封页面点击 <code>Request a review</code> 表单填入）</p>
+<p><strong>邮件标题</strong>：<code>Account Appeal &amp; Billing Inquiry - Unexpected Suspension [你的注册邮箱]</code></p>
+<p><strong>正文（直接复制替换括号内容）</strong>：</p>
+<pre><code>
+Hi Anthropic Support Team,
+
+My Claude account ([填入你的注册邮箱]) was recently disabled by an automated review. 
+
+I use Claude strictly for legitimate individual software development, technical writing, and daily productivity. I have not shared my account, used unauthorized third-party scrapers, or intentionally violated Anthropic's Usage Policy. I suspect this might have been a false positive triggered by a temporary network/VPN fluctuation while traveling/working remotely.
+
+Could you please conduct a manual review of my account? 
+
+If the suspension cannot be lifted due to regional or automated compliance policies, I completely respect your decision, and I kindly request a prorated refund for the unused portion of my current [Claude Pro / Claude Max] subscription (billed on [填入扣款日期, 如 Nov 20, 2026]).
+
+Thank you very much for your time and assistance.
+
+Best regards,
+[你的英文名]
+</code></pre>
+</blockquote>
+<h3>4. 重开新号防「秒封连坐」4 清铁律 + 资产防丢</h3>
+<p>如果决定弃旧开新，漏掉任何一项都会触发指纹关联秒封：</p>
+<ol>
+<li><strong>清浏览器痕迹</strong>：绝对不要在刚被封的原浏览器窗口直接退出重注！必须彻底清除 <code>claude.ai</code> 与 <code>anthropic.com</code> 的全部 Cookie / LocalStorage / IndexedDB，或直接在隔离浏览器里新建一个全新空白 Profile。</li>
+<li><strong>换全新出口 IP</strong>：已被封过号的 IP 已被打标，重开务必更换新的静态住宅 IP。</li>
+<li><strong>换全新邮箱与手机号</strong>：推荐全新 Gmail / Outlook / ProtonMail，不复用旧接码号。</li>
+<li><strong>换支付通道</strong>：原虚拟卡绝不可再绑新号（必连坐），改走前文「美区 Apple ID 礼品卡内购」。</li>
+<li><strong>日常自动本地备份（防封号丢代码/丢论文）</strong>：一旦账号被封，网页立即锁死，所有历史对话和 Artifacts 代码块一字都导不出来。重开新号第一天就装上纯本地归档扩展（如 <a href="https://a3152557994-ship-it.github.io/claude-guard/downloads/claude-guard-mv3.zip" target="_blank" rel="noopener">Claude Guard MV3 浏览器插件</a>），聊天同时自动把 Markdown 和代码块存在你自己电脑硬盘里，换新号 1 秒接上上下文。</li>
+</ol>
+    </article>
+
+    <section class="cta-grid" id="services">
+      <div class="cta-card">
+        <div>
+          <div style="font-size:12px;color:#fbbf24;font-weight:700;">方案 1 · 防封隔离基建</div>
+          <h3 style="margin:6px 0;color:#fff;">指纹隔离容器 &amp; 质保省心合租</h3>
+          <p style="font-size:13px;color:var(--muted);">不想主浏览器东八区时区穿帮，或不想自己折腾美区卡？直接用隔离容器或带官方补号质保的老牌合租平台。</p>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;">
+          <a id="pbAdsBtn" class="btn btn-amber" href="https://www.adspower.com/" target="_blank" rel="noopener">🔒 AdsPower 隔离环境</a>
+          <a id="pbShareBtn" class="btn" href="https://nf.video/" target="_blank" rel="noopener">🛡️ 银河录像局 (带质保)</a>
+        </div>
+      </div>
+
+      <div class="cta-card" style="border-color:#3b82f6;">
+        <div>
+          <div style="font-size:12px;color:#60a5fa;font-weight:700;">方案 2 · 零成本软件终身通票</div>
+          <h3 style="margin:6px 0;color:#fff;">无限对话保险箱 / 16款工具通票</h3>
+          <div class="price">¥15 单品 / ¥39 全站通票</div>
+          <p style="font-size:13px;color:var(--muted);">一次买断永久有效（离线 Ed25519 秒激活）。¥39 通票一码解锁本插件无限归档 + OPC 全站 16 款效率微工具。</p>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;">
+          <a class="btn btn-blue" href="./index.html#checkout-bundle">🎁 获取 ¥39 全站通票 / ¥15 激活码</a>
+        </div>
+      </div>
+
+      <div class="cta-card" style="border-color:#10b981;">
+        <div>
+          <div style="font-size:12px;color:#34d399;font-weight:700;">方案 3 · 100% 永不封号企业通道代配</div>
+          <h3 style="margin:6px 0;color:#fff;">AWS Bedrock / Vertex 远程部署</h3>
+          <div class="price">¥168 <span style="font-size:12px;font-weight:400;color:var(--muted);">/ 次 · 不通全退</span></div>
+          <p style="font-size:13px;color:var(--muted);">专为输不起封号断流的程序员与科研党定制：20 分钟远程配通亚马逊/谷歌云商业通道 + 5源热备切换器。</p>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;">
+          <a class="btn btn-emerald" href="./index.html#checkout-remote">🧑‍💻 预约 20 分钟远程一键配通</a>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script type="module">
+    import { MONETIZATION_CONFIG } from "./affiliate-config.js";
+    document.getElementById("pbAdsBtn").href = MONETIZATION_CONFIG.antidetectBrowserUrl;
+    document.getElementById("pbShareBtn").href = MONETIZATION_CONFIG.managedShareUrl;
+  </script>
+</body>
+</html>

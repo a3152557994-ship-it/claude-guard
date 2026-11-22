@@ -1,8 +1,8 @@
 {
   "extName": {
-    "message": "Claude Guard: Auto Local Chat Backup & Env Risk Monitor"
+    "message": "Chat Vault & Env Guard for Claude"
   },
   "extDesc": {
-    "message": "100% local Markdown & Artifact auto-backup vault for Claude chats, plus real-time timezone/IP mismatch alerts and context recovery."
+    "message": "100% local Markdown & code backup vault, timezone/IP risk monitor, and context recovery tool for Claude."
   }
 }

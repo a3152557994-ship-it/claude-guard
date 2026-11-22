@@ -4,8 +4,8 @@ import {
   buildMigrationBundle,
   verifyLicenseUniversal,
 } from "./guard-core.js";
+import { MONETIZATION_CONFIG } from "./affiliate-config.js";
 
-const WEB_RADAR_URL = "https://a3152557994-ship-it.github.io/claude-guard/";
 const FREE_VAULT_LIMIT = 20;
 const isZh = (navigator.language || "").toLowerCase().startsWith("zh");
 const tr = (zh, en) => (isZh ? zh : en);
@@ -14,12 +14,27 @@ let proActive = false;
 let vaultList = [];
 let currentChat = null;
 
+function wireConfigLinks() {
+  document.getElementById("openPlaybookLink").href = MONETIZATION_CONFIG.playbookWebUrl;
+  document.getElementById("affBrowserLink").href = MONETIZATION_CONFIG.antidetectBrowserUrl;
+  document.getElementById("affShareLink").href = isZh
+    ? MONETIZATION_CONFIG.managedShareUrl
+    : MONETIZATION_CONFIG.residentialProxyUrl;
+  document.getElementById("openWebRadarLink").href = MONETIZATION_CONFIG.webRadarUrl;
+  document.getElementById("buySingleBtn").href = `${MONETIZATION_CONFIG.webRadarUrl}#checkout-single`;
+  document.getElementById("buyBundleBtn").href = `${MONETIZATION_CONFIG.webRadarUrl}#checkout-bundle`;
+}
+
 function applyI18nLabels() {
-  if (!isZh) return;
-  document.getElementById("tierBadge").textContent = "免费畅享版 (含20场归档)";
+  if (!isZh) {
+    document.getElementById("affShareLink").textContent = "🌐 Static ISP IP";
+    return;
+  }
+  document.getElementById("tierBadge").textContent = "免费版 (含20场归档)";
   document.getElementById("lblEnvTitle").textContent = "🔍 浏览器环境风控监测";
-  document.getElementById("affProxyLink").textContent = "🌐 获取纯净静态住宅IP";
-  document.getElementById("affBrowserLink").textContent = "🔒 隔离时区指纹";
+  document.getElementById("openPlaybookLink").textContent = "📖 2026 防封退款全书";
+  document.getElementById("affBrowserLink").textContent = "🔒 AdsPower 时区隔离";
+  document.getElementById("affShareLink").textContent = "🛡️ 省心质保合租";
   document.getElementById("openWebRadarLink").textContent = "📡 完整体检";
   document.getElementById("lblCurTitle").textContent = "💬 当前对话与代码快照";
   document.getElementById("refreshBtn").textContent = "刷新";
@@ -28,11 +43,13 @@ function applyI18nLabels() {
   document.getElementById("stageVaultBtn").textContent = "🛡️ 存入保险箱";
   document.getElementById("lblVaultTitle").textContent = "📦 本地防丢保险箱 (20场内全免费)";
   document.getElementById("lblVaultDesc").textContent =
-    "免费一键导出全量 Markdown +「新号 1 秒接续上下文恢复 Prompt」，不怕限流或封号丢进度。";
+    "纯本地保存 Markdown 与代码块，一键导出「新号 1 秒接续上下文恢复 Prompt」，封号也不丢代码。";
   document.getElementById("exportMigrationBtn").textContent =
     "🚀 一键导出全量归档 + 新号无缝恢复包 (20场内免费)";
   document.getElementById("clearVaultBtn").textContent = "清空";
-  document.getElementById("lblProTitle").textContent = "🔑 重度无限容量解锁 (>20场 · ¥15 / $4.99 终身)";
+  document.getElementById("lblProTitle").textContent = "🔑 无限容量解锁 (>20场 · 一次买断永久用)";
+  document.getElementById("buySingleBtn").textContent = "🛒 单品终身码 (¥15)";
+  document.getElementById("buyBundleBtn").textContent = "🎁 全站16款工具通票 (¥39)";
   document.getElementById("licenseInput").placeholder = "粘贴 OPC1. 离线激活码...";
   document.getElementById("verifyBtn").textContent = "激活";
 }
@@ -70,14 +87,14 @@ function runLocalEnvCheck() {
     badgeEl.className = "env-pill crit";
     badgeEl.textContent = tr(`⚠️ 时区暴露 (${tz})`, `⚠️ TZ Mismatch (${tz})`);
     detailEl.textContent = tr(
-      `检测到东八区时区 ${tz}，若挂欧美节点直连易触发跨洲异常！建议配置下方静态住宅 IP 与时区隔离。`,
-      `Local timezone ${tz} conflicts with US/EU proxies. Use a dedicated Static ISP IP & isolated browser profile below.`
+      `检测到东八区时区 ${tz}，挂欧美节点易触发跨洲异常！建议点下方阅读防封全书或开启隔离容器。`,
+      `Local timezone ${tz} conflicts with US/EU proxies. Read the 2026 Anti-Ban Guide or isolate browser profile below.`
     );
   } else {
     badgeEl.className = "env-pill safe";
     badgeEl.textContent = tr(`🟢 指纹正常`, `🟢 Locale Matched`);
     detailEl.textContent = tr(
-      `当前时区 ${tz} · 语言 ${languages[0]}。可点下方「完整体检」核查机房 ASN。`,
+      `当前时区 ${tz} · 语言 ${languages[0]}。可点「完整体检」核查出口机房 ASN。`,
       `Timezone ${tz} · Locale ${languages[0]}. Click 'Full ASN Audit' to check datacenter IP score.`
     );
   }
@@ -94,9 +111,9 @@ async function loadState() {
     if (res.valid) {
       proActive = true;
       const badge = document.getElementById("tierBadge");
-      badge.textContent = tr("Pro 无限容量版", "Pro Unlimited");
+      badge.textContent = res.payload?.p === "*" ? tr("全站通票版", "All-Access Pro") : tr("Pro 无限版", "Pro Unlimited");
       badge.classList.add("pro");
-      document.getElementById("licenseMsg").textContent = tr(`✅ 已激活无限容量`, `✅ Unlimited Vault Active`);
+      document.getElementById("licenseMsg").textContent = tr(`✅ 已永久解锁无限容量`, `✅ Unlimited Vault Active`);
     }
   }
 }
@@ -146,7 +163,7 @@ async function captureActiveTab() {
   } catch (_err) {
     currentChat = {
       id: "/fallback",
-      title: "Claude Guard Local Backup",
+      title: "Chat Vault Local Backup",
       url: "https://claude.ai/chat/local",
       capturedAt: new Date().toISOString(),
       messages: [{ role: "user", text: "Backup project context locally." }],
@@ -155,11 +172,6 @@ async function captureActiveTab() {
     titleEl.textContent = currentChat.title;
   }
 }
-
-document.getElementById("openWebRadarLink").addEventListener("click", (e) => {
-  e.preventDefault();
-  chrome.tabs.create({ url: WEB_RADAR_URL });
-});
 
 document.getElementById("refreshBtn").addEventListener("click", captureActiveTab);
 
@@ -183,7 +195,7 @@ document.getElementById("stageVaultBtn").addEventListener("click", async () => {
   if (!proActive && vaultList.length >= FREE_VAULT_LIMIT) {
     document.getElementById("currentStatus").className = "status err";
     document.getElementById("currentStatus").textContent = tr(
-      `免费版最多保存 ${FREE_VAULT_LIMIT} 场会话，可先免费导出清空或激活下方无限版。`,
+      `免费版最多保存 ${FREE_VAULT_LIMIT} 场会话，可先免费导出清空或解锁下方无限版。`,
       `Free vault holds ${FREE_VAULT_LIMIT} chats. Export & clear for free, or unlock Unlimited below.`
     );
     return;
@@ -237,7 +249,7 @@ document.getElementById("verifyBtn").addEventListener("click", async () => {
     proActive = true;
     await chrome.storage.local.set({ opc1_token: token });
     const badge = document.getElementById("tierBadge");
-    badge.textContent = tr("Pro 无限容量版", "Pro Unlimited");
+    badge.textContent = res.payload?.p === "*" ? tr("全站通票版", "All-Access Pro") : tr("Pro 无限版", "Pro Unlimited");
     badge.classList.add("pro");
     msgEl.className = "status";
     msgEl.textContent = tr("✅ 已永久解锁无限容量归档！", "✅ Unlimited Vault unlocked forever!");
@@ -247,6 +259,7 @@ document.getElementById("verifyBtn").addEventListener("click", async () => {
   }
 });
 
+wireConfigLinks();
 applyI18nLabels();
 runLocalEnvCheck();
 loadState().then(captureActiveTab);

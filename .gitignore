@@ -2,3 +2,5 @@ node_modules/
 .DS_Store
 *.log
 PRIVATE_*.md
+release/anti-ban-playbook-2026/
+release/cashflow-service-pack/

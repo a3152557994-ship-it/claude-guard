@@ -344,6 +344,7 @@
         <span class="pill">100% 本地零上传 · 防封体检 + 防丢备份</span>
       </div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <a class="btn" style="background:linear-gradient(135deg,#3b82f6,#2563eb);color:#fff;border-color:transparent;" href="./claude-anti-ban-playbook-2026.html">📖 免费看《2026 防封与封后退款全书》</a>
         <a class="btn" href="./downloads/claude-guard-mv3.zip" download>🧩 下载 Chrome/Edge 防丢备份插件 (.zip)</a>
         <a class="btn btn-amber" href="./downloads/claude-code-kit.zip" download>⚡ 下载 Claude Code 不断流切换包 (.zip)</a>
       </div>
@@ -468,8 +469,9 @@
             </p>
           </div>
           <div class="btn-row">
-            <a id="affProxyBtn" class="btn btn-amber" href="https://proxy-seller.com/?partner=CLAUDEGUARD" target="_blank" rel="noopener">🌐 获取独享静态住宅 ISP IP →</a>
-            <a id="affBrowserBtn" class="btn" href="https://www.adspower.com/share?code=claudeguard" target="_blank" rel="noopener">🔒 下载 AdsPower 隔离环境 →</a>
+            <a id="affBrowserBtn" class="btn btn-amber" href="https://www.adspower.com/" target="_blank" rel="noopener">🔒 下载 AdsPower 隔离环境 →</a>
+            <a id="affShareBtn" class="btn btn-emerald" href="https://nf.video/" target="_blank" rel="noopener">🛡️ 银河录像局 (带官方质保) →</a>
+            <a id="affProxyBtn" class="btn" href="https://proxy-seller.com/" target="_blank" rel="noopener">🌐 独享静态住宅 IP →</a>
           </div>
         </div>
 
@@ -498,8 +500,9 @@
             </p>
           </div>
           <div class="btn-row">
-            <a class="btn btn-amber" href="./downloads/claude-guard-mv3.zip" download>🧩 下载 Chrome/Edge 插件 (.zip)</a>
-            <a id="buyProWebBtn" class="btn btn-rose" href="#">🔑 获取 ¥15 终身买断激活码</a>
+            <a class="btn btn-amber" href="./downloads/claude-guard-mv3.zip" download>🧩 下载 Chrome/Edge 插件 v1.2</a>
+            <a id="buyProWebBtn" class="btn btn-rose" href="#checkout-single">🔑 ¥15 单品码</a>
+            <a id="buyBundleWebBtn" class="btn" style="background:linear-gradient(135deg,#3b82f6,#2563eb);color:#fff;border-color:transparent;" href="#checkout-bundle">🎁 ¥39 解锁全站16款工具通票</a>
           </div>
         </div>
       </div>
@@ -533,6 +536,7 @@
       <pre>curl -fsSL https://a3152557994-ship-it.github.io/claude-guard/install.sh | bash</pre>
       <div style="margin-top:16px;font-size:14px;font-weight:700;color:#fbbf24;">📚 深度排查与零封号配置专题指南：</div>
       <ul style="margin:8px 0 0;padding-left:20px;line-height:1.9;font-size:13.5px;">
+        <li><a href="./claude-anti-ban-playbook-2026.html" style="color:#fbbf24;text-decoration:none;font-weight:700;">🔥 2026 Claude 防封号、美区免税州礼品卡订阅与封后退款自救实战全书 (含 PDF 离线版下载)</a></li>
         <li><a href="./claude-account-banned-fix.html" style="color:#38bdf8;text-decoration:none;font-weight:600;">Claude 账号被封 (Account Suspended / Disabled) 原因自查、聊天记录抢救与防封指南</a></li>
         <li><a href="./claude-code-bedrock-vertex-setup.html" style="color:#38bdf8;text-decoration:none;font-weight:600;">Claude Code 接入 AWS Bedrock 与 Google Vertex AI 零封号配置教程 (含 settings.json)</a></li>
         <li><a href="./cc-switch-multi-provider-guide.html" style="color:#38bdf8;text-decoration:none;font-weight:600;">cc-switch 多源切换教程：Claude Code 遭遇 5 小时限流如何 1 秒切备用源不断活</a></li>
@@ -565,6 +569,36 @@
     </div>
   </div>
 
+  <!-- 三档秒选下单弹窗（告别死板 mailto，支持一键复制口令/联系号） -->
+  <div id="checkoutModal" style="display:none;position:fixed;inset:0;background:rgba(3,7,18,0.86);z-index:1000;align-items:center;justify-content:center;padding:18px;">
+    <div class="modal-inner" style="max-width:540px;text-align:left;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <strong style="font-size:16px;">⚡ 选择方案 · 获取离线永久激活码 / 远程代配</strong>
+        <button id="closeCheckoutBtn" class="btn" style="padding:4px 10px;font-size:12px;" type="button">关闭</button>
+      </div>
+      <div style="display:grid;gap:8px;margin-bottom:12px;">
+        <label id="planCardSingle" style="display:block;border:1px solid var(--border);border-radius:10px;padding:10px 12px;cursor:pointer;background:#0f172a;">
+          <input type="radio" name="opcPlan" value="single" /> <strong>¥15 / $4.99 单品买断</strong> — 永久解锁本插件无限容量本地归档 + 批量恢复包
+        </label>
+        <label id="planCardBundle" style="display:block;border:2px solid #3b82f6;border-radius:10px;padding:10px 12px;cursor:pointer;background:rgba(37,99,235,0.14);">
+          <input type="radio" name="opcPlan" value="bundle" checked /> <strong>🎁 ¥39 / $14.99 全站16款工具通票（最划算推荐）</strong> — 一枚 <code>OPC1.</code> 主密钥永久解锁本插件 + OPC 全部 16 款微工具 Pro 能力
+        </label>
+        <label id="planCardRemote" style="display:block;border:1px solid #10b981;border-radius:10px;padding:10px 12px;cursor:pointer;background:rgba(16,185,129,0.10);">
+          <input type="radio" name="opcPlan" value="remote" /> <strong>🧑‍💻 ¥168 / 次 工程师 1对1 远程部署</strong> — 20 分钟配通 AWS Bedrock / Google Vertex AI 100% 永不封号通道 + 5源秒切包（不通全退）
+        </label>
+      </div>
+      <div style="background:#030712;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:12.5px;color:#cbd5e1;line-height:1.6;">
+        <div>📮 <strong>极速发码 / 预约通道</strong>：<code>3152557994@qq.com</code>（支持直接添加 QQ <code>3152557994</code> 或发邮件秒回发码）</div>
+        <div id="orderSnippetPreview" style="color:#fbbf24;margin-top:4px;font-family:monospace;"></div>
+      </div>
+      <div class="btn-row" style="margin-top:12px;">
+        <button id="copyOrderBtn" class="btn btn-amber" type="button">📋 一键复制 QQ号 + 下单口令</button>
+        <button id="sendOrderMailBtn" class="btn btn-emerald" type="button">✉️ 一键唤起邮件发送</button>
+      </div>
+      <div id="checkoutCopyFeedback" style="font-size:12px;color:#34d399;margin-top:8px;"></div>
+    </div>
+  </div>
+
   <script type="module">
     import {
       evaluateClaudeRisk,
@@ -584,31 +618,100 @@
       webrtcLeakedIps: [],
     };
 
-    // Wire affiliate & mail links from central config
+    // Wire affiliate & checkout modal from central config
     document.getElementById("affProxyBtn").href = MONETIZATION_CONFIG.residentialProxyUrl;
     document.getElementById("affBrowserBtn").href = MONETIZATION_CONFIG.antidetectBrowserUrl;
+    document.getElementById("affShareBtn").href = MONETIZATION_CONFIG.managedShareUrl;
 
-    function openOrderMail(subjectText, bodyText) {
-      const subject = encodeURIComponent(subjectText);
-      const body = encodeURIComponent(bodyText);
-      window.location.href = `mailto:${MONETIZATION_CONFIG.orderEmail}?cc=${MONETIZATION_CONFIG.backupEmail}&subject=${subject}&body=${body}`;
+    const checkoutModal = document.getElementById("checkoutModal");
+    const snippetEl = document.getElementById("orderSnippetPreview");
+    const feedbackEl = document.getElementById("checkoutCopyFeedback");
+
+    const PLAN_META = {
+      single: {
+        subject: "[购买激活码] Claude Guard 单品终身买断 (¥15 / $4.99)",
+        snippet: "购买口令：Claude Guard 单品终身码 (¥15) ｜ 联系 QQ/邮箱：3152557994@qq.com",
+      },
+      bundle: {
+        subject: "[购买全通票] OPC 16款工具终身通票 + Claude Guard 无限版 (¥39 / $14.99)",
+        snippet: "购买口令：OPC 16合1全站终身通票 (¥39) ｜ 联系 QQ/邮箱：3152557994@qq.com",
+      },
+      remote: {
+        subject: "[预约远程部署] AWS Bedrock / Vertex AI 零封号企业通道代配 (¥168)",
+        snippet: "预约口令：Bedrock/Vertex 20分钟零封号远程部署 (¥168·不通全退) ｜ 联系 QQ/邮箱：3152557994@qq.com",
+      },
+    };
+
+    function getSelectedPlan() {
+      const checked = document.querySelector('input[name="opcPlan"]:checked');
+      return checked ? checked.value : "bundle";
     }
+
+    function refreshOrderPreview() {
+      const p = getSelectedPlan();
+      snippetEl.textContent = PLAN_META[p].snippet;
+      feedbackEl.textContent = "";
+    }
+
+    function openCheckoutModal(planKey = "bundle") {
+      if (MONETIZATION_CONFIG.xianyuServiceUrl && planKey === "remote") {
+        window.open(MONETIZATION_CONFIG.xianyuServiceUrl, "_blank", "noopener");
+        return;
+      }
+      const radio = document.querySelector(`input[name="opcPlan"][value="${planKey}"]`);
+      if (radio) radio.checked = true;
+      refreshOrderPreview();
+      checkoutModal.style.display = "flex";
+    }
+
+    document.querySelectorAll('input[name="opcPlan"]').forEach((r) =>
+      r.addEventListener("change", refreshOrderPreview)
+    );
+
+    document.getElementById("closeCheckoutBtn").addEventListener("click", () => {
+      checkoutModal.style.display = "none";
+    });
+
+    document.getElementById("copyOrderBtn").addEventListener("click", async () => {
+      const p = getSelectedPlan();
+      try {
+        await navigator.clipboard.writeText(PLAN_META[p].snippet);
+        feedbackEl.textContent = "✅ 已复制 QQ号 (3152557994) 与下单口令！直接打开 QQ / 微信 / 邮箱粘贴发送即可秒领激活码。";
+      } catch (_e) {
+        feedbackEl.textContent = "请手动复制联系邮箱/QQ：3152557994@qq.com";
+      }
+    });
+
+    document.getElementById("sendOrderMailBtn").addEventListener("click", () => {
+      const p = getSelectedPlan();
+      const subject = encodeURIComponent(PLAN_META[p].subject);
+      const body = encodeURIComponent(`${PLAN_META[p].snippet}\n我的接收邮箱 / 系统环境：`);
+      window.location.href = `mailto:${MONETIZATION_CONFIG.orderEmail}?cc=${MONETIZATION_CONFIG.backupEmail}&subject=${subject}&body=${body}`;
+    });
 
     document.getElementById("buyProWebBtn").addEventListener("click", (e) => {
       e.preventDefault();
-      openOrderMail(
-        "[购买激活码] Claude Guard Pro 终身买断 (¥15 / $4.99)",
-        "你好！我想购买 Claude Guard (claude-guard) Pro 终身买断激活码 (¥15 / $4.99)。\n接收激活码邮箱："
-      );
+      openCheckoutModal("single");
+    });
+
+    document.getElementById("buyBundleWebBtn").addEventListener("click", (e) => {
+      e.preventDefault();
+      openCheckoutModal("bundle");
     });
 
     document.getElementById("bookRemoteBtn").addEventListener("click", (e) => {
       e.preventDefault();
-      openOrderMail(
-        "[咨询配置] Claude Code 零封号 Bedrock/多源切换配置包",
-        "你好！我想获取 Claude Code 不断流配置包 / 预约远程代配指导。\n我的操作系统 (macOS / Windows)：\n联系邮箱或微信号："
-      );
+      openCheckoutModal("remote");
     });
+
+    function checkHashCheckout() {
+      const h = (window.location.hash || "").toLowerCase();
+      if (h.includes("checkout-single")) openCheckoutModal("single");
+      else if (h.includes("checkout-remote")) openCheckoutModal("remote");
+      else if (h.includes("checkout")) openCheckoutModal("bundle");
+    }
+    window.addEventListener("hashchange", checkHashCheckout);
+    setTimeout(checkHashCheckout, 150);
 
     async function detectWebRtcLeaks() {
       const ips = new Set();
