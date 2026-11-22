@@ -4,3 +4,4 @@ node_modules/
 PRIVATE_*.md
 release/anti-ban-playbook-2026/
 release/cashflow-service-pack/
+release/browser-store-pack/*.md
