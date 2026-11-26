@@ -760,11 +760,18 @@ fs.writeFileSync(p, JSON.stringify(cfg, null, 2) + "\\n");
         "OEBPS/ch08_vault_recovery.xhtml",
         "OEBPS/ch09_appendix.xhtml",
     ]
+    import re
     toc_attr = 'epub:type="toc"'
-    sections_html = "\n".join(
-        f'<section class="chap">{chapter_bodies[k].replace(toc_attr, "")}</section>'
-        for k in ordered_files if k in chapter_bodies
-    )
+    sec_list = []
+    for k in ordered_files:
+        if k not in chapter_bodies:
+            continue
+        stem = Path(k).stem
+        b_html = chapter_bodies[k].replace(toc_attr, "")
+        b_html = re.sub(r'<li>\s*<a href="cover\.xhtml">[^<]*</a>\s*</li>', "", b_html)
+        b_html = re.sub(r'href="(ch\d+_[^"]+)\.xhtml"', r'href="#\1"', b_html)
+        sec_list.append(f'<section class="chap" id="{stem}">{b_html}</section>')
+    sections_html = "\n".join(sec_list)
     full_html = f"""<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
