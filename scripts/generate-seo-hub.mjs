@@ -532,6 +532,7 @@ if (!indexHtml.includes("claude-account-banned-fix.html")) {
 // 6. Update docs/sitemap.xml with all pages
 const allUrls = [
   `${BASE_URL}/`,
+  `${BASE_URL}/claude-anti-ban-playbook-2026.html`,
   ...ARTICLES.map((a) => `${BASE_URL}/${a.slug}`),
   `${BASE_URL}/llms.txt`,
   `${BASE_URL}/llms-full.txt`,
