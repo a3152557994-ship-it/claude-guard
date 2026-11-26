@@ -459,19 +459,19 @@
       <p style="color:var(--muted);font-size:14px;margin-top:0;">远离闲鱼必翻车的黑卡代充与多人拼车号，按你的真实使用场景选最省钱稳妥的一条：</p>
 
       <div class="grid-3">
-        <!-- 方案 A：原生静态住宅 IP + 防关联浏览器 -->
+        <!-- 方案 A：官方合规企业云 + 自营算力防护矩阵 -->
         <div class="card solution-card">
           <div>
-            <div class="tag-top">适合：网页版 Pro / Max 独享党</div>
-            <h3 style="margin:4px 0 8px;font-size:17px;">方案 A：双 ISP 静态原生住宅 IP + 独立指纹容器</h3>
+            <div class="tag-top">适合：企业合规 / 高强度重度用户</div>
+            <h3 style="margin:4px 0 8px;font-size:17px;">方案 A：AWS Bedrock / Vertex AI 官方云 + 算力熔断</h3>
             <p style="color:var(--muted);font-size:13px;">
-              彻底解决「万人共用机场机房 ASN」与「Asia/Shanghai 时区跨洲错位」两大封号元凶。用静态美/英/新原生家庭宽带 IP 搭配防关联浏览器，把时区、语言、WebRTC 与出口 IP 100% 锁定对齐。
+              彻底告别共享机房 ASN 与个人号连坐风控。直接对接亚马逊 AWS Bedrock 或 Google Cloud Vertex AI 官方企业通道，并配合自营 <strong>Agent-Guard</strong> 实时锁定 Token 预算防爆表。
             </p>
           </div>
           <div class="btn-row">
-            <a id="affBrowserBtn" class="btn btn-amber" href="https://www.adspower.com/" target="_blank" rel="noopener">🔒 下载 AdsPower 隔离环境 →</a>
-            <a id="affShareBtn" class="btn btn-emerald" href="https://nf.video/" target="_blank" rel="noopener">🛡️ 银河录像局 (带官方质保) →</a>
-            <a id="affProxyBtn" class="btn" href="https://proxy-seller.com/" target="_blank" rel="noopener">🌐 独享静态住宅 IP →</a>
+            <a id="selfBedrockDocBtn" class="btn btn-amber" href="https://docs.anthropic.com/en/docs/claude-code/amazon-bedrock" target="_blank" rel="noopener">☁️ AWS Bedrock 官方文档 →</a>
+            <a id="selfVertexDocBtn" class="btn btn-emerald" href="https://docs.anthropic.com/en/docs/claude-code/google-vertex-ai" target="_blank" rel="noopener">🌐 Google Vertex 官方文档 →</a>
+            <a id="selfAgentGuardBtn" class="btn" href="https://a3152557994-ship-it.github.io/agent-guard/" target="_blank" rel="noopener">⚡ Agent-Guard 算力熔断器 →</a>
           </div>
         </div>
 
@@ -501,8 +501,8 @@
           </div>
           <div class="btn-row">
             <a class="btn btn-amber" href="./downloads/claude-guard-mv3.zip" download>🧩 下载 Chrome/Edge 插件 v1.2</a>
-            <a id="buyProWebBtn" class="btn btn-rose" href="#checkout-single">🔑 ¥15 单品码</a>
-            <a id="buyBundleWebBtn" class="btn" style="background:linear-gradient(135deg,#3b82f6,#2563eb);color:#fff;border-color:transparent;" href="#checkout-bundle">🎁 ¥39 解锁全站16款工具通票</a>
+            <a id="buyProWebBtn" class="btn btn-rose" href="#checkout-single">🔑 ¥15 / $4.99 单品码</a>
+            <a id="buyBundleWebBtn" class="btn" style="background:linear-gradient(135deg,#3b82f6,#2563eb);color:#fff;border-color:transparent;" href="#checkout-bundle">🎁 ¥39 / $14.99 全站通票</a>
           </div>
         </div>
       </div>
@@ -569,33 +569,46 @@
     </div>
   </div>
 
-  <!-- 三档秒选下单弹窗（告别死板 mailto，支持一键复制口令/联系号） -->
+  <!-- 统一收银与 OPC1. 当场 WebCrypto Ed25519 验签秒解锁弹窗 -->
   <div id="checkoutModal" style="display:none;position:fixed;inset:0;background:rgba(3,7,18,0.86);z-index:1000;align-items:center;justify-content:center;padding:18px;">
-    <div class="modal-inner" style="max-width:540px;text-align:left;">
+    <div class="modal-inner" style="max-width:560px;text-align:left;max-height:92vh;overflow-y:auto;">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-        <strong style="font-size:16px;">⚡ 选择方案 · 获取离线永久激活码 / 远程代配</strong>
+        <strong style="font-size:16px;">⚡ 统一收银与离线激活台 · 秒级验签解锁</strong>
         <button id="closeCheckoutBtn" class="btn" style="padding:4px 10px;font-size:12px;" type="button">关闭</button>
       </div>
       <div style="display:grid;gap:8px;margin-bottom:12px;">
         <label id="planCardSingle" style="display:block;border:1px solid var(--border);border-radius:10px;padding:10px 12px;cursor:pointer;background:#0f172a;">
-          <input type="radio" name="opcPlan" value="single" /> <strong>¥15 / $4.99 单品买断</strong> — 永久解锁本插件无限容量本地归档 + 批量恢复包
+          <input type="radio" name="opcPlan" value="single" /> <strong>¥15 / $4.99 单品买断</strong>（<code>p="claude-guard"</code>）— 永久解锁本插件无限容量本地归档 + AES-256-GCM 加密导出 + 批量恢复包
         </label>
         <label id="planCardBundle" style="display:block;border:2px solid #3b82f6;border-radius:10px;padding:10px 12px;cursor:pointer;background:rgba(37,99,235,0.14);">
-          <input type="radio" name="opcPlan" value="bundle" checked /> <strong>🎁 ¥39 / $14.99 全站16款工具通票（最划算推荐）</strong> — 一枚 <code>OPC1.</code> 主密钥永久解锁本插件 + OPC 全部 16 款微工具 Pro 能力
+          <input type="radio" name="opcPlan" value="bundle" checked /> <strong>🎁 ¥39 / $14.99 全站通票（最划算推荐）</strong>（<code>p="*"</code>）— 一枚 <code>OPC1.</code> 通票主密钥永久解锁本插件 + OPC 全站所有微工具 Pro 能力
         </label>
         <label id="planCardRemote" style="display:block;border:1px solid #10b981;border-radius:10px;padding:10px 12px;cursor:pointer;background:rgba(16,185,129,0.10);">
-          <input type="radio" name="opcPlan" value="remote" /> <strong>🧑‍💻 ¥168 / 次 工程师 1对1 远程部署</strong> — 20 分钟配通 AWS Bedrock / Google Vertex AI 100% 永不封号通道 + 5源秒切包（不通全退）
+          <input type="radio" name="opcPlan" value="remote" /> <strong>🧑‍💻 ¥168 / 次 工程师 1对1 远程人工部署服务</strong> — 20 分钟配通 AWS Bedrock / Google Vertex AI 100% 永不封号企业通道 + 5源秒切包（不通全退）
         </label>
       </div>
       <div style="background:#030712;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:12.5px;color:#cbd5e1;line-height:1.6;">
-        <div>📮 <strong>极速发码 / 预约通道</strong>：<code>3152557994@qq.com</code>（支持直接添加 QQ <code>3152557994</code> 或发邮件秒回发码）</div>
+        <div>📮 <strong>客服极速发码 / 预约通道</strong>：客服 QQ <code>3152557994</code> ｜ 国内邮箱 <a href="mailto:3152557994@qq.com" style="color:#fbbf24;">3152557994@qq.com</a> ｜ 海外 <a href="mailto:a3152557994@gmail.com" style="color:#38bdf8;">a3152557994@gmail.com</a></div>
         <div id="orderSnippetPreview" style="color:#fbbf24;margin-top:4px;font-family:monospace;"></div>
       </div>
-      <div class="btn-row" style="margin-top:12px;">
-        <button id="copyOrderBtn" class="btn btn-amber" type="button">📋 一键复制 QQ号 + 下单口令</button>
-        <button id="sendOrderMailBtn" class="btn btn-emerald" type="button">✉️ 一键唤起邮件发送</button>
+      <div class="btn-row" style="margin-top:10px;">
+        <button id="copyOrderBtn" class="btn btn-amber" type="button">📋 一键复制订单口令</button>
+        <button id="copyQqOnlyBtn" class="btn" type="button">💬 复制客服 QQ (3152557994)</button>
+        <button id="sendOrderMailBtn" class="btn btn-emerald" type="button">📮 发信至 3152557994@qq.com</button>
+        <button id="sendGmailBtn" class="btn" type="button">📧 Overseas Gmail</button>
       </div>
-      <div id="checkoutCopyFeedback" style="font-size:12px;color:#34d399;margin-top:8px;"></div>
+      <div id="checkoutCopyFeedback" style="font-size:12px;color:#34d399;margin-top:6px;"></div>
+
+      <hr style="border:none;border-top:1px solid var(--border);margin:14px 0;" />
+
+      <div>
+        <div style="font-size:13px;font-weight:700;color:#f8fafc;margin-bottom:6px;">🔑 已购 <code>OPC1.</code> 激活码？当场 WebCrypto Ed25519 验签秒解锁：</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <input type="text" id="modalLicenseInput" placeholder="粘贴 OPC1.<payload>.<sig> 当场秒验签解锁..." style="flex:1;margin-bottom:0;min-width:210px;" />
+          <button id="modalVerifyBtn" class="btn btn-emerald" type="button">⚡ 秒级验签解锁</button>
+        </div>
+        <div id="modalLicenseStatus" style="font-size:12.5px;margin-top:6px;font-weight:700;"></div>
+      </div>
     </div>
   </div>
 
@@ -618,10 +631,10 @@
       webrtcLeakedIps: [],
     };
 
-    // Wire affiliate & checkout modal from central config
-    document.getElementById("affProxyBtn").href = MONETIZATION_CONFIG.residentialProxyUrl;
-    document.getElementById("affBrowserBtn").href = MONETIZATION_CONFIG.antidetectBrowserUrl;
-    document.getElementById("affShareBtn").href = MONETIZATION_CONFIG.managedShareUrl;
+    // Wire self-owned matrix & official enterprise cloud links from central config
+    document.getElementById("selfBedrockDocBtn").href = MONETIZATION_CONFIG.awsBedrockDocsUrl;
+    document.getElementById("selfVertexDocBtn").href = MONETIZATION_CONFIG.gcpVertexDocsUrl;
+    document.getElementById("selfAgentGuardBtn").href = MONETIZATION_CONFIG.agentGuardUrl;
 
     const checkoutModal = document.getElementById("checkoutModal");
     const snippetEl = document.getElementById("orderSnippetPreview");
@@ -630,15 +643,15 @@
     const PLAN_META = {
       single: {
         subject: "[购买激活码] Claude Guard 单品终身买断 (¥15 / $4.99)",
-        snippet: "购买口令：Claude Guard 单品终身码 (¥15) ｜ 联系 QQ/邮箱：3152557994@qq.com",
+        snippet: "下单口令：Claude Guard 单品终身码 (¥15 / $4.99) ｜ 客服QQ：3152557994 ｜ 邮箱：3152557994@qq.com",
       },
       bundle: {
-        subject: "[购买全通票] OPC 16款工具终身通票 + Claude Guard 无限版 (¥39 / $14.99)",
-        snippet: "购买口令：OPC 16合1全站终身通票 (¥39) ｜ 联系 QQ/邮箱：3152557994@qq.com",
+        subject: "[购买全站通票] OPC 全站通票 p=* 终身买断 (¥39 / $14.99)",
+        snippet: "下单口令：OPC 全站通票主密钥 p=* (¥39 / $14.99) ｜ 客服QQ：3152557994 ｜ 邮箱：3152557994@qq.com",
       },
       remote: {
-        subject: "[预约远程部署] AWS Bedrock / Vertex AI 零封号企业通道代配 (¥168)",
-        snippet: "预约口令：Bedrock/Vertex 20分钟零封号远程部署 (¥168·不通全退) ｜ 联系 QQ/邮箱：3152557994@qq.com",
+        subject: "[预约远程部署] AWS Bedrock / Vertex AI 零封号企业通道 1对1 人工代配 (¥168)",
+        snippet: "预约口令：Bedrock/Vertex 20分钟零封号远程人工部署 (¥168·不通全退) ｜ 客服QQ：3152557994 ｜ 邮箱：3152557994@qq.com",
       },
     };
 
@@ -676,17 +689,34 @@
       const p = getSelectedPlan();
       try {
         await navigator.clipboard.writeText(PLAN_META[p].snippet);
-        feedbackEl.textContent = "✅ 已复制 QQ号 (3152557994) 与下单口令！直接打开 QQ / 微信 / 邮箱粘贴发送即可秒领激活码。";
+        feedbackEl.textContent = "✅ 已复制订单口令！直接添加客服 QQ (3152557994) 或发邮件粘贴发送即可秒领激活码。";
       } catch (_e) {
         feedbackEl.textContent = "请手动复制联系邮箱/QQ：3152557994@qq.com";
       }
     });
 
-    document.getElementById("sendOrderMailBtn").addEventListener("click", () => {
+    document.getElementById("copyQqOnlyBtn").addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText("3152557994");
+        feedbackEl.textContent = "✅ 已复制客服 QQ：3152557994（邮箱 3152557994@qq.com / a3152557994@gmail.com）";
+      } catch (_e) {
+        feedbackEl.textContent = "客服 QQ：3152557994";
+      }
+    });
+
+    function openOrderMail(targetEmail) {
       const p = getSelectedPlan();
       const subject = encodeURIComponent(PLAN_META[p].subject);
       const body = encodeURIComponent(`${PLAN_META[p].snippet}\n我的接收邮箱 / 系统环境：`);
-      window.location.href = `mailto:${MONETIZATION_CONFIG.orderEmail}?cc=${MONETIZATION_CONFIG.backupEmail}&subject=${subject}&body=${body}`;
+      window.location.href = `mailto:${targetEmail}?subject=${subject}&body=${body}`;
+    }
+
+    document.getElementById("sendOrderMailBtn").addEventListener("click", () => {
+      openOrderMail(MONETIZATION_CONFIG.orderEmail);
+    });
+
+    document.getElementById("sendGmailBtn").addEventListener("click", () => {
+      openOrderMail(MONETIZATION_CONFIG.backupEmail);
     });
 
     document.getElementById("buyProWebBtn").addEventListener("click", (e) => {
@@ -1025,19 +1055,46 @@
       a.click();
     });
 
-    // Web License & Demo Migration Export
-    document.getElementById("webVerifyBtn").addEventListener("click", async () => {
-      const token = document.getElementById("webLicenseInput").value.trim();
+    // Web & In-Modal License Instant Unlock + Demo Migration Export
+    async function verifyAndActivateWebLicense(rawToken, silent = false) {
+      const token = String(rawToken || "").trim();
       const msgEl = document.getElementById("webLicenseMsg");
+      const modalMsgEl = document.getElementById("modalLicenseStatus");
+      const badgeEl = document.getElementById("webTierBadge");
       const res = await verifyLicenseUniversal(token, "claude-guard");
       if (res.valid) {
+        localStorage.setItem("claude_guard_web_opc1", token);
+        document.getElementById("webLicenseInput").value = token;
+        document.getElementById("modalLicenseInput").value = token;
+        const okText = `✅ Ed25519 离线验签通过！已永久解锁 (${res.payload.p} · ${res.payload.e || "Pro"})`;
         msgEl.style.color = "#10b981";
-        msgEl.textContent = `✅ Ed25519 离线验签通过！产品标识: ${res.payload.p} · 授权邮箱: ${res.payload.e}`;
-      } else {
+        msgEl.textContent = okText;
+        modalMsgEl.style.color = "#10b981";
+        modalMsgEl.textContent = okText;
+        badgeEl.textContent = res.payload.p === "*" ? "✨ 全站通票已激活 (p=*)" : "✅ Pro 终身版已激活";
+        badgeEl.style.background = "rgba(16,185,129,0.2)";
+        badgeEl.style.color = "#34d399";
+      } else if (!silent) {
+        const errText = `❌ 激活码无效 (${res.reason})。请核对是否完整复制了 OPC1. 开头的激活码。`;
         msgEl.style.color = "#f43f5e";
-        msgEl.textContent = `❌ 激活码无效 (${res.reason})。请核对是否完整复制了 OPC1. 开头的激活码。`;
+        msgEl.textContent = errText;
+        modalMsgEl.style.color = "#f43f5e";
+        modalMsgEl.textContent = errText;
       }
+    }
+
+    document.getElementById("webVerifyBtn").addEventListener("click", () => {
+      verifyAndActivateWebLicense(document.getElementById("webLicenseInput").value, false);
     });
+
+    document.getElementById("modalVerifyBtn").addEventListener("click", () => {
+      verifyAndActivateWebLicense(document.getElementById("modalLicenseInput").value, false);
+    });
+
+    const savedWebToken = localStorage.getItem("claude_guard_web_opc1");
+    if (savedWebToken) {
+      verifyAndActivateWebLicense(savedWebToken, true);
+    }
 
     document.getElementById("webDemoExportBtn").addEventListener("click", () => {
       const bundle = buildMigrationBundle([

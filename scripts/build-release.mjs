@@ -105,10 +105,19 @@ const dlDir = path.join(ROOT, "docs", "downloads");
 fs.mkdirSync(distDir, { recursive: true });
 fs.mkdirSync(dlDir, { recursive: true });
 
-// Sync 2026 Anti-Ban PDF into docs/downloads/
-const playbookPdfSrc = path.join(ROOT, "release", "anti-ban-playbook-2026", "Claude-2026防封号与退款自救实战全书.pdf");
-if (fs.existsSync(playbookPdfSrc)) {
-  fs.copyFileSync(playbookPdfSrc, path.join(dlDir, "Claude-2026-Anti-Ban-Playbook.pdf"));
+// Sync full 2026 Anti-Ban Ebook PDF (<20MB) into docs/downloads/Claude-2026-Anti-Ban-Playbook.pdf
+const fullEbookPdfSrc = path.join(
+  ROOT,
+  "release",
+  "ebook-publishing-pack",
+  "不掉号_Claude防封号与封后退费自救全书_2026完整版.pdf",
+);
+if (fs.existsSync(fullEbookPdfSrc)) {
+  const pdfStat = fs.statSync(fullEbookPdfSrc);
+  if (pdfStat.size >= 20 * 1024 * 1024) {
+    throw new Error(`PDF exceeds 20MB limit: ${pdfStat.size} bytes`);
+  }
+  fs.copyFileSync(fullEbookPdfSrc, path.join(dlDir, "Claude-2026-Anti-Ban-Playbook.pdf"));
 }
 
 const mv3ZipDist = path.join(distDir, "claude-guard-mv3.zip");

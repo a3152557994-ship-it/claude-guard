@@ -149,8 +149,8 @@ export function evaluateClaudeRisk(input = {}) {
       severity: "critical",
       title: `系统时区 (${timezone}) 与出口国家 (${cc}) 跨洲错位`,
       detail: "客户端与网页 JS 可直接读取 Intl 系统时区。挂着欧美节点却暴露东八区 Asia/Shanghai 时区，是识别跨境代充/共享号的典型特征。",
-      fix: "使用防关联指纹浏览器（如 AdsPower）自动将环境时区、WebGL 与出口 IP 所在地强制对齐，或改用新加坡/日本原生住宅 IP。",
-      actionType: "antidetect-browser",
+      fix: "使用独立浏览器 Profile 容器将时区、语言与出口 IP 归属地对齐，或改走 AWS Bedrock / Google Cloud Vertex AI 合规企业通道。",
+      actionType: "cc-kit",
     });
   } else if (CN_TIMEZONES.has(timezone)) {
     penalty += 15;
@@ -522,4 +522,211 @@ export async function verifyLicenseUniversal(token, expectedProduct = "claude-gu
   } catch (err) {
     return { valid: false, reason: "VERIFY_ERROR", message: err.message };
   }
+}
+
+/**
+ * Parse key=value output from `https://cloudflare.com/cdn-cgi/trace`
+ */
+export function parseCloudflareTrace(rawText) {
+  const map = {};
+  for (const line of String(rawText || "").split(/\r?\n/)) {
+    const idx = line.indexOf("=");
+    if (idx > 0) {
+      map[line.slice(0, idx).trim()] = line.slice(idx + 1).trim();
+    }
+  }
+  return {
+    ip: map.ip || "",
+    countryCode: (map.loc || "").toUpperCase(),
+    colo: map.colo || "",
+  };
+}
+
+function isDatacenterAsnOrOrg(asn = "", org = "", isp = "") {
+  const normAsn = String(asn || "").toUpperCase().trim().split(/\s+/)[0];
+  const combined = `${normAsn} ${org} ${isp}`.toLowerCase();
+  return (
+    DATACENTER_ASNS.has(normAsn) ||
+    DATACENTER_KEYWORDS.some((kw) => combined.includes(kw)) ||
+    /\b(hosting|datacenter|data center|cloud|vps|dedi|colocation|proxy)\b/i.test(combined)
+  );
+}
+
+async function fetchWithTimeout(fetchImpl, url, timeoutMs, acceptJson = true) {
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), timeoutMs);
+  try {
+    const res = await fetchImpl(url, {
+      method: "GET",
+      headers: acceptJson ? { Accept: "application/json" } : { Accept: "text/plain" },
+      signal: ctrl.signal,
+    });
+    if (!res || !res.ok) return null;
+    return acceptJson ? await res.json() : await res.text();
+  } catch (_err) {
+    return null;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+/**
+ * Real-time Exit IP, ASN, Country, and Datacenter vs Residential ISP probe with multi-route redundancy:
+ * 1) Primary: `https://ipwho.is/` (keyless CORS JSON with ASN + ISP + Org)
+ * 2) Secondary: `https://ipinfo.io/json` / `https://ipapi.co/json/` (CORS JSON with ASN + Org)
+ * 3) Tertiary: `https://cloudflare.com/cdn-cgi/trace` (CORS plaintext IP + country trace)
+ * 4) Offline fallback: returns `{ online: false, ip: "离线", source: "offline" }` without faking `"local"`.
+ */
+export async function probePublicExitNetwork(options = {}) {
+  const fetchImpl = options.fetchImpl || globalThis.fetch;
+  const timeoutMs = Number(options.timeoutMs) > 0 ? Number(options.timeoutMs) : 2600;
+
+  if (typeof fetchImpl !== "function") {
+    return {
+      online: false,
+      source: "offline",
+      ip: "离线",
+      asn: "",
+      org: "",
+      isp: "",
+      countryCode: "",
+      hosting: false,
+    };
+  }
+
+  // Route 1: ipwho.is
+  const who = await fetchWithTimeout(fetchImpl, "https://ipwho.is/", timeoutMs, true);
+  if (who && who.ip && who.success !== false) {
+    const asn = who.connection?.asn ? `AS${String(who.connection.asn).replace(/^AS/i, "")}` : "";
+    const org = who.connection?.org || who.connection?.isp || "";
+    const isp = who.connection?.isp || "";
+    const countryCode = String(who.country_code || "").toUpperCase();
+    const hosting = Boolean(who.security?.hosting || isDatacenterAsnOrOrg(asn, org, isp));
+    return {
+      online: true,
+      source: "ipwho.is",
+      ip: String(who.ip),
+      asn,
+      org,
+      isp,
+      countryCode,
+      hosting,
+    };
+  }
+
+  // Route 2: ipinfo.io/json (e.g. org: "AS16509 Amazon.com, Inc.")
+  const info = await fetchWithTimeout(fetchImpl, "https://ipinfo.io/json", timeoutMs, true);
+  if (info && info.ip) {
+    const rawOrg = String(info.org || "").trim();
+    const asnMatch = rawOrg.match(/^(AS\d+)\s*(.*)$/i);
+    const asn = asnMatch ? asnMatch[1].toUpperCase() : "";
+    const org = asnMatch ? asnMatch[2] || rawOrg : rawOrg;
+    const countryCode = String(info.country || "").toUpperCase();
+    const hosting = isDatacenterAsnOrOrg(asn, org, org);
+    return {
+      online: true,
+      source: "ipinfo.io",
+      ip: String(info.ip),
+      asn,
+      org,
+      isp: org,
+      countryCode,
+      hosting,
+    };
+  }
+
+  // Route 2b: ipapi.co/json/
+  const ipapi = await fetchWithTimeout(fetchImpl, "https://ipapi.co/json/", timeoutMs, true);
+  if (ipapi && ipapi.ip && !ipapi.error) {
+    const asn = ipapi.asn ? String(ipapi.asn).toUpperCase() : "";
+    const org = String(ipapi.org || "");
+    const countryCode = String(ipapi.country_code || "").toUpperCase();
+    const hosting = isDatacenterAsnOrOrg(asn, org, org);
+    return {
+      online: true,
+      source: "ipapi.co",
+      ip: String(ipapi.ip),
+      asn,
+      org,
+      isp: org,
+      countryCode,
+      hosting,
+    };
+  }
+
+  // Route 3: cloudflare.com/cdn-cgi/trace
+  const cfText = await fetchWithTimeout(fetchImpl, "https://cloudflare.com/cdn-cgi/trace", timeoutMs, false);
+  if (cfText) {
+    const parsed = parseCloudflareTrace(cfText);
+    if (parsed.ip) {
+      return {
+        online: true,
+        source: "cloudflare-trace",
+        ip: parsed.ip,
+        asn: "",
+        org: parsed.colo ? `Edge Colo ${parsed.colo}` : "",
+        isp: "",
+        countryCode: parsed.countryCode,
+        hosting: false,
+      };
+    }
+  }
+
+  return {
+    online: false,
+    source: "offline",
+    ip: "离线",
+    asn: "",
+    org: "",
+    isp: "",
+    countryCode: "",
+    hosting: false,
+  };
+}
+
+/**
+ * Encrypt Pro vault export locally using WebCrypto AES-256-GCM (`CGVAULT1.<saltB64>.<ivB64>.<ctB64>`)
+ */
+export async function encryptVaultMarkdown(markdownText, licenseToken) {
+  const subtle = globalThis.crypto?.subtle;
+  if (!subtle) throw new Error("WEBCRYPTO_UNAVAILABLE");
+  const salt = new Uint8Array(16);
+  const iv = new Uint8Array(12);
+  globalThis.crypto.getRandomValues(salt);
+  globalThis.crypto.getRandomValues(iv);
+
+  const keyMat = await subtle.importKey(
+    "raw",
+    new TextEncoder().encode(String(licenseToken || "claude-guard-pro")),
+    "PBKDF2",
+    false,
+    ["deriveKey"],
+  );
+  const aesKey = await subtle.deriveKey(
+    { name: "PBKDF2", salt, iterations: 100000, hash: "SHA-256" },
+    keyMat,
+    { name: "AES-GCM", length: 256 },
+    false,
+    ["encrypt"],
+  );
+  const ctBuf = await subtle.encrypt(
+    { name: "AES-GCM", iv },
+    aesKey,
+    new TextEncoder().encode(String(markdownText || "")),
+  );
+  const toB64 = (u8) =>
+    typeof Buffer !== "undefined"
+      ? Buffer.from(u8).toString("base64")
+      : btoa(String.fromCharCode(...u8));
+  return JSON.stringify(
+    {
+      format: "CGVAULT1-AES256GCM",
+      kdf: "PBKDF2-SHA256-100000",
+      salt: toB64(salt),
+      iv: toB64(iv),
+      ciphertext: toB64(new Uint8Array(ctBuf)),
+    },
+    null,
+    2,
+  );
 }

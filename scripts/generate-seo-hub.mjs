@@ -225,7 +225,7 @@ curl -fsSL ${BASE_URL}/install.sh | bash
     title: "Claude 防封网络环境指南：如何检测机房 ASN (AS13335) 与配置双 ISP 静态住宅 IP",
     description:
       "为什么用了代理还是被 Claude 封号？详解数据中心机房 ASN (Hosting) 与原生家庭宽带 (Residential ISP) 的底层区别，教你用 Claude Guard 10 秒检测 WebRTC 泄露与时区错位，并配置静态住宅 IP + 指纹浏览器隔离环境。",
-    keywords: "Claude静态住宅IP,IP纯净度检测,AS13335封号,WebRTC泄露检测,AdsPower配置Claude,原生住宅IP",
+    keywords: "Claude静态住宅IP,IP纯净度检测,AS13335封号,WebRTC泄露检测,独立浏览器隔离Claude,原生住宅IP",
     leadAnswer:
       "决定 Claude 网页端存活率的核心网络指标不是 ping 延迟，而是出口 IP 的 ASN 运营商属性（Residential ISP 原生家宽 vs Hosting 数据中心机房）以及浏览器本地时区、WebRTC 公网 IP 是否与出口 IP 归属地 100% 一致。",
     sections: [

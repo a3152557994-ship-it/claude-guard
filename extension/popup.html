@@ -30,8 +30,8 @@
     .badge { padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 600; background: #1e293b; color: #cbd5e1; border: 1px solid var(--border); }
     .badge.pro { background: rgba(16, 185, 129, 0.16); color: #34d399; border-color: rgba(16, 185, 129, 0.4); }
     .card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 10px; margin-bottom: 9px; }
-    .card-title { font-weight: 700; font-size: 12px; margin-bottom: 5px; display: flex; align-items: center; justify-content: space-between; }
-    .env-pill { display: inline-block; padding: 2px 7px; border-radius: 6px; font-size: 10.5px; font-weight: 600; }
+    .card-title { font-weight: 700; font-size: 12px; margin-bottom: 5px; display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+    .env-pill { display: inline-block; padding: 2px 7px; border-radius: 6px; font-size: 10.5px; font-weight: 600; white-space: nowrap; }
     .env-pill.safe { background: rgba(16, 185, 129, 0.16); color: #34d399; }
     .env-pill.warn { background: rgba(245, 158, 11, 0.18); color: #fbbf24; }
     .env-pill.crit { background: rgba(244, 63, 94, 0.18); color: #fb7185; }
@@ -55,18 +55,19 @@
     <span id="tierBadge" class="badge">Free (20 Vault Slots)</span>
   </div>
 
-  <!-- 1. Environment Check + Playbook + Isolate Remedy -->
+  <!-- 1. Real Exit IP / ASN / Datacenter Check + Self-Owned & Official Cloud Guides -->
   <div class="card">
     <div class="card-title">
-      <span id="lblEnvTitle">🔍 Environment Risk Monitor</span>
-      <span id="envBadge" class="env-pill warn">Checking...</span>
+      <span id="lblEnvTitle">🔍 Exit IP, ASN &amp; Env Monitor</span>
+      <span id="envBadge" class="env-pill warn">Probing IP...</span>
     </div>
-    <div id="envDetail" class="meta">Scanning local Intl timezone &amp; locale...</div>
+    <div id="envIpLine" style="font-size:11.3px;font-weight:600;color:#e2e8f0;margin-bottom:3px;">Detecting exit IP &amp; ASN...</div>
+    <div id="envDetail" class="meta">Scanning real exit ASN, residential/IDC status &amp; timezone...</div>
     <div class="actions">
-      <a id="openPlaybookLink" class="btn btn-blue" href="#" target="_blank" rel="noopener">📖 2026 Anti-Ban Guide</a>
-      <a id="affBrowserLink" class="btn btn-primary" href="#" target="_blank" rel="noopener">🔒 Isolate Timezone</a>
-      <a id="affShareLink" class="btn" href="#" target="_blank" rel="noopener">🛡️ Managed Pro</a>
-      <a id="openWebRadarLink" class="btn" href="#" target="_blank" rel="noopener">📡 Full ASN Audit</a>
+      <a id="openPlaybookLink" class="btn btn-blue" href="#" target="_blank" rel="noopener">📖 2026 Anti-Ban Book</a>
+      <a id="bedrockGuideLink" class="btn btn-primary" href="#" target="_blank" rel="noopener">☁️ Bedrock/Vertex Zero-Ban</a>
+      <a id="agentGuardLink" class="btn" href="#" target="_blank" rel="noopener">⚡ Agent-Guard Breaker</a>
+      <a id="openWebRadarLink" class="btn" href="#" target="_blank" rel="noopener">📡 Full Radar</a>
     </div>
   </div>
 
@@ -86,30 +87,28 @@
     <div id="currentStatus" class="status"></div>
   </div>
 
-  <!-- 3. Local Auto-Vault & Context Handoff (Free up to 20 chats!) -->
+  <!-- 3. Local Auto-Vault & Context Handoff + Pro Encrypted Backup -->
   <div class="card">
     <div class="card-title">
-      <span id="lblVaultTitle">📦 Local Auto-Vault (Free ≤20)</span>
-      <span style="color:#fbbf24;font-size:11px;"><strong id="vaultCount">0</strong> / 20 saved</span>
+      <span id="lblVaultTitle">📦 Local Auto-Vault</span>
+      <span style="color:#fbbf24;font-size:11px;"><strong id="vaultCount">0</strong> / <span id="vaultCapText">20</span></span>
     </div>
-    <div id="lblVaultDesc" class="meta">Export full archive + 1-click "New Account Context Recovery Prompt" anytime—zero cloud upload.</div>
+    <div id="lblVaultDesc" class="meta">Save Markdown &amp; code locally; unlock Pro for unlimited vault &amp; AES-256-GCM encrypted backup.</div>
     <div class="actions">
-      <button id="exportMigrationBtn" class="btn btn-emerald btn-full" type="button">🚀 Export All + Context Recovery Prompt (Free ≤20)</button>
+      <button id="exportMigrationBtn" class="btn btn-emerald" style="flex:1;" type="button">🚀 Context Recovery Pack</button>
+      <button id="exportEncryptedBtn" class="btn btn-primary" type="button">🔐 Encrypted (.enc)</button>
     </div>
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:5px;">
-      <span id="vaultMsg" class="status" style="margin-top:0;"></span>
-      <button id="clearVaultBtn" class="btn" style="padding:2px 6px;font-size:10px;color:#94a3b8;" type="button">Clear</button>
-    </div>
+    <div id="vaultMsg" class="status"></div>
   </div>
 
   <!-- 4. Unlimited Vault Key & All-Access Pass -->
   <div class="card" style="margin-bottom:0;">
     <div class="card-title">
-      <span id="lblProTitle">🔑 Unlimited Vault (&gt;20 Chats · $4.99 / ¥15 Once)</span>
+      <span id="lblProTitle">🔑 Unlock Pro Unlimited &amp; Encrypted Export</span>
     </div>
     <div class="actions" style="margin-top:4px;margin-bottom:6px;">
-      <a id="buySingleBtn" class="btn btn-primary" href="#" target="_blank" rel="noopener">🛒 Get Key (¥15 / $4.99)</a>
-      <a id="buyBundleBtn" class="btn btn-blue" href="#" target="_blank" rel="noopener">🎁 16-in-1 All-Access Pass (¥39)</a>
+      <a id="buySingleBtn" class="btn btn-primary" href="#" target="_blank" rel="noopener">🛒 Single Pro (¥15 / $4.99)</a>
+      <a id="buyBundleBtn" class="btn btn-blue" href="#" target="_blank" rel="noopener">🎁 All-Access Pass (¥39 / $14.99)</a>
     </div>
     <div class="input-row">
       <input id="licenseInput" type="text" placeholder="Paste OPC1. offline license key..." />

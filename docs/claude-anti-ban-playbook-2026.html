@@ -79,7 +79,7 @@
       <a class="btn" href="./index.html">← 返回 10 秒封号风险体检台</a>
       <div style="display:flex;gap:8px;flex-wrap:wrap;">
         <a class="btn btn-blue" href="./downloads/Zero-Ban-Claude-2026.epub" download>📘 下载《不掉号》标准电子书 (.epub 导苹果图书/微信读书)</a>
-        <a class="btn btn-amber" href="./downloads/Claude-2026-Anti-Ban-Playbook.pdf" download>📥 下载 PDF 版 (1.1MB)</a>
+        <a class="btn btn-amber" href="./downloads/Claude-2026-Anti-Ban-Playbook.pdf" download>📥 下载 2026 完整版全书 (.pdf)</a>
         <a class="btn btn-emerald" href="./downloads/claude-guard-mv3.zip" download>🧩 下载防丢插件 v1.2</a>
       </div>
     </div>
@@ -131,9 +131,9 @@
 <ul>
 <li><strong>固定独享静态原生住宅 IP（ISP Static Residential IP）</strong>：认准归属为海外本土宽带运营商（如 AT&amp;T、Comcast、Verizon、Spectrum 等双 ISP 属性）的固定美西/美东独享住宅 IP，全程固定单节点，<strong>严禁早晚在美/日/港/新之间横跳</strong>（注意：中国香港与大陆均属不支持区域，切勿挂香港节点打开 Claude 或点官方邮件链接）。</li>
 <ul>
-<li><em>常用独享静态住宅 IP 参考通道</em>：<a href="https://proxy-seller.com/" target="_blank" rel="noopener">Proxy-Seller 静态住宅代理</a> / <a href="https://iproyal.com/" target="_blank" rel="noopener">IPRoyal 静态住宅 IP</a>（选 US ISP Static Residential，单月几美元即可独享固定出口）。</li>
+<li><em>ASN 纯净度核验方法</em>：使用 <a href="./claude-static-residential-ip-guide.html">Claude Guard 机房 ASN 与静态家宽自检指南</a> 核验运营商自治系统号，避开 AS13335 / AS20473 / AS14061 等共享机房段。</li>
 </ul>
-<li><strong>指纹隔离浏览器（防主浏览器插件与时区穿帮）</strong>：日常主力 Chrome 往往挂着国内百度/淘宝 Cookie、中文语言权重与 <code>Asia/Shanghai (UTC+8)</code> 时区。建议单独用一个防关联隔离浏览器环境（如 <a href="https://www.adspower.com/" target="_blank" rel="noopener">AdsPower</a> 或 MoreLogin 免费版单环境）专门跑 Claude：</li>
+<li><strong>独立浏览器 Profile 容器（防主浏览器插件与时区穿帮）</strong>：日常主力 Chrome 往往挂着国内 Cookie、中文语言权重与 <code>Asia/Shanghai (UTC+8)</code> 时区。建议新建一个空白独立浏览器 Profile 专门访问 Claude，或直接改走零封号的企业云 API（<a href="./claude-code-bedrock-vertex-setup.html">AWS Bedrock / Google Cloud Vertex AI 配置向导</a>）：</li>
 <ul>
 <li>自动匹配出口 IP 所在时区（如美西 <code>America/Los_Angeles</code>）；</li>
 <li>浏览器语言设为 <code>en-US</code>；</li>
@@ -170,7 +170,7 @@
 </ul>
 </ol>
 <blockquote>
-<p>💡 <strong>懒人省心分支</strong>：如果手头没有 iPhone，或者不想自己折腾美区 ID 与静态住宅 IP，也<strong>千万不要去闲鱼买无售后的个人散户黑卡成品号</strong>。直接走老牌正规合租/代充大平台（如银河录像局 <code>nf.video</code> / GamsGo 等），贵几块钱但带官方质保——万一赶上封号潮，由大平台客服免费补号或按天退差价，自己零折腾。</p>
+<p>💡 <strong>工程省心分支</strong>：如果手头没有 iPhone，或者不想自己折腾美区 ID 与静态住宅 IP，<strong>千万不要去闲鱼买无售后的个人散户黑卡成品号或多人拼车号</strong>。最稳妥合规的做法是直接接入官方企业云通道（<a href="https://docs.anthropic.com/en/docs/claude-code/amazon-bedrock" target="_blank" rel="noopener">AWS Bedrock</a> 或 <a href="https://docs.anthropic.com/en/docs/claude-code/google-vertex-ai" target="_blank" rel="noopener">Google Cloud Vertex AI</a>），按实际 Token 用量透明结算，并搭配自营 <a href="https://a3152557994-ship-it.github.io/agent-guard/" target="_blank" rel="noopener">Agent-Guard 算力防爆表熔断器</a> 锁死预算上限。</p>
 </blockquote>
 <hr/>
 <h2>四、 Claude Code 开发者专项加固与「100% 永不封号」通道</h2>
@@ -255,25 +255,25 @@ Best regards,
     <section class="cta-grid" id="services">
       <div class="cta-card">
         <div>
-          <div style="font-size:12px;color:#fbbf24;font-weight:700;">方案 1 · 防封隔离基建</div>
-          <h3 style="margin:6px 0;color:#fff;">指纹隔离容器 &amp; 质保省心合租</h3>
-          <p style="font-size:13px;color:var(--muted);">不想主浏览器东八区时区穿帮，或不想自己折腾美区卡？直接用隔离容器或带官方补号质保的老牌合租平台。</p>
+          <div style="font-size:12px;color:#fbbf24;font-weight:700;">方案 1 · 合规云与自营防护矩阵</div>
+          <h3 style="margin:6px 0;color:#fff;">官方企业云 &amp; 算力预算熔断</h3>
+          <p style="font-size:13px;color:var(--muted);">告别共享机房号焦虑：直连 AWS Bedrock / Google Vertex AI 官方合规通道，配合自营 Agent-Guard 防止 API 账单失控。</p>
         </div>
         <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;">
-          <a id="pbAdsBtn" class="btn btn-amber" href="https://www.adspower.com/" target="_blank" rel="noopener">🔒 AdsPower 隔离环境</a>
-          <a id="pbShareBtn" class="btn" href="https://nf.video/" target="_blank" rel="noopener">🛡️ 银河录像局 (带质保)</a>
+          <a id="pbBedrockBtn" class="btn btn-amber" href="./claude-code-bedrock-vertex-setup.html">☁️ Bedrock/Vertex 向导</a>
+          <a id="pbAgentGuardBtn" class="btn" href="https://a3152557994-ship-it.github.io/agent-guard/" target="_blank" rel="noopener">⚡ Agent-Guard 熔断器</a>
         </div>
       </div>
 
       <div class="cta-card" style="border-color:#3b82f6;">
         <div>
           <div style="font-size:12px;color:#60a5fa;font-weight:700;">方案 2 · 零成本软件终身通票</div>
-          <h3 style="margin:6px 0;color:#fff;">无限对话保险箱 / 16款工具通票</h3>
-          <div class="price">¥15 单品 / ¥39 全站通票</div>
-          <p style="font-size:13px;color:var(--muted);">一次买断永久有效（离线 Ed25519 秒激活）。¥39 通票一码解锁本插件无限归档 + OPC 全站 16 款效率微工具。</p>
+          <h3 style="margin:6px 0;color:#fff;">无限对话保险箱 / 全站工具通票</h3>
+          <div class="price">¥15 单品 / ¥39 ($14.99) 通票</div>
+          <p style="font-size:13px;color:var(--muted);">一次买断永久有效（离线 Ed25519 秒激活）。¥39 / $14.99 通票一码解锁本插件无限归档 + OPC 全站效率微工具。</p>
         </div>
         <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;">
-          <a class="btn btn-blue" href="./index.html#checkout-bundle">🎁 获取 ¥39 全站通票 / ¥15 激活码</a>
+          <a class="btn btn-blue" href="./index.html#checkout-bundle">🎁 获取 ¥39 ($14.99) 全站通票</a>
         </div>
       </div>
 
@@ -292,8 +292,8 @@ Best regards,
   </div>
   <script type="module">
     import { MONETIZATION_CONFIG } from "./affiliate-config.js";
-    document.getElementById("pbAdsBtn").href = MONETIZATION_CONFIG.antidetectBrowserUrl;
-    document.getElementById("pbShareBtn").href = MONETIZATION_CONFIG.managedShareUrl;
+    document.getElementById("pbBedrockBtn").href = MONETIZATION_CONFIG.bedrockVertexGuideUrl;
+    document.getElementById("pbAgentGuardBtn").href = MONETIZATION_CONFIG.agentGuardUrl;
   </script>
 </body>
 </html>
