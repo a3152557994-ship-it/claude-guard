@@ -12,7 +12,7 @@
     "@type": "TechArticle",
     "headline": "2026 Claude 防封号、稳态订阅与封后退款自救实战手册",
     "datePublished": "2026-11-22",
-    "dateModified": "2026-11-22",
+    "dateModified": "2026-11-26",
     "author": { "@type": "Organization", "name": "OPC Tools Studio" },
     "url": "https://a3152557994-ship-it.github.io/claude-guard/claude-anti-ban-playbook-2026.html"
   }
@@ -103,6 +103,129 @@
 </tbody></table>
 <hr/>
 <h2>一、 报错先别弃号！30 秒排查「假封号乌龙」</h2>
+<!-- DECISION-TREE-SVG-START -->
+<div style="margin:18px 0 22px;box-shadow:0 12px 28px rgba(0,0,0,0.45);border-radius:12px;overflow:hidden;">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 338" width="100%" role="img" aria-label="10秒报错排障与零断流路由决策树" style="display:block;width:100%;height:auto;border-radius:10px;">
+  <defs>
+    <linearGradient id="dtBg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0B1120" />
+      <stop offset="100%" stop-color="#0F172A" />
+    </linearGradient>
+    <linearGradient id="dtHdr" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#172554" />
+      <stop offset="100%" stop-color="#0F172A" />
+    </linearGradient>
+  </defs>
+
+  <!-- Outer Blueprint Frame -->
+  <rect x="1" y="1" width="818" height="336" rx="11" fill="url(#dtBg)" stroke="#334155" stroke-width="1.6" />
+  <rect x="1" y="1" width="818" height="36" rx="11" fill="url(#dtHdr)" />
+  <rect x="1" y="24" width="818" height="13" fill="url(#dtHdr)" />
+  <line x1="1" y1="37" x2="819" y2="37" stroke="#334155" stroke-width="1.2" />
+
+  <!-- Header Bar -->
+  <circle cx="18" cy="19" r="4.5" fill="#F59E0B" />
+  <text x="30" y="23.5" fill="#F8FAFC" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-size="12" font-weight="800">10 秒报错排障与零断流路由决策树（2026 Production Decision Tree）</text>
+  <rect x="668" y="8" width="138" height="22" rx="11" fill="#1E293B" stroke="#F59E0B" stroke-width="1" />
+  <text x="737" y="22.5" text-anchor="middle" fill="#FDE68A" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="9.8" font-weight="800">3 大高频场景 · 按图秒修</text>
+
+  <!-- Root Entry Node -->
+  <rect x="12" y="133" width="116" height="108" rx="9" fill="#172554" stroke="#60A5FA" stroke-width="1.8" />
+  <text x="70" y="156" text-anchor="middle" fill="#93C5FD" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="10.5" font-weight="800">终端 / 网页异常</text>
+  <text x="70" y="175" text-anchor="middle" fill="#FFFFFF" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="11.5" font-weight="900">突发阻断分流</text>
+  <line x1="24" y1="186" x2="116" y2="186" stroke="#3B82F6" stroke-width="1" stroke-dasharray="3,2" />
+  <text x="70" y="203" text-anchor="middle" fill="#FDE68A" font-family="ui-monospace,SFMono-Regular,Menlo,monospace" font-size="9.8" font-weight="700">400 / 403 / 529</text>
+  <text x="70" y="219" text-anchor="middle" fill="#CBD5E1" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="9.2">disabled · 5h限流</text>
+  <text x="70" y="234" text-anchor="middle" fill="#38BDF8" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="9" font-weight="700">先定性 · 勿盲目弃号</text>
+
+  <!-- Root -> 3 Branches Bezier Connectors -->
+  <path d="M 128 168 C 146 168, 142 89, 157 89" fill="none" stroke="#F59E0B" stroke-width="2.2" />
+  <polygon points="161,89 154,85 154,93" fill="#F59E0B" />
+  <line x1="128" y1="187" x2="157" y2="187" stroke="#FB7185" stroke-width="2.2" />
+  <polygon points="161,187 154,183 154,191" fill="#FB7185" />
+  <path d="M 128 206 C 146 206, 142 285, 157 285" fill="none" stroke="#34D399" stroke-width="2.2" />
+  <polygon points="161,285 154,281 154,289" fill="#34D399" />
+
+  <!-- ==================== BRANCH A: 假封号乌龙 (y=47..131) ==================== -->
+  <rect x="163" y="47" width="205" height="84" rx="8" fill="#1F1A14" stroke="#F59E0B" stroke-width="1.6" />
+  <rect x="172" y="54" width="154" height="17" rx="4" fill="#451A03" />
+  <text x="178" y="66" fill="#FBBF24" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="9.8" font-weight="800">分支 A · 命中率 30%（假封号）</text>
+  <text x="172" y="86" fill="#F8FAFC" font-family="ui-monospace,SFMono-Regular,Menlo,monospace" font-size="9.1" font-weight="700">CLI 报 400 Organization disabled</text>
+  <text x="172" y="104" fill="#E2E8F0" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="9.8">但 <tspan fill="#FDE68A" font-family="ui-monospace,Menlo,monospace">claude.ai</tspan> 网页端对话完全正常</text>
+  <text x="172" y="121" fill="#94A3B8" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="9">症状：刚开订阅仍秒拒，仅终端报错</text>
+
+  <line x1="368" y1="89" x2="383" y2="89" stroke="#F59E0B" stroke-width="2" />
+  <polygon points="387,89 380,85 380,93" fill="#F59E0B" />
+
+  <rect x="389" y="47" width="203" height="84" rx="8" fill="#1E293B" stroke="#FBBF24" stroke-width="1.3" />
+  <text x="398" y="65" fill="#FDE68A" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="10" font-weight="800">根因：L1 环境变量抢占最高优先级</text>
+  <text x="398" y="85" fill="#FCA5A5" font-family="ui-monospace,SFMono-Regular,Menlo,monospace" font-size="9.2" font-weight="700">残留旧 ANTHROPIC_API_KEY</text>
+  <text x="398" y="103" fill="#E2E8F0" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="9.6">或失效 BASE_URL 强行覆盖 OAuth</text>
+  <text x="398" y="121" fill="#94A3B8" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="9">潜伏点：~/.zshrc · .bashrc · ./.env</text>
+
+  <line x1="592" y1="89" x2="607" y2="89" stroke="#10B981" stroke-width="2" />
+  <polygon points="611,89 604,85 604,93" fill="#10B981" />
+
+  <rect x="613" y="47" width="195" height="84" rx="8" fill="#064E3B" stroke="#10B981" stroke-width="1.6" />
+  <text x="622" y="65" fill="#6EE7B7" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="10" font-weight="800">处置：三连清理 · 10 秒原地恢复</text>
+  <text x="622" y="84" fill="#ECFDF5" font-family="ui-monospace,SFMono-Regular,Menlo,monospace" font-size="9.2">1. env | grep ANTHROPIC</text>
+  <text x="622" y="102" fill="#ECFDF5" font-family="ui-monospace,SFMono-Regular,Menlo,monospace" font-size="9.2">2. unset ANTHROPIC_API_KEY</text>
+  <text x="622" y="120" fill="#A7F3D0" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="9.3" font-weight="700">3. 删 .zshrc 导出行并重开终端</text>
+
+  <!-- ==================== BRANCH B: 网页同步封禁 (y=145..229) ==================== -->
+  <rect x="163" y="145" width="205" height="84" rx="8" fill="#24131B" stroke="#FB7185" stroke-width="1.6" />
+  <rect x="172" y="152" width="154" height="17" rx="4" fill="#4C0519" />
+  <text x="178" y="164" fill="#FDA4AF" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="9.8" font-weight="800">分支 B · 网页同步锁定（真风控）</text>
+  <text x="172" y="184" fill="#F8FAFC" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="9.8" font-weight="700">网页端同步弹 <tspan fill="#FDA4AF" font-family="ui-monospace,Menlo,monospace">disabled</tspan> 或</text>
+  <text x="172" y="202" fill="#FCA5A5" font-family="ui-monospace,SFMono-Regular,Menlo,monospace" font-size="9.3" font-weight="700">automatic review 阻断登录</text>
+  <text x="172" y="219" fill="#94A3B8" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="9">症状：Web 与 CLI 同时丧失访问权</text>
+
+  <line x1="368" y1="187" x2="383" y2="187" stroke="#FB7185" stroke-width="2" />
+  <polygon points="387,187 380,183 380,191" fill="#FB7185" />
+
+  <rect x="389" y="145" width="203" height="84" rx="8" fill="#1E293B" stroke="#F43F5E" stroke-width="1.3" />
+  <text x="398" y="163" fill="#FECDD3" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="10" font-weight="800">核查出口 ASN + 严守止损第一铁律</text>
+  <text x="398" y="183" fill="#E2E8F0" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="9.5">排查是否撞 <tspan fill="#FDE68A" font-family="ui-monospace,Menlo,monospace">AS13335</tspan> 共享段/跳变</text>
+  <text x="398" y="201" fill="#FCA5A5" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="9.6" font-weight="800">严禁直连点开封号邮件申诉链接！</text>
+  <text x="398" y="219" fill="#94A3B8" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="9">防非受支持区 IP 留痕焊死人工复核</text>
+
+  <line x1="592" y1="187" x2="607" y2="187" stroke="#38BDF8" stroke-width="2" />
+  <polygon points="611,187 604,183 604,191" fill="#38BDF8" />
+
+  <rect x="613" y="145" width="195" height="84" rx="8" fill="#0C4A6E" stroke="#38BDF8" stroke-width="1.6" />
+  <text x="622" y="163" fill="#7DD3FC" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="10" font-weight="800">处置：黄金 48h 退费或一次申诉</text>
+  <text x="622" y="182" fill="#F0F9FF" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="9.4">App Store 订阅走苹果官方通道：</text>
+  <text x="622" y="200" fill="#FDE68A" font-family="ui-monospace,SFMono-Regular,Menlo,monospace" font-size="9.1" font-weight="700">reportaproblem.apple.com</text>
+  <text x="622" y="218" fill="#BAE6FD" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="9.2" font-weight="700">48h 退回余额 / 备齐账单一次申诉</text>
+
+  <!-- ==================== BRANCH C: 企业云零封号终极解 (y=243..327) ==================== -->
+  <rect x="163" y="243" width="205" height="84" rx="8" fill="#102336" stroke="#38BDF8" stroke-width="1.6" />
+  <rect x="172" y="250" width="166" height="17" rx="4" fill="#082F49" />
+  <text x="178" y="262" fill="#7DD3FC" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="9.8" font-weight="800">分支 C · 团队/重度编码终极架构</text>
+  <text x="172" y="282" fill="#F8FAFC" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="9.8" font-weight="700">彻底告别封号焦虑与 5h 限额卡死</text>
+  <text x="172" y="300" fill="#E2E8F0" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="9.6">赶项目死线 · 多仓库重构零断流</text>
+  <text x="172" y="317" fill="#94A3B8" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="9">目标：0% 地区封禁 + 企业高吞吐</text>
+
+  <line x1="368" y1="285" x2="383" y2="285" stroke="#34D399" stroke-width="2" />
+  <polygon points="387,285 380,281 380,289" fill="#34D399" />
+
+  <rect x="389" y="243" width="203" height="84" rx="8" fill="#1E293B" stroke="#34D399" stroke-width="1.3" />
+  <text x="398" y="261" fill="#6EE7B7" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="10" font-weight="800">接入企业云商业 IAM 按量 API</text>
+  <text x="398" y="281" fill="#FDE68A" font-family="ui-monospace,SFMono-Regular,Menlo,monospace" font-size="9.2" font-weight="700">AWS Bedrock (us.anthropic.*)</text>
+  <text x="398" y="299" fill="#E2E8F0" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="9.6">或 GCP Vertex AI（可抵 $300 赠金）</text>
+  <text x="398" y="317" fill="#94A3B8" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="9">最小权限 IAM 子密钥 · 账单透明可控</text>
+
+  <line x1="592" y1="285" x2="607" y2="285" stroke="#FBBF24" stroke-width="2" />
+  <polygon points="611,285 604,281 604,289" fill="#FBBF24" />
+
+  <rect x="613" y="243" width="195" height="84" rx="8" fill="#172554" stroke="#FBBF24" stroke-width="1.6" />
+  <text x="622" y="261" fill="#FDE68A" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="10" font-weight="800">cc-switch v2.0 秒级无损热切</text>
+  <text x="622" y="280" fill="#F8FAFC" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="9.5">JSON 深合并仅改 env 托管路由键</text>
+  <text x="622" y="298" fill="#6EE7B7" font-family="ui-monospace,SFMono-Regular,Menlo,monospace" font-size="9.1" font-weight="700">100% 保留 mcpServers / hooks</text>
+  <text x="622" y="316" fill="#CBD5E1" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="9.2" font-weight="700">5 源互备 1 秒切源，不断研发心流</text>
+</svg>
+</div>
+<!-- DECISION-TREE-SVG-END -->
 <p>如果在终端使用 <code>Claude Code</code> 或本地工具时突然弹出：</p>
 <p><code>Your organization has been disabled</code> 或 <code>This organization has been disabled</code></p>
 <p><strong>先别以为刚充的 $20 / $200 打水漂了！实测约 30% 属于本地环境变量冲突乌龙：</strong></p>
