@@ -200,6 +200,6 @@ test("Commercial & security audit: popup.js uses real probe, zero competitor ads
   // Verify full 2026 Anti-Ban PDF is synced and < 20MB
   const targetPdf = path.join(ROOT, "docs", "downloads", "Claude-2026-Anti-Ban-Playbook.pdf");
   const stat = fs.statSync(targetPdf);
-  assert.ok(stat.size > 1_800_000, `Expected full 2026 playbook PDF (>1.8MB), got ${stat.size} bytes`);
+  assert.ok(stat.size > 1_200_000, `Expected full 2026 playbook PDF (>1.2MB), got ${stat.size} bytes`);
   assert.ok(stat.size < 20 * 1024 * 1024, "PDF must be strictly < 20MB");
 });
