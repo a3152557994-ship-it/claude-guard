@@ -233,7 +233,7 @@ grep -rn "ANTHROPIC_" ~/.zshrc ~/.bashrc ./.env 2&gt;/dev/null &amp;&amp; ./cc-s
       <div class="cs-card">
         <div class="cs-card-hd">⚡ 二、五源核心环境变量速查表（<code>~/.claude/settings.json</code>）</div>
         <table class="cs-tbl">
-          <thead><tr><th width="27%">工作源模式</th><th>核心 <code>env</code> 键值组合与模型配置</th></tr></thead>
+          <thead><tr><th style="width:27%;">工作源模式</th><th>核心 <code>env</code> 键值组合与模型配置</th></tr></thead>
           <tbody>
             <tr><td><b>① 官方加固</b></td><td><code>DISABLE_TELEMETRY="1"</code>, <code>DISABLE_ERROR_REPORTING="1"</code>, <code>CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC="1"</code></td></tr>
             <tr><td><b>② Bedrock</b></td><td><code>CLAUDE_CODE_USE_BEDROCK="1"</code>, <code>AWS_REGION="us-east-1"</code>, <code>ANTHROPIC_MODEL="us.anthropic.claude-sonnet-4-6"</code></td></tr>
@@ -968,6 +968,8 @@ a { color: #2563eb; text-decoration: underline; }
   <head>
     <meta name="dtb:uid" content="urn:uuid:20261122-zero-ban-claude-opc-v1"/>
     <meta name="dtb:depth" content="1"/>
+    <meta name="dtb:totalPageCount" content="0"/>
+    <meta name="dtb:maxPageNumber" content="0"/>
   </head>
   <docTitle><text>不掉号：Claude 防封号、免税订阅与封后退款自救全书</text></docTitle>
   <navMap>
@@ -1004,11 +1006,12 @@ a { color: #2563eb; text-decoration: underline; }
   <manifest>
     <item id="style" href="style.css" media-type="text/css"/>
     <item id="cover-img" href="cover.jpg" media-type="image/jpeg" properties="cover-image"/>
+    <item id="decision-tree-img" href="decision_tree.png" media-type="image/png"/>
     <item id="cover" href="cover.xhtml" media-type="application/xhtml+xml"/>
     <item id="nav" href="nav.xhtml" media-type="application/xhtml+xml" properties="nav"/>
     <item id="ncx" href="toc.ncx" media-type="application/x-dtbncx+xml"/>
     <item id="ch01" href="ch00_preface.xhtml" media-type="application/xhtml+xml"/>
-    <item id="ch02" href="ch01_risk_matrix.xhtml" media-type="application/xhtml+xml" properties="svg"/>
+    <item id="ch02" href="ch01_risk_matrix.xhtml" media-type="application/xhtml+xml"/>
     <item id="ch03" href="ch02_false_ban.xhtml" media-type="application/xhtml+xml"/>
     <item id="ch04" href="ch03_network_isolation.xhtml" media-type="application/xhtml+xml"/>
     <item id="ch05" href="ch04_apple_iap.xhtml" media-type="application/xhtml+xml"/>
@@ -1054,7 +1057,7 @@ a { color: #2563eb; text-decoration: underline; }
       <li><strong>OAuth 凭证非官方客户端调用</strong>：将个人 Pro/Max 订阅凭证填入第三方逆向套壳客户端或共享池，立即触发整个 Organization 封停。</li>
     </ol>
     <table>
-      <thead><tr><th width="36%">订阅与连接方案</th><th width="16%">封号风险</th><th>核心原因剖析</th></tr></thead>
+      <thead><tr><th style="width:36%;">订阅与连接方案</th><th style="width:16%;">封号风险</th><th>核心原因剖析</th></tr></thead>
       <tbody>
         <tr><td>普通共享节点 + 某宝代充 / 拼车成品号</td><td><strong>95% 极危</strong></td><td>机房 ASN 千人骑 + 黑卡回滚一锅端</td></tr>
         <tr><td>网页端直接绑公开虚拟信用卡（VCC）</td><td><strong>70% 高危</strong></td><td>虚拟卡 BIN 段被 Stripe 重点监控，易触发 KYC 或秒封</td></tr>
@@ -1064,7 +1067,7 @@ a { color: #2563eb; text-decoration: underline; }
       </tbody>
     </table>
     <h2>二、10 秒报错排障与零断流路由决策树（按症状精准对号入座）</h2>
-    <div class="svg-wrap">{svg_tree}</div>
+    <div class="svg-wrap"><img src="decision_tree.png" alt="10秒报错排障与零断流路由决策树" style="width:100%;height:auto;display:block;" /></div>
 </body>
 </html>"""
 
@@ -1082,7 +1085,7 @@ a { color: #2563eb; text-decoration: underline; }
     <pre><code>API Error: 400 {"type":"error","error":{"type":"invalid_request_error","message":"Your organization has been disabled."}}</code></pre>
     <h2>一、CLI 四级凭据读取优先级机制（高优先级无条件覆盖低优先级）</h2>
     <table>
-      <thead><tr><th width="20%">优先级层级</th><th width="34%">配置来源位置</th><th>覆盖行为与排障要点</th></tr></thead>
+      <thead><tr><th style="width:20%;">优先级层级</th><th style="width:34%;">配置来源位置</th><th>覆盖行为与排障要点</th></tr></thead>
       <tbody>
         <tr><td><strong>L1 最高抢占</strong></td><td>Shell 显式环境变量 (<code>ANTHROPIC_API_KEY</code>)</td><td>无条件覆盖一切订阅登录态；半年前填在 <code>.zshrc</code> 的失效中转 Key 会直接报 400</td></tr>
         <tr><td><strong>L2 目录局部</strong></td><td>当前或父目录 <code>./.env</code> 文件</td><td>旧测试项目残留的局部测试密钥，进入该仓库即刻触发报错</td></tr>
@@ -1124,7 +1127,7 @@ Remove-Item Env:ANTHROPIC_API_KEY,Env:ANTHROPIC_BASE_URL -ErrorAction SilentlyCo
       <li>核对下方常见自治系统号（ASN）信誉分类，全程固定单一美国城市出口，切勿早晚在美、日、新之间横跳。<strong>特别警告：中国香港属于不支持区域，严禁挂香港节点访问或点击官方邮件！</strong></li>
     </ol>
     <table>
-      <thead><tr><th width="24%">出口类型</th><th width="38%">典型 ASN 与运营商标识</th><th>风控评分与处置建议</th></tr></thead>
+      <thead><tr><th style="width:24%;">出口类型</th><th style="width:38%;">典型 ASN 与运营商标识</th><th>风控评分与处置建议</th></tr></thead>
       <tbody>
         <tr><td><strong>✅ 原生住宅 ISP</strong></td><td><code>AS7922</code> (Comcast)、<code>AS7018</code> (AT&amp;T)、<code>AS701</code> (Verizon)、<code>AS20115</code> (Charter)</td><td><code>hosting: false</code>，高信誉家庭宽带特征，配合固定单城可长期稳用</td></tr>
         <tr><td><strong>❌ 高危机房段</strong></td><td><code>AS13335</code> (Cloudflare)、<code>AS20473</code> (Vultr/Choopa)、<code>AS14061</code> (DigitalOcean)、<code>AS9009</code> (M247)</td><td><code>hosting: true</code>，千人共用服务器代理段，注册或绑卡极易触发自动封禁</td></tr>
@@ -1170,7 +1173,7 @@ fs.writeFileSync(p, JSON.stringify(cfg, null, 2) + "\\n");
 '</code></pre>
     <h2>二、为什么必须用 cc-switch v2.0 非破坏性深合并切源？</h2>
     <table>
-      <thead><tr><th width="26%">对比维度</th><th width="37%">❌ 传统粗暴覆盖脚本 (<code>cat &gt;</code>)</th><th>✅ <code>cc-switch v2.0</code> 无损深合并引擎</th></tr></thead>
+      <thead><tr><th style="width:26%;">对比维度</th><th style="width:37%;">❌ 传统粗暴覆盖脚本 (<code>cat &gt;</code>)</th><th>✅ <code>cc-switch v2.0</code> 无损深合并引擎</th></tr></thead>
       <tbody>
         <tr><td><strong>MCP 与 Hooks 配置</strong></td><td>直接覆写整份文件，已配 MCP 工具链瞬间归零</td><td>解析原 JSON 语法树，顶层 <code>mcpServers / permissions / hooks</code> 100% 保留</td></tr>
         <tr><td><strong>旧通道残留键清理</strong></td><td>易混留 Bedrock 与 BaseURL 双开关导致鉴权死锁</td><td>精准定点清理托管路由键，同时完整保留用户自定义业务环境变量</td></tr>
@@ -1305,7 +1308,7 @@ fs.writeFileSync(p, JSON.stringify(cfg, null, 2) + "\\n");
 <body>
     <h1>附录 A：常见报错代码速查字典（10秒定位病因）</h1>
     <table>
-      <thead><tr><th width="31%">报错提示 / 状态码</th><th width="34%">真实原因</th><th>最快解决动作</th></tr></thead>
+      <thead><tr><th style="width:31%;">报错提示 / 状态码</th><th style="width:34%;">真实原因</th><th>最快解决动作</th></tr></thead>
       <tbody>
         <tr><td><code>Organization disabled</code> (网页正常)</td><td>本地残留旧 <code>ANTHROPIC_API_KEY</code> 覆盖 OAuth</td><td>执行第 2 章 <code>unset</code> 并删净 <code>.zshrc / .env</code> 残留行</td></tr>
         <tr><td><code>disabled after automatic review</code></td><td>触发机房 ASN 连坐、时区穿帮或虚拟卡风控</td><td>挂纯净美区 IP 按第 7 章走苹果退费或英文申诉，禁直连点邮件</td></tr>
@@ -1335,8 +1338,39 @@ fs.writeFileSync(p, JSON.stringify(cfg, null, 2) + "\\n");
         ET.fromstring(xml_str.encode("utf-8"))
 
     chapter_bodies = {}
-    with tempfile.TemporaryDirectory(prefix="cg_epub_") as td:
-        tmp_epub = Path(td) / "updated.epub"
+    with tempfile.TemporaryDirectory(prefix="cg_epub_", dir="/tmp") as td:
+        td_p = Path(td)
+        # Render crisp 2x PNG of SVG decision tree for universal EPUB3/Play Books compatibility
+        dt_html = td_p / "dt.html"
+        dt_png = td_p / "decision_tree.png"
+        dt_html.write_text(
+            f"<!doctype html><html><body style='margin:0;padding:0;background:#0B1120;overflow:hidden;'>{svg_tree}</body></html>",
+            encoding="utf-8",
+        )
+        for att in range(3):
+            subprocess.run(
+                [
+                    CHROME_BIN,
+                    "--headless=new",
+                    "--disable-gpu",
+                    "--hide-scrollbars",
+                    f"--user-data-dir={td_p / f'u_dt_{att}'}",
+                    "--window-size=820,338",
+                    "--force-device-scale-factor=2",
+                    f"--screenshot={dt_png}",
+                    dt_html.as_uri(),
+                ],
+                check=False,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+            )
+            if dt_png.exists() and dt_png.stat().st_size > 10000:
+                break
+        if not (dt_png.exists() and dt_png.stat().st_size > 10000):
+            raise RuntimeError("Failed to render decision_tree.png for EPUB")
+        dt_png_bytes = dt_png.read_bytes()
+
+        tmp_epub = td_p / "updated.epub"
         cover_bytes = (EBOOK_DIR / "cover-1600x2560.jpg").read_bytes()
         replacements = {
             "OEBPS/style.css": epub_style_css.encode("utf-8"),
@@ -1351,13 +1385,14 @@ fs.writeFileSync(p, JSON.stringify(cfg, null, 2) + "\\n");
             "OEBPS/ch06_bedrock_vertex.xhtml": ch06_new.encode("utf-8"),
             "OEBPS/ch08_vault_recovery.xhtml": ch08_new.encode("utf-8"),
             "OEBPS/ch09_appendix.xhtml": ch09_new.encode("utf-8"),
+            "OEBPS/ch10_cheatsheet.xhtml": ch10_new.encode("utf-8"),
         }
         written_names = set()
         with zipfile.ZipFile(epub_pack, "r") as zin, zipfile.ZipFile(tmp_epub, "w") as zout:
             zout.writestr("mimetype", "application/epub+zip", compress_type=zipfile.ZIP_STORED)
             written_names.add("mimetype")
             for info in zin.infolist():
-                if info.filename == "mimetype":
+                if info.filename == "mimetype" or info.filename == "OEBPS/decision_tree.png":
                     continue
                 data = zin.read(info.filename)
                 if info.filename == "OEBPS/cover.jpg":
@@ -1383,6 +1418,8 @@ fs.writeFileSync(p, JSON.stringify(cfg, null, 2) + "\\n");
                 zout.writestr(info.filename, data, compress_type=zipfile.ZIP_DEFLATED)
                 written_names.add(info.filename)
 
+            zout.writestr("OEBPS/decision_tree.png", dt_png_bytes, compress_type=zipfile.ZIP_DEFLATED)
+            written_names.add("OEBPS/decision_tree.png")
             if "OEBPS/ch10_cheatsheet.xhtml" not in written_names:
                 c10_bytes = ch10_new.encode("utf-8")
                 ET.fromstring(c10_bytes)
@@ -1390,6 +1427,11 @@ fs.writeFileSync(p, JSON.stringify(cfg, null, 2) + "\\n");
                 chapter_bodies["OEBPS/ch10_cheatsheet.xhtml"] = ch10_new.split("<body>")[1].split("</body>")[0].strip()
 
         shutil.move(str(tmp_epub), str(epub_pack))
+    # Restore inline vector SVG for full PDF chapter body (PNG is inside EPUB)
+    chapter_bodies["OEBPS/ch01_risk_matrix.xhtml"] = chapter_bodies["OEBPS/ch01_risk_matrix.xhtml"].replace(
+        '<img src="decision_tree.png" alt="10秒报错排障与零断流路由决策树" style="width:100%;height:auto;display:block;" />',
+        svg_tree,
+    )
     shutil.copy2(epub_pack, epub_dl)
     print(f"[PASS] Updated Zero-Ban-Claude-2026.epub ({epub_pack.stat().st_size // 1024} KB) & synced to docs/downloads/")
 
