@@ -1233,7 +1233,63 @@ fs.writeFileSync(p, JSON.stringify(cfg, null, 2) + "\\n");
 }</code></pre>
     <div class="box">
       <strong>🧑‍💻 一键无损脚本与远程代配服务：</strong>
-      <p>上述非破坏性合并流程已封装进开源脚本 <code>bedrock-vertex-1click.sh</code>（含在 <a href="https://a3152557994-ship-it.github.io/claude-guard/downloads/claude-code-kit.zip">claude-code-kit.zip</a> 中，100% 保留原有 MCP 与 Hooks）。不想自己折腾 AWS IAM 跨区权限或 GCP CLI？可直接预约工程师 <strong>20 分钟 1对1 远程代部署（¥168/次，全程本机自输密钥，调不通全额退款）</strong>：<a href="https://a3152557994-ship-it.github.io/claude-guard/#checkout-remote">点击预约远程部署</a>。</p>
+      <p>上述非破坏性合并流程已封装进开源脚本 <code>bedrock-vertex-1click.sh</code>（含在 <a href="https://a3152557994-ship-it.github.io/claude-guard/downloads/claude-code-kit.zip">claude-code-kit.zip</a> 中，100% 保留原有 MCP 与 Hooks）。不想自己折腾 AWS IAM 跨区权限或 GCP CLI？可直接预约工程师 <strong>20 分钟 1对1 远程代部署（¥168/次，全程本机自输密钥，调不通全额退款）</strong>：<a href="https://a3152557994-ship-it.github.io/claude-guard/#service">点击预约远程部署</a>。</p>
+    </div>
+</body>
+</html>"""
+
+    ch00_new = """<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="zh-CN" lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>序言与 30 秒急救导航</title>
+  <link rel="stylesheet" type="text/css" href="style.css" />
+</head>
+<body>
+    <h1>序言：为什么你需要这本《不掉号》？</h1>
+    <p>如果你正在用 Claude 写核心业务代码、改写博士论文、或者搭建自动化 Agent 工作流，你一定体会过那种最令人窒息的瞬间：昨晚刚刚付完 $20（甚至 $200 Max 订阅），今天早上打开屏幕，迎面弹出一行冰冷的红字——<code>Your account has been disabled after an automatic review</code>。</p>
+    <p>更糟糕的是，官方申诉人工解封率长期低于 <strong>5%</strong>；一旦网页锁死，你沉淀了几个月的 Project 上下文、上百段未保存的 Artifacts 代码块瞬间无法访问。</p>
+    <div class="box">
+      <strong>⚡ 急性子读者 30 秒急救直达入口（100% 免费开源免激活码）：</strong>
+      <ul>
+        <li>📡 <strong>10 秒在线检测当前 IP ASN 与本地时区漏点（免费免登录）</strong>：<a href="https://a3152557994-ship-it.github.io/claude-guard/">https://a3152557994-ship-it.github.io/claude-guard/</a></li>
+        <li>🧩 <strong>Chrome / Edge 对话与代码块纯本地防丢保险箱插件（无限容量 100% 免费）</strong>：<a href="https://a3152557994-ship-it.github.io/claude-guard/downloads/claude-guard-mv3.zip">点击免费下载 MV3 扩展包</a></li>
+        <li>🧑‍💻 <strong>嫌配环境麻烦？AWS Bedrock / Google Vertex 100% 永不封号企业通道远程代配</strong>：<a href="https://a3152557994-ship-it.github.io/claude-guard/#service">点击查看 20 分钟包跑通方案</a></li>
+      </ul>
+    </div>
+    <p>本书摒弃一切含糊其辞的空话，把 2026 年实测有效的<strong>「假封号乌龙排查 → 住宅网络与独立指纹容器 → 美区免税州礼品卡稳态支付 → AWS/Vertex 零封号企业架构 → 封后 48 小时追回订阅费与申诉模板」</strong>拆解为可一步步照抄执行的工程手册。</p>
+</body>
+</html>"""
+
+    ch08_new = """<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="zh-CN" lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>第 8 章：重开新号「四清铁律」与本地代码零丢失保险箱</title>
+  <link rel="stylesheet" type="text/css" href="style.css" />
+</head>
+<body>
+    <h1>第 8 章：重开新号「四清铁律」与本地代码零丢失保险箱</h1>
+    <h2>一、弃旧开新防「关联秒封」四清清单</h2>
+    <p>如果旧号确定放弃、准备重新注册干净新号，以下四项<strong>漏掉任何一项都会在 24 小时内触发指纹关联秒封</strong>：</p>
+    <ol>
+      <li><strong>清浏览器存储痕迹</strong>：绝对不能在刚被封号的原浏览器 Profile 里点退出直接注册新号！必须彻底清除 <code>claude.ai</code> 与 <code>anthropic.com</code> 的全部 Cookie、LocalStorage、IndexedDB，或直接在隔离浏览器中新建一个全新空白容器。</li>
+      <li><strong>换全新静态住宅出口 IP</strong>：刚死过号的 IP 已被短期打标，重开务必切换新的独享住宅 IP。</li>
+      <li><strong>换全新海外邮箱与接码号</strong>：使用全新 Gmail / Outlook / ProtonMail。</li>
+      <li><strong>切断旧虚拟卡关联</strong>：被封账号绑过的虚拟卡号绝不可二次绑定新号，统一改走第 4 章的「美区免税州 Apple 礼品卡内购」。</li>
+    </ol>
+    <h2>二、永远别等封号那天才想起导出代码！</h2>
+    <p>账号被封的真正损失往往不是那 $20，而是你调教了好几周的项目架构对话、论文修改稿和几十个未落盘的 Artifacts 代码组件——一旦封号，连登录导出页面都进不去！</p>
+    <div class="box">
+      <strong>🛡️ 养成纯本地静默防丢习惯（Chat Vault &amp; Env Guard · 100% 免费无限版）：</strong>
+      <ul>
+        <li>在浏览器装上纯本地归档扩展（<strong>所有数据 100% 存在你电脑自己的硬盘 <code>chrome.storage.local</code>，零云端上传</strong>）：单篇 Markdown / JSON 导出、无限本地对话归档与 AES-256-GCM 本地口令加密全部永久免费开放（免注册、免激活码）；</li>
+        <li>万一遇到限流或换新号，点击<strong>「🚀 一键导出全量归档 + 新号无缝恢复包」</strong>，自动生成结构化唤醒 Prompt，贴进新账号第一句话，1 秒接上全部项目上下文！</li>
+        <li>📦 <strong>免费下载插件与 5 源切换脚本</strong>：<a href="https://a3152557994-ship-it.github.io/claude-guard/">https://a3152557994-ship-it.github.io/claude-guard/</a></li>
+        <li>🛠️ <strong>开源微工具矩阵 &amp; 企业定制服务</strong>：免费畅用全站 18 款研发与办公效率微工具（<a href="https://a3152557994-ship-it.github.io/opc-tools/">opc-tools 百宝箱</a>），或预约 AWS Bedrock / Vertex 1v1 远程无损代配与企业防封定制。</li>
+      </ul>
     </div>
 </body>
 </html>"""
@@ -1275,7 +1331,7 @@ fs.writeFileSync(p, JSON.stringify(cfg, null, 2) + "\\n");
 </body>
 </html>"""
 
-    for xml_str in (nav_new, ncx_new, opf_new, ch01_new, ch02_new, ch03_new, ch05_new, ch06_new, ch09_new, ch10_new):
+    for xml_str in (nav_new, ncx_new, opf_new, ch00_new, ch01_new, ch02_new, ch03_new, ch05_new, ch06_new, ch08_new, ch09_new, ch10_new):
         ET.fromstring(xml_str.encode("utf-8"))
 
     chapter_bodies = {}
@@ -1287,11 +1343,13 @@ fs.writeFileSync(p, JSON.stringify(cfg, null, 2) + "\\n");
             "OEBPS/nav.xhtml": nav_new.encode("utf-8"),
             "OEBPS/toc.ncx": ncx_new.encode("utf-8"),
             "OEBPS/content.opf": opf_new.encode("utf-8"),
+            "OEBPS/ch00_preface.xhtml": ch00_new.encode("utf-8"),
             "OEBPS/ch01_risk_matrix.xhtml": ch01_new.encode("utf-8"),
             "OEBPS/ch02_false_ban.xhtml": ch02_new.encode("utf-8"),
             "OEBPS/ch03_network_isolation.xhtml": ch03_new.encode("utf-8"),
             "OEBPS/ch05_claude_code.xhtml": ch05_new.encode("utf-8"),
             "OEBPS/ch06_bedrock_vertex.xhtml": ch06_new.encode("utf-8"),
+            "OEBPS/ch08_vault_recovery.xhtml": ch08_new.encode("utf-8"),
             "OEBPS/ch09_appendix.xhtml": ch09_new.encode("utf-8"),
         }
         written_names = set()
@@ -1312,7 +1370,7 @@ fs.writeFileSync(p, JSON.stringify(cfg, null, 2) + "\\n");
                         s4_head = s4.split('<div class="box">')[0]
                         s4 = s4_head + """<div class="box">
       <strong>💡 没有 iPhone 或不想维护海外住宅 IP 的零折腾方案：</strong>
-      <p>切勿在二手平台购买无质保共享成品号（多人混用机房节点极易连坐秒封）。若无美区设备，推荐直接采用本书<strong>第 6 章 AWS Bedrock / Google Vertex AI 企业商业接口</strong>（按量付费、0% 封号），或直接预约 <a href="https://a3152557994-ship-it.github.io/claude-guard/#checkout-remote">20 分钟 1对1 远程代配（¥168 包跑通）</a>。</p>
+      <p>切勿在二手平台购买无质保共享成品号（多人混用机房节点极易连坐秒封）。若无美区设备，推荐直接采用本书<strong>第 6 章 AWS Bedrock / Google Vertex AI 企业商业接口</strong>（按量付费、0% 封号），或直接预约 <a href="https://a3152557994-ship-it.github.io/claude-guard/#service">20 分钟 1对1 远程代配（¥168 包跑通）</a>。</p>
     </div>
 </body>
 </html>"""
@@ -1401,7 +1459,7 @@ fs.writeFileSync(p, JSON.stringify(cfg, null, 2) + "\\n");
     <p style="font-size:8.9pt;color:#334155;margin-top:2px;"><em>注：Vertex AI 接入前需在 GCP <code>Model Garden</code> 启用 Claude Sonnet 4.6 权限，并在本机执行一次 <code>gcloud auth application-default login</code> 生成 ADC 凭证。</em></p>
     <div class="box">
       <strong>🧑‍💻 一键无损脚本与远程代配服务：</strong>
-      <p style="margin-bottom:0;">上述非破坏性合并流程已封装进开源脚本 <code>bedrock-vertex-1click.sh</code>（含在 <a href="https://a3152557994-ship-it.github.io/claude-guard/downloads/claude-code-kit.zip">claude-code-kit.zip</a> 中，100% 保留原有 MCP 与 Hooks 配置）。不想自己折腾 AWS IAM 跨区权限或 GCP CLI？可直接预约工程师 <strong>20 分钟 1对1 远程代部署（¥168/次，全程本机自输密钥，调不通全额退款）</strong>：<a href="https://a3152557994-ship-it.github.io/claude-guard/#checkout-remote">点击预约远程部署</a>。</p>
+      <p style="margin-bottom:0;">上述非破坏性合并流程已封装进开源脚本 <code>bedrock-vertex-1click.sh</code>（含在 <a href="https://a3152557994-ship-it.github.io/claude-guard/downloads/claude-code-kit.zip">claude-code-kit.zip</a> 中，100% 保留原有 MCP 与 Hooks 配置）。不想自己折腾 AWS IAM 跨区权限或 GCP CLI？可直接预约工程师 <strong>20 分钟 1对1 远程代部署（¥168/次，全程本机自输密钥，调不通全额退款）</strong>：<a href="https://a3152557994-ship-it.github.io/claude-guard/#service">点击预约远程部署</a>。</p>
     </div>"""
 
     full_doc_html = f"""<!DOCTYPE html>
@@ -1628,8 +1686,8 @@ fs.writeFileSync(p, JSON.stringify(cfg, null, 2) + "\\n");
     shutil.copy2(full_pdf_pack, full_pdf_dl)
     rc = PdfReader(str(full_pdf_pack))
     ftxt = "\n".join(p.extract_text() or "" for p in rc.pages)
-    for banned in ("银河录像局", "nf.video", "AdsPower", "Proxy-Seller", "IPRoyal"):
-        assert banned not in ftxt, f"Competitor still present: {banned}"
+    for banned in ("银河录像局", "nf.video", "AdsPower", "Proxy-Seller", "IPRoyal", "¥15", "¥39", "20场", "20 场"):
+        assert banned not in ftxt, f"Legacy paywall or competitor still present: {banned}"
 
     # 严格校验 0 file:// 残留 且 全部 #chXX 内部命名锚点 100% 有效！
     named_dests = set(rc.named_destinations.keys())
