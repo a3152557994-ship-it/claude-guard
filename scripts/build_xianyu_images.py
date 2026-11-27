@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 """
-Generate & unify Xianyu 1080x1080 product showcase images for claude-guard:
-1. Update release/xianyu-03-plugin.png:
-   - Fix conflicting old ¥49 remote setup price -> unify with site-wide ¥9.9 / ¥39 (¥15 single) / ¥168 tiers.
-2. Generate release/xianyu-04-interior-showcase.png (and sync to release/cashflow-service-pack/xianyu-04-interior-showcase.png):
-   - Rasterize genuine newly built PDF pages (P.03 Color SVG Decision Tree & P.15 1-Page Dev Cheat Sheet) via macOS PDFKit
-   - Macro-showcase the real PDF interior pages + non-destructive JSON merge comparison + unified pricing bar.
+Generate & unify Xianyu 1080x1080 product showcase images for claude-guard (Zero-Paywall Edition):
+- Theme: 「全套 2026 防封全书 + 出口体检插件 + 零断流脚本 0 元免费送（不卖激活码不拦人）｜另承接 AWS Bedrock / Vertex 1v1 远程无损代配与团队防封定制」
+- Generates:
+  1. release/xianyu-01-cover.png (+ release/xianyu-01.png & media/20261118-claude-guard/xianyu-01-cover.png)
+  2. release/xianyu-02-terminal.png (+ release/xianyu-02.png & media/20261118-claude-guard/xianyu-02-terminal.png)
+  3. release/xianyu-03-plugin.png (+ release/xianyu-03.png & media/20261118-claude-guard/xianyu-03-plugin.png)
+  4. release/xianyu-04-interior-showcase.png (+ release/xianyu-04.png & release/cashflow-service-pack/xianyu-04-interior-showcase.png)
 """
 
 import shutil
@@ -18,6 +19,7 @@ ROOT = Path("/Users/wang/OPC/projects/claude-guard")
 RELEASE_DIR = ROOT / "release"
 SERVICE_PACK_DIR = RELEASE_DIR / "cashflow-service-pack"
 EBOOK_DIR = RELEASE_DIR / "ebook-publishing-pack"
+MEDIA_SYNC_DIR = Path("/Users/wang/OPC/media/20261118-claude-guard")
 CHROME_BIN = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 
 
@@ -107,6 +109,174 @@ def render_html_to_1080_png(html_content: str, out_png: Path, td_p: Path, tag: s
         rgb.save(out_png, format="PNG", optimize=True)
 
 
+def build_xianyu_01_html() -> str:
+    return """<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    width: 1080px; height: 1080px; overflow: hidden;
+    background: #060A14; color: #F8FAFC;
+    font-family: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  }
+  .canvas {
+    width: 1080px; height: 1080px; padding: 50px 58px 48px;
+    display: flex; flex-direction: column; justify-content: space-between;
+    background:
+      radial-gradient(circle at 82% 14%, rgba(16,185,129,0.16) 0%, transparent 45%),
+      radial-gradient(circle at 18% 85%, rgba(245,158,11,0.13) 0%, transparent 48%),
+      #060A14;
+  }
+  .pill {
+    display: inline-block; border: 2px solid #10B981; background: rgba(16,185,129,0.14);
+    color: #6EE7B7; font-size: 22px; font-weight: 800; padding: 8px 24px; border-radius: 99px;
+  }
+  .h1 { font-size: 56px; font-weight: 900; line-height: 1.18; margin-top: 18px; color: #FFFFFF; }
+  .h1 span { color: #FBBF24; }
+  .sub { font-size: 25px; color: #94A3B8; margin-top: 12px; font-weight: 600; }
+  .items { display: flex; flex-direction: column; gap: 18px; }
+  .item {
+    background: #0D1528; border: 1.8px solid #233256; border-radius: 20px;
+    padding: 24px 28px; display: flex; align-items: center; gap: 22px;
+  }
+  .num {
+    width: 68px; height: 68px; border-radius: 16px; display: flex; align-items: center;
+    justify-content: center; font-size: 28px; font-weight: 900; flex-shrink: 0;
+  }
+  .n1 { background: rgba(56,189,248,0.2); color: #38BDF8; border: 1.5px solid rgba(56,189,248,0.5); }
+  .n2 { background: rgba(245,158,11,0.2); color: #FBBF24; border: 1.5px solid rgba(245,158,11,0.5); }
+  .n3 { background: rgba(16,185,129,0.2); color: #34D399; border: 1.5px solid rgba(16,185,129,0.5); }
+  .it-title { font-size: 27px; font-weight: 800; color: #F8FAFC; margin-bottom: 6px; }
+  .it-desc { font-size: 21px; color: #94A3B8; line-height: 1.38; }
+  .footer-bar {
+    background: linear-gradient(90deg, #064E3B 0%, #0F172A 55%, #172554 100%);
+    border: 2px solid #10B981; border-radius: 18px; padding: 20px 26px;
+  }
+  .fb-top { font-size: 24px; font-weight: 900; color: #6EE7B7; margin-bottom: 6px; }
+  .fb-bot { font-size: 21px; font-weight: 700; color: #FDE68A; }
+</style>
+</head>
+<body>
+  <div class="canvas">
+    <div>
+      <span class="pill">🎉 2026 开源防封百宝箱 · 0 元免费送（不卖激活码不拦人）</span>
+      <div class="h1">全套防封全书 + 体检插件<br/><span>+ 零断流脚本 ¥0 免码全送</span></div>
+      <div class="sub">拒绝把人拒之门外的收费锁！工具全免费，另承接企业云 1v1 远程代配</div>
+    </div>
+
+    <div class="items">
+      <div class="item">
+        <div class="num n1">01</div>
+        <div>
+          <div class="it-title">2026 防封与退款自救全书（15页矢量 PDF + EPUB 免费送）</div>
+          <div class="it-desc">含 10 秒排障彩色决策树、美区免税州订阅避坑与封后退费申诉模板</div>
+        </div>
+      </div>
+      <div class="item">
+        <div class="num n2">02</div>
+        <div>
+          <div class="it-title">出口 ASN 体检插件 + 无限容量防丢保险箱（MV3 免码全开）</div>
+          <div class="it-desc">实时揪出机房 IP / 东八区时区穿帮，无限本地备份 + AES-256 口令加密</div>
+        </div>
+      </div>
+      <div class="item">
+        <div class="num n3">03</div>
+        <div>
+          <div class="it-title">cc-switch v2.0 五源 1 秒无损热切脚本（Mac/Win/Linux）</div>
+          <div class="it-desc">一键开启防遥测，无损保留原有 MCP/Hooks，秒切 Bedrock / Vertex</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bar">
+      <div class="fb-top">✅ 全套软件 / 插件 / 脚本 / 电子书：私信或自助 0 元免费领（绝不卖激活码）</div>
+      <div class="fb-bot">🛠️ 嫌配置麻烦？另承接 AWS Bedrock / Vertex 1v1 远程无损代配与团队防封定制</div>
+    </div>
+  </div>
+</body>
+</html>"""
+
+
+def build_xianyu_02_html() -> str:
+    return """<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    width: 1080px; height: 1080px; overflow: hidden;
+    background: #060A12; color: #F8FAFC;
+    font-family: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  }
+  .canvas {
+    width: 1080px; height: 1080px; padding: 48px 56px 46px;
+    display: flex; flex-direction: column; justify-content: space-between;
+  }
+  .hdr-title { font-size: 40px; font-weight: 900; color: #FBBF24; }
+  .hdr-sub { font-size: 23px; color: #94A3B8; margin-top: 10px; font-weight: 600; }
+  .term-box {
+    background: #0B101B; border: 2px solid #233256; border-radius: 20px; padding: 28px 34px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  .dots { display: flex; gap: 10px; align-items: center; margin-bottom: 18px; }
+  .dot { width: 15px; height: 15px; border-radius: 50%; display: inline-block; }
+  .t-line { font-size: 21px; line-height: 1.68; color: #E2E8F0; }
+  .c-amber { color: #FBBF24; font-weight: 700; }
+  .c-rose { color: #FB7185; font-weight: 700; }
+  .c-green { color: #34D399; font-weight: 700; }
+  .switch-box {
+    background: #0B1424; border: 2px solid #10B981; border-radius: 20px; padding: 28px 34px;
+  }
+  .sw-hd { font-size: 27px; font-weight: 800; color: #34D399; margin-bottom: 16px; }
+  .sw-line { font-size: 21.5px; line-height: 1.66; color: #E2E8F0; }
+  .bottom-note {
+    background: #111C33; border: 1.5px solid #38BDF8; border-radius: 16px; padding: 16px 20px;
+    font-size: 19.5px; font-weight: 800; color: #BAE6FD; text-align: center; white-space: nowrap;
+  }
+</style>
+</head>
+<body>
+  <div class="canvas">
+    <div>
+      <div class="hdr-title">终端实机运行实拍（脚本 0 元开源免码直用）</div>
+      <div class="hdr-sub">上：env-doctor.mjs 10秒漏点扫描 ｜ 下：cc-switch v2.0 五源无损热切</div>
+    </div>
+
+    <div class="term-box">
+      <div class="dots">
+        <span class="dot" style="background:#F43F5E;"></span>
+        <span class="dot" style="background:#F59E0B;"></span>
+        <span class="dot" style="background:#10B981;"></span>
+        <span style="color:#94A3B8;font-size:19px;margin-left:8px;">zsh — node kit/env-doctor.mjs</span>
+      </div>
+      <div class="t-line c-amber">Claude Guard — 本地终端防封环境自检报告 (CLI Doctor)</div>
+      <div class="t-line">· 操作系统平台 : darwin (arm64) ｜ 系统时区 : Asia/Shanghai (UTC+8)</div>
+      <div class="t-line">· 配置文件路径 : ~/.claude/settings.json</div>
+      <div class="t-line c-amber">[风险 -20] 系统时区暴露东八区，挂欧美机房节点易触发跨洲异常标记</div>
+      <div class="t-line c-rose">[风险 -25] 未开启 DISABLE_TELEMETRY=1 与非必要流量屏蔽！</div>
+      <div class="t-line c-green">终端环境初始评分: 55 / 100  --&gt;  一键加固后评分: 95 / 100</div>
+    </div>
+
+    <div class="switch-box">
+      <div class="sw-hd">~/.claude/settings.json 非破坏性深合并 · 5 源 1 秒热备切换：</div>
+      <div class="sw-line">[1] 官方账号 · 隐私防遥测加固 (DISABLE_TELEMETRY=1)</div>
+      <div class="sw-line">[2] AWS Bedrock · 企业级零封号直连 (CLAUDE_CODE_USE_BEDROCK=1)</div>
+      <div class="sw-line">[3] Google Cloud Vertex AI · 零封号商业通道 (可抵扣 GCP $300 赠金)</div>
+      <div class="sw-line">[4] OpenRouter 聚合网关 · 5小时限流无缝顶上不断活</div>
+      <div class="sw-line">[5] 国产高性价比兼容源 · 离线兜底模式 (100% 保留原有 mcpServers/hooks)</div>
+    </div>
+
+    <div class="bottom-note">
+      🎁 全书+插件+脚本 0元免费送（不拦人） ｜ 🛠️ 承接 AWS Bedrock / Vertex 1v1远程无损代配
+    </div>
+  </div>
+</body>
+</html>"""
+
+
 def build_xianyu_03_html() -> str:
     return """<!DOCTYPE html>
 <html lang="zh-CN">
@@ -120,75 +290,75 @@ def build_xianyu_03_html() -> str:
     font-family: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
   }
   .canvas {
-    width: 1080px; height: 1080px; padding: 54px 62px 52px;
+    width: 1080px; height: 1080px; padding: 52px 58px 50px;
     display: flex; flex-direction: column; justify-content: space-between;
-    background: radial-gradient(circle at 85% 12%, rgba(16,185,129,0.10) 0%, rgba(6,10,18,0) 48%), #060A12;
+    background: radial-gradient(circle at 85% 12%, rgba(16,185,129,0.12) 0%, rgba(6,10,18,0) 48%), #060A12;
   }
-  .hdr-title { font-size: 41px; font-weight: 800; color: #22C55E; letter-spacing: 0.3px; line-height: 1.2; white-space: nowrap; }
-  .hdr-sub { font-size: 23.5px; color: #94A3B8; margin-top: 12px; font-weight: 500; white-space: nowrap; }
+  .hdr-title { font-size: 40px; font-weight: 800; color: #22C55E; line-height: 1.2; white-space: nowrap; }
+  .hdr-sub { font-size: 23px; color: #94A3B8; margin-top: 12px; font-weight: 500; white-space: nowrap; }
 
   .vault-card {
     background: #0D1526; border: 2px solid #38BDF8; border-radius: 22px;
-    padding: 36px 42px; box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+    padding: 34px 38px; box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
   }
-  .vault-hd { font-size: 32px; font-weight: 800; color: #FFFFFF; margin-bottom: 24px; white-space: nowrap; }
-  .vault-list { list-style: none; display: flex; flex-direction: column; gap: 18px; }
-  .vault-list li { font-size: 23px; color: #CBD5E1; line-height: 1.45; white-space: nowrap; }
+  .vault-hd { font-size: 31px; font-weight: 800; color: #FFFFFF; margin-bottom: 22px; white-space: nowrap; }
+  .vault-list { list-style: none; display: flex; flex-direction: column; gap: 16px; }
+  .vault-list li { font-size: 22px; color: #CBD5E1; line-height: 1.45; white-space: nowrap; }
   .vault-list li b { color: #F1F5F9; }
-  .vault-pro {
-    margin-top: 24px; padding-top: 20px; border-top: 1px solid rgba(56, 189, 248, 0.24);
-    font-size: 23.5px; font-weight: 800; color: #FBBF24; white-space: nowrap;
+  .vault-free {
+    margin-top: 22px; padding-top: 18px; border-top: 1px solid rgba(56, 189, 248, 0.24);
+    font-size: 22.5px; font-weight: 800; color: #34D399; white-space: nowrap;
   }
 
   .tier-card {
     background: #0D1422; border: 2px solid #F59E0B; border-radius: 22px;
-    padding: 34px 42px; box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+    padding: 32px 38px; box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
   }
-  .tier-hd { font-size: 30px; font-weight: 800; color: #F59E0B; margin-bottom: 22px; white-space: nowrap; }
-  .tier-rows { display: flex; flex-direction: column; gap: 17px; }
-  .tier-row { font-size: 21px; color: #E2E8F0; line-height: 1.42; display: flex; align-items: center; gap: 12px; white-space: nowrap; }
+  .tier-hd { font-size: 29px; font-weight: 800; color: #F59E0B; margin-bottom: 20px; white-space: nowrap; }
+  .tier-rows { display: flex; flex-direction: column; gap: 16px; }
+  .tier-row { font-size: 19.5px; color: #E2E8F0; line-height: 1.42; display: flex; align-items: center; gap: 12px; white-space: nowrap; }
   .price-pill {
-    display: inline-block; font-weight: 900; padding: 3px 10px; border-radius: 7px; font-size: 20px; flex-shrink: 0; min-width: 172px; text-align: center;
+    display: inline-block; font-weight: 900; padding: 4px 10px; border-radius: 8px; font-size: 18.5px; flex-shrink: 0; min-width: 176px; text-align: center;
   }
+  .p-green { background: rgba(16,185,129,0.18); color: #6EE7B7; border: 1px solid rgba(16,185,129,0.45); }
   .p-amber { background: rgba(245,158,11,0.18); color: #FCD34D; border: 1px solid rgba(245,158,11,0.45); }
   .p-blue { background: rgba(56,189,248,0.16); color: #7DD3FC; border: 1px solid rgba(56,189,248,0.45); }
-  .p-green { background: rgba(16,185,129,0.18); color: #6EE7B7; border: 1px solid rgba(16,185,129,0.45); }
-  .tier-note { font-size: 20.5px; color: #94A3B8; margin-top: 4px; white-space: nowrap; }
+  .tier-note { font-size: 19px; color: #94A3B8; margin-top: 4px; white-space: nowrap; }
 </style>
 </head>
 <body>
   <div class="canvas">
     <div>
-      <div class="hdr-title">配套 Chrome/Edge 本地自动防丢插件 (MV3)</div>
+      <div class="hdr-title">配套 Chrome/Edge 无限容量防丢插件 (0元免码)</div>
       <div class="hdr-sub">等账号被封再装导出插件已经进不去网页了！平时自动落盘本地硬盘才稳</div>
     </div>
 
     <div class="vault-card">
       <div class="vault-hd">Claude Guard 浏览器防丢保险箱 (100% 本地零云端上传)</div>
       <ul class="vault-list">
-        <li>· <b>实时环境预警灯</b>：检测到 Asia/Shanghai 时区暴露或机房 ASN 立即提醒</li>
-        <li>· <b>免费导出权益</b>：单篇对话 + 代码块一键导出 Markdown，20 场内保险箱免费</li>
-        <li>· <b>AES 本地防丢库</b>：边聊边存本地硬盘，换号一键生成「1 秒恢复上下文包」</li>
+        <li>· <b>实时出口预警灯</b>：检测到机房共享 ASN 或东八区时区暴露立即亮灯提醒</li>
+        <li>· <b>无限容量全免费</b>：取消 20 场容量锁，对话 + Artifacts 代码块无限本地归档</li>
+        <li>· <b>AES-256 口令加密</b>：免费支持自定义口令加密备份与「新号 1 秒恢复上下文包」</li>
       </ul>
-      <div class="vault-pro">★ 离线永久买断：¥15 单品激活码 ｜ ¥39 全站工具通票 (Ed25519 秒解锁)</div>
+      <div class="vault-free">★ 零门槛承诺：全套插件 · 脚本 · 15页防封全书 0 元免费送（不卖激活码不拦人）</div>
     </div>
 
     <div class="tier-card">
-      <div class="tier-hd">全站统一梯度清单与售前说明（拍前必看 · 零套路）</div>
+      <div class="tier-hd">免费领工具 &amp; 工程师人工技术服务说明（公开透明 · 零套路）</div>
       <div class="tier-rows">
         <div class="tier-row">
-          <span class="price-pill p-amber">1. ¥9.9 自救包</span>
-          <span>自动发 2026 双版排障 PDF + <b>cc-switch v2.0 无损脚本</b> + 体检器</span>
+          <span class="price-pill p-green">1. 工具全套 0 元送</span>
+          <span>0 元免费送 2026 防封全书 PDF/EPUB + <b>无限版备份插件</b> + 5源切换脚本</span>
         </div>
         <div class="tier-row">
-          <span class="price-pill p-blue">2. ¥39 全站通票</span>
-          <span>离线永久解锁无限容量保险箱 + OPC 全站 16 款效率工具 (单品 ¥15)</span>
+          <span class="price-pill p-amber">2. 1v1 远程无损代配</span>
+          <span>工程师远程 20 分钟配通 <b>AWS Bedrock / Vertex 零封号通道</b>（不通全退）</span>
         </div>
         <div class="tier-row">
-          <span class="price-pill p-green">3. ¥168 远程代配</span>
-          <span>工程师 1对1 部署 <b>AWS Bedrock / Vertex 企业云零封号通道</b> (不通全退)</span>
+          <span class="price-pill p-blue">3. 团队防封架构定制</span>
+          <span>企业多席位最小权限 IAM 策略、多源容灾路由与算力预算熔断定制部署</span>
         </div>
-        <div class="tier-note">4. 合规边界：纯本地开源研发辅助脚本与正规云 IAM 架构指导，不含违规账号或节点</div>
+        <div class="tier-note">合规边界：纯本地开源研发辅助工具与正规云厂商 IAM 架构调试，不含任何违规账号或节点</div>
       </div>
     </div>
   </div>
@@ -218,18 +388,17 @@ def build_xianyu_04_showcase_html(p3_uri: str, p15_uri: str) -> str:
   }}
   .top-bar {{ display: flex; justify-content: space-between; align-items: center; }}
   .kicker-pill {{
-    display: inline-block; border: 1.5px solid #F59E0B; background: rgba(245,158,11,0.12);
-    color: #FCD34D; font-size: 20px; font-weight: 800; padding: 6px 20px; border-radius: 99px;
+    display: inline-block; border: 1.5px solid #10B981; background: rgba(16,185,129,0.14);
+    color: #6EE7B7; font-size: 20px; font-weight: 800; padding: 6px 20px; border-radius: 99px;
   }}
   .ver-tag {{
     background: #1E293B; border: 1px solid #334155; color: #38BDF8;
     font-size: 18px; font-weight: 800; padding: 6px 16px; border-radius: 99px;
   }}
-  .main-title {{ font-size: 38px; font-weight: 900; color: #FFFFFF; margin-top: 10px; letter-spacing: 0.3px; white-space: nowrap; }}
+  .main-title {{ font-size: 38px; font-weight: 900; color: #FFFFFF; margin-top: 10px; letter-spacing: 0.3px; }}
   .main-title span {{ color: #FBBF24; }}
-  .sub-title {{ font-size: 21px; color: #94A3B8; margin-top: 6px; font-weight: 600; white-space: nowrap; }}
+  .sub-title {{ font-size: 21px; color: #94A3B8; margin-top: 6px; font-weight: 600; }}
 
-  /* 中部双内页高清微距实拍窗 */
   .pages-grid {{
     display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin: 12px 0;
   }}
@@ -243,17 +412,16 @@ def build_xianyu_04_showcase_html(p3_uri: str, p15_uri: str) -> str:
   .shot-bar {{
     display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 10px;
   }}
-  .shot-lbl {{ font-size: 18px; font-weight: 800; color: #FDE68A; white-space: nowrap; }}
+  .shot-lbl {{ font-size: 18px; font-weight: 800; color: #FDE68A; }}
   .shot-card.right .shot-lbl {{ color: #7DD3FC; }}
   .shot-tag {{
-    font-size: 13.5px; font-weight: 800; padding: 3px 9px; border-radius: 6px; white-space: nowrap; flex-shrink: 0;
+    font-size: 13.5px; font-weight: 800; padding: 3px 9px; border-radius: 6px; flex-shrink: 0;
     background: rgba(16,185,129,0.2); color: #6EE7B7; border: 1px solid rgba(16,185,129,0.4);
   }}
   .paper-viewport {{
-    width: 100%; height: 500px; border-radius: 10px; overflow: hidden;
+    width: 100%; height: 492px; border-radius: 10px; overflow: hidden;
     background: #FFFFFF; border: 1px solid #334155; position: relative;
   }}
-  /* 微距聚焦 PDF 核心图表版面，字迹清晰锐利 */
   .paper-viewport img.p3 {{
     width: 108%; margin-left: -4%; margin-top: -18px; display: block;
   }}
@@ -261,10 +429,9 @@ def build_xianyu_04_showcase_html(p3_uri: str, p15_uri: str) -> str:
     width: 104%; margin-left: -2%; margin-top: -12px; display: block;
   }}
   .shot-caption {{
-    margin-top: 9px; font-size: 16.5px; color: #CBD5E1; line-height: 1.38; font-weight: 600; white-space: nowrap;
+    margin-top: 9px; font-size: 15.2px; color: #CBD5E1; line-height: 1.38; font-weight: 600; white-space: nowrap;
   }}
 
-  /* 下部非破坏性脚本硬核对比卡 */
   .diff-box {{
     background: #0D1628; border: 1.5px solid #334155; border-radius: 16px;
     padding: 16px 22px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
@@ -286,16 +453,14 @@ def build_xianyu_04_showcase_html(p3_uri: str, p15_uri: str) -> str:
     background: rgba(15,23,42,0.75); color: #FDE68A; padding: 1px 6px; border-radius: 5px; font-size: 16.5px;
   }}
 
-  /* 底部统一定价横幅 */
   .bottom-strip {{
-    background: linear-gradient(90deg, #0F172A 0%, #172554 50%, #0F172A 100%);
-    border: 1.5px solid #F59E0B; border-radius: 14px; padding: 14px 22px;
+    background: linear-gradient(90deg, #064E3B 0%, #172554 55%, #0F172A 100%);
+    border: 1.8px solid #10B981; border-radius: 14px; padding: 14px 20px;
     display: flex; justify-content: space-between; align-items: center;
-    font-size: 20px; font-weight: 800; color: #F8FAFC;
+    font-size: 19px; font-weight: 800; color: #F8FAFC;
   }}
-  .bottom-strip span.hl-amber {{ color: #FBBF24; }}
-  .bottom-strip span.hl-blue {{ color: #7DD3FC; }}
   .bottom-strip span.hl-green {{ color: #6EE7B7; }}
+  .bottom-strip span.hl-amber {{ color: #FBBF24; }}
   .sep {{ color: #475569; }}
 </style>
 </head>
@@ -303,18 +468,18 @@ def build_xianyu_04_showcase_html(p3_uri: str, p15_uri: str) -> str:
   <div class="canvas">
     <div>
       <div class="top-bar">
-        <span class="kicker-pill">🔥 拒绝廉价拼凑 AI 水文 · 掘金销冠级精排版内页实拍</span>
+        <span class="kicker-pill">🎁 15页精排版全书 + 插件 + 脚本 0元免费送（不卖激活码）</span>
         <span class="ver-tag">2026 v2.0 工程实测版</span>
       </div>
       <div class="main-title">内页微距实拍：<span>彩色排障决策树 + 一页纸贴屏速查卡</span></div>
-      <div class="sub-title">买即发：双版本高清矢量 PDF + 标准 EPUB + v2.0 五源无损切换源码包</div>
+      <div class="sub-title">全套 PDF / EPUB / 体检插件 / 五源无损脚本零门槛免费领 · 另承接企业云远程代配</div>
     </div>
 
     <div class="pages-grid">
       <div class="shot-card">
         <div class="shot-bar">
           <span class="shot-lbl">📊 P.03 实拍 · 10秒报错排障决策树</span>
-          <span class="shot-tag">高清矢量无损放大</span>
+          <span class="shot-tag">0元免费送完整版</span>
         </div>
         <div class="paper-viewport">
           <img class="p3" src="{p3_uri}" alt="PDF Page 3 Decision Tree Real Render" />
@@ -325,7 +490,7 @@ def build_xianyu_04_showcase_html(p3_uri: str, p15_uri: str) -> str:
       <div class="shot-card right">
         <div class="shot-bar">
           <span class="shot-lbl">🗂️ 书末实拍 · 一页纸贴屏速查卡</span>
-          <span class="shot-tag">双栏高密壁纸</span>
+          <span class="shot-tag">双栏高清矢量</span>
         </div>
         <div class="paper-viewport">
           <img class="p15" src="{p15_uri}" alt="PDF Page 15 1-Page Dev Cheat Sheet Real Render" />
@@ -336,21 +501,19 @@ def build_xianyu_04_showcase_html(p3_uri: str, p15_uri: str) -> str:
 
     <div class="diff-box">
       <div class="diff-bad">
-        <div class="diff-hd">❌ 闲鱼几块钱旧脚本 (cat &gt; settings.json)</div>
+        <div class="diff-hd">❌ 普通覆盖脚本 (cat &gt; settings.json)</div>
         <div class="diff-txt">粗暴全量覆盖配置文件，切一次源直接把辛苦配好的 <code>mcpServers</code> 与 <code>hooks</code> 清空归零！</div>
       </div>
       <div class="diff-good">
         <div class="diff-hd">✅ 本套 cc-switch v2.0 非破坏性深合并</div>
-        <div class="diff-txt">Node/Python 双引擎解析 JSON 语法树，仅更新 <code>env</code> 路由键，<b>100% 无损保留原有 MCP 与钩子</b>！</div>
+        <div class="diff-txt">解析 JSON 语法树仅更新 <code>env</code> 路由键，<b>100% 无损保留原有 MCP 与钩子</b>！</div>
       </div>
     </div>
 
     <div class="bottom-strip">
-      <span class="hl-amber">¥9.9 手册+无损脚本包</span>
+      <span class="hl-green">🎁 全书+插件+脚本 0元免费送（不拦人）</span>
       <span class="sep">｜</span>
-      <span class="hl-blue">¥39 在线全站通票</span>
-      <span class="sep">｜</span>
-      <span class="hl-green">¥168 企业云 Bedrock/Vertex 1对1代部署</span>
+      <span class="hl-amber">🛠️ 另承接 AWS Bedrock / Vertex 1v1远程无损代配与团队定制</span>
     </div>
   </div>
 </body>
@@ -372,22 +535,25 @@ def main():
         subprocess.run(["swift", str(swift_file), str(wenku_pdf), "3", str(p3_png), "1240"], check=True)
         subprocess.run(["swift", str(swift_file), str(wenku_pdf), "15", str(p15_png), "1240"], check=True)
 
-        # 1. Rebuild release/xianyu-03-plugin.png (unified pricing, 0 ¥49 conflict)
-        xy03_out = RELEASE_DIR / "xianyu-03-plugin.png"
-        render_html_to_1080_png(build_xianyu_03_html(), xy03_out, td_p, "xy03")
-        print(f"[PASS] Updated {xy03_out} ({xy03_out.stat().st_size // 1024} KB)")
+        targets = [
+            ("xy01", build_xianyu_01_html(), "xianyu-01-cover.png"),
+            ("xy02", build_xianyu_02_html(), "xianyu-02-terminal.png"),
+            ("xy03", build_xianyu_03_html(), "xianyu-03-plugin.png"),
+            ("xy04", build_xianyu_04_showcase_html(p3_png.as_uri(), p15_png.as_uri()), "xianyu-04-interior-showcase.png"),
+        ]
 
-        # 2. Build release/xianyu-04-interior-showcase.png & sync to cashflow-service-pack/
-        xy04_out = RELEASE_DIR / "xianyu-04-interior-showcase.png"
-        xy04_service_out = SERVICE_PACK_DIR / "xianyu-04-interior-showcase.png"
-        render_html_to_1080_png(
-            build_xianyu_04_showcase_html(p3_png.as_uri(), p15_png.as_uri()),
-            xy04_out,
-            td_p,
-            "xy04",
-        )
-        shutil.copy2(xy04_out, xy04_service_out)
-        print(f"[PASS] Built {xy04_out} ({xy04_out.stat().st_size // 1024} KB) & synced to {xy04_service_out}")
+        for idx, (tag, html_str, fname) in enumerate(targets, 1):
+            out_main = RELEASE_DIR / fname
+            render_html_to_1080_png(html_str, out_main, td_p, tag)
+            print(f"[PASS] Built {out_main} ({out_main.stat().st_size // 1024} KB)")
+
+            # Sync to media/20261118-claude-guard/ if directory & matching file exist
+            if MEDIA_SYNC_DIR.exists() and (MEDIA_SYNC_DIR / fname).exists():
+                shutil.copy2(out_main, MEDIA_SYNC_DIR / fname)
+                print(f"  -> Synced {MEDIA_SYNC_DIR / fname}")
+
+        shutil.copy2(RELEASE_DIR / "xianyu-04-interior-showcase.png", SERVICE_PACK_DIR / "xianyu-04-interior-showcase.png")
+        print(f"  -> Synced {SERVICE_PACK_DIR / 'xianyu-04-interior-showcase.png'}")
 
 
 if __name__ == "__main__":

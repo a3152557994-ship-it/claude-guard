@@ -25,9 +25,9 @@
       font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Segoe UI", sans-serif;
       font-size: 12.5px;
     }
-    .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 9px; }
-    .brand { display: flex; align-items: center; gap: 6px; font-weight: 700; font-size: 14px; }
-    .badge { padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 600; background: #1e293b; color: #cbd5e1; border: 1px solid var(--border); }
+    .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 9px; gap: 6px; }
+    .brand { display: flex; align-items: center; gap: 6px; font-weight: 700; font-size: 13.5px; }
+    .badge { padding: 2px 8px; border-radius: 999px; font-size: 10.5px; font-weight: 700; background: #1e293b; color: #cbd5e1; border: 1px solid var(--border); white-space: nowrap; }
     .badge.pro { background: rgba(16, 185, 129, 0.16); color: #34d399; border-color: rgba(16, 185, 129, 0.4); }
     .card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 10px; margin-bottom: 9px; }
     .card-title { font-weight: 700; font-size: 12px; margin-bottom: 5px; display: flex; align-items: center; justify-content: space-between; gap: 6px; }
@@ -42,20 +42,25 @@
     .btn-primary { background: linear-gradient(135deg, #f59e0b, #d97706); color: #0b0f19; border-color: transparent; }
     .btn-emerald { background: linear-gradient(135deg, #10b981, #059669); color: #052e16; border-color: transparent; }
     .btn-blue { background: linear-gradient(135deg, #3b82f6, #2563eb); color: #fff; border-color: transparent; }
-    .btn-full { width: 100%; text-align: center; padding: 6.5px 10px; }
     .input-row { display: flex; gap: 5px; margin-top: 6px; }
     input[type="text"] { flex: 1; background: #090d16; border: 1px solid var(--border); color: var(--text); border-radius: 6px; padding: 5.5px 8px; font-size: 11.2px; }
-    .status { margin-top: 5px; font-size: 11px; color: #34d399; line-height: 1.4; }
+    .status { margin-top: 5px; font-size: 11px; color: #34d399; line-height: 1.4; word-break: break-all; }
     .status.err { color: #fb7185; }
+    .hub-list { display: flex; flex-direction: column; gap: 6px; margin-top: 6px; }
+    .hub-item { display: flex; align-items: center; justify-content: space-between; gap: 8px; background: #0b1120; border: 1px solid var(--border); border-radius: 8px; padding: 6px 8px; text-decoration: none; color: var(--text); font-size: 11.2px; }
+    .hub-item:hover { border-color: #38bdf8; }
+    .hub-item strong { display: block; font-size: 11.3px; color: #f8fafc; }
+    .hub-item span { font-size: 10.4px; color: var(--muted); }
+    .hub-arrow { color: #fbbf24; font-weight: 800; font-size: 11px; white-space: nowrap; }
   </style>
 </head>
 <body>
   <div class="header">
-    <div class="brand"><span>🛡️ Chat Vault &amp; Guard v1.2</span></div>
-    <span id="tierBadge" class="badge">Free (20 Vault Slots)</span>
+    <div class="brand"><span>🛡️ Chat Vault &amp; Guard v1.3</span></div>
+    <span id="tierBadge" class="badge pro">100% Free &amp; Unlimited</span>
   </div>
 
-  <!-- 1. Real Exit IP / ASN / Datacenter Check + Self-Owned & Official Cloud Guides -->
+  <!-- 1. Real Exit IP / ASN / Datacenter Check + Official Cloud Guides -->
   <div class="card">
     <div class="card-title">
       <span id="lblEnvTitle">🔍 Exit IP, ASN &amp; Env Monitor</span>
@@ -71,7 +76,7 @@
     </div>
   </div>
 
-  <!-- 2. Current Session Free Export + Save to Local Vault -->
+  <!-- 2. Current Session Export + Save to Unlimited Local Vault -->
   <div class="card">
     <div class="card-title">
       <span id="lblCurTitle">💬 Current Chat &amp; Code Artifacts</span>
@@ -80,41 +85,55 @@
     <div id="currentTitle" style="font-weight:600;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Scanning active tab...</div>
     <div id="currentMeta" class="meta">0 messages · 0 code blocks</div>
     <div class="actions">
-      <button id="exportMdBtn" class="btn btn-primary" type="button">📥 Export .md (Free)</button>
+      <button id="exportMdBtn" class="btn btn-primary" type="button">📥 Export .md</button>
       <button id="exportJsonBtn" class="btn" type="button">Export .json</button>
       <button id="stageVaultBtn" class="btn btn-emerald" type="button">🛡️ Save to Vault</button>
     </div>
     <div id="currentStatus" class="status"></div>
   </div>
 
-  <!-- 3. Local Auto-Vault & Context Handoff + Pro Encrypted Backup -->
+  <!-- 3. Unlimited Local Auto-Vault & AES-256-GCM Passphrase Encrypted Backup -->
   <div class="card">
     <div class="card-title">
-      <span id="lblVaultTitle">📦 Local Auto-Vault</span>
-      <span style="color:#fbbf24;font-size:11px;"><strong id="vaultCount">0</strong> / <span id="vaultCapText">20</span></span>
+      <span id="lblVaultTitle">📦 Unlimited Local Auto-Vault</span>
+      <span style="color:#34d399;font-size:11px;"><strong id="vaultCount">0</strong> / <span id="vaultCapText">∞</span></span>
     </div>
-    <div id="lblVaultDesc" class="meta">Save Markdown &amp; code locally; unlock Pro for unlimited vault &amp; AES-256-GCM encrypted backup.</div>
+    <div id="lblVaultDesc" class="meta">100% free &amp; local: unlimited sessions, context recovery pack, and AES-256-GCM passphrase-encrypted backup.</div>
+    <div class="input-row">
+      <input id="vaultPassphraseInput" type="text" autocomplete="off" placeholder="Custom AES-256 passphrase (blank = auto random)..." />
+    </div>
     <div class="actions">
       <button id="exportMigrationBtn" class="btn btn-emerald" style="flex:1;" type="button">🚀 Context Recovery Pack</button>
-      <button id="exportEncryptedBtn" class="btn btn-primary" type="button">🔐 Encrypted (.enc)</button>
+      <button id="exportEncryptedBtn" class="btn btn-primary" type="button">🔐 AES-256 (.enc)</button>
     </div>
     <div id="vaultMsg" class="status"></div>
   </div>
 
-  <!-- 4. Unlimited Vault Key & All-Access Pass -->
+  <!-- 4. Backend Value-Add Hub (Cloud/ISP Guides + 1v1 Remote Setup + Free Offline Toolkit & Sponsor) -->
   <div class="card" style="margin-bottom:0;">
     <div class="card-title">
-      <span id="lblProTitle">🔑 Unlock Pro Unlimited &amp; Encrypted Export</span>
+      <span id="lblHubTitle">🚀 Zero-Ban Resources &amp; 1v1 Remote Setup</span>
     </div>
-    <div class="actions" style="margin-top:4px;margin-bottom:6px;">
-      <a id="buySingleBtn" class="btn btn-primary" href="#" target="_blank" rel="noopener">🛒 Single Pro (¥15 / $4.99)</a>
-      <a id="buyBundleBtn" class="btn btn-blue" href="#" target="_blank" rel="noopener">🎁 All-Access Pass (¥39 / $14.99)</a>
+    <div class="hub-list">
+      <a id="hubCloudIspLink" class="hub-item" href="#" target="_blank" rel="noopener">
+        <div>
+          <strong id="hubCloudTitle">☁️ Official Cloud Credits &amp; Residential ISP Guide</strong>
+          <span id="hubCloudDesc">AWS Bedrock / GCP $300 Credits &amp; clean dual-ISP routing</span>
+        </div>
+        <span class="hub-arrow">Guide →</span>
+      </a>
+      <a id="hubRemoteServiceLink" class="hub-item" href="#" target="_blank" rel="noopener">
+        <div>
+          <strong id="hubServiceTitle">🛠️ Book 1v1 Engineer Remote Setup</strong>
+          <span id="hubServiceDesc">20-min lossless Bedrock / Vertex / 5-source hot-standby setup</span>
+        </div>
+        <span class="hub-arrow">Book →</span>
+      </a>
+      <div style="display:flex;gap:5px;">
+        <a id="hubOfflinePackLink" class="btn btn-blue" style="flex:1;text-align:center;" href="#" target="_blank" rel="noopener">📦 Free Offline Toolkit</a>
+        <a id="hubSponsorLink" class="btn" style="text-align:center;" href="#" target="_blank" rel="noopener">⭐ Open-Source Sponsor</a>
+      </div>
     </div>
-    <div class="input-row">
-      <input id="licenseInput" type="text" placeholder="Paste OPC1. offline license key..." />
-      <button id="verifyBtn" class="btn" type="button">Activate</button>
-    </div>
-    <div id="licenseMsg" class="status"></div>
   </div>
 
   <script type="module" src="popup.js"></script>

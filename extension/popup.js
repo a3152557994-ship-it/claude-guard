@@ -4,33 +4,51 @@ import {
   formatConversationMarkdown,
   buildMigrationBundle,
   encryptVaultMarkdown,
-  verifyLicenseUniversal,
 } from "./guard-core.js";
 import { MONETIZATION_CONFIG } from "./affiliate-config.js";
 
-const FREE_VAULT_LIMIT = 20;
 const isZh = (navigator.language || "").toLowerCase().startsWith("zh");
 const tr = (zh, en) => (isZh ? zh : en);
 
-let proActive = false;
-let activeToken = "";
+// 100% Free & Open Edition: unlimited vault & AES-256-GCM encryption unlocked by default for everyone
+const proActive = true;
 let vaultList = [];
 let currentChat = null;
+
+function generateRandomPassphrase() {
+  const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789";
+  const bytes = new Uint8Array(16);
+  globalThis.crypto.getRandomValues(bytes);
+  let out = "CG-";
+  for (let i = 0; i < bytes.length; i += 1) {
+    out += alphabet[bytes[i] % alphabet.length];
+    if (i === 3 || i === 7 || i === 11) out += "-";
+  }
+  return out;
+}
 
 function wireConfigLinks() {
   document.getElementById("openPlaybookLink").href = MONETIZATION_CONFIG.playbookWebUrl;
   document.getElementById("bedrockGuideLink").href = MONETIZATION_CONFIG.bedrockVertexGuideUrl;
   document.getElementById("agentGuardLink").href = MONETIZATION_CONFIG.agentGuardUrl;
   document.getElementById("openWebRadarLink").href = MONETIZATION_CONFIG.webRadarUrl;
-  document.getElementById("buySingleBtn").href = `${MONETIZATION_CONFIG.webRadarUrl}#checkout-single`;
-  document.getElementById("buyBundleBtn").href = `${MONETIZATION_CONFIG.webRadarUrl}#checkout-bundle`;
+
+  // Backend monetization 3-in-1 hub links
+  document.getElementById("hubCloudIspLink").href =
+    MONETIZATION_CONFIG.residentialIspAffiliateUrl || MONETIZATION_CONFIG.networkAuditGuideUrl;
+  document.getElementById("hubRemoteServiceLink").href = MONETIZATION_CONFIG.serviceUrl;
+  document.getElementById("hubOfflinePackLink").href = MONETIZATION_CONFIG.offlineVaultPackUrl;
+  document.getElementById("hubSponsorLink").href = MONETIZATION_CONFIG.sponsorUrl;
 }
 
 function applyI18nLabels() {
+  const badge = document.getElementById("tierBadge");
+  badge.textContent = tr("100% 免费开源版 · 无限容量", "100% Free & Unlimited");
+  badge.classList.add("pro");
+
   if (!isZh) {
     return;
   }
-  document.getElementById("tierBadge").textContent = "免费版 (20场额度)";
   document.getElementById("lblEnvTitle").textContent = "🔍 出口 IP · ASN · 指纹风控监测";
   document.getElementById("openPlaybookLink").textContent = "📖 2026 防封全书";
   document.getElementById("bedrockGuideLink").textContent = "☁️ Bedrock/Vertex 零封号";
@@ -38,19 +56,24 @@ function applyI18nLabels() {
   document.getElementById("openWebRadarLink").textContent = "📡 完整雷达";
   document.getElementById("lblCurTitle").textContent = "💬 当前对话与代码快照";
   document.getElementById("refreshBtn").textContent = "刷新";
-  document.getElementById("exportMdBtn").textContent = "📥 导出 .md (免费)";
+  document.getElementById("exportMdBtn").textContent = "📥 导出 .md";
   document.getElementById("exportJsonBtn").textContent = "导出 .json";
   document.getElementById("stageVaultBtn").textContent = "🛡️ 存入保险箱";
-  document.getElementById("lblVaultTitle").textContent = "📦 本地防丢保险箱";
+  document.getElementById("lblVaultTitle").textContent = "📦 本地无限防丢保险箱";
   document.getElementById("lblVaultDesc").textContent =
-    "纯本地保存 Markdown 与代码块；升级 Pro 解锁无限本地归档容量与 AES-256-GCM 加密迁移包导出。";
+    "100% 免费免码：无限本地归档 Markdown 与代码块、一键新号恢复包与 AES-256-GCM 口令加密导出。";
+  document.getElementById("vaultPassphraseInput").placeholder =
+    "输入自定义加密口令（留空则自动生成本地随机口令并提示）...";
   document.getElementById("exportMigrationBtn").textContent = "🚀 导出新号恢复包";
-  document.getElementById("exportEncryptedBtn").textContent = "🔐 Pro 加密导出 (.enc)";
-  document.getElementById("lblProTitle").textContent = "🔑 升级 Pro 解锁无限归档与加密导出";
-  document.getElementById("buySingleBtn").textContent = "🛒 单品买断 (¥15 / $4.99)";
-  document.getElementById("buyBundleBtn").textContent = "🎁 全站通票 (¥39 / $14.99)";
-  document.getElementById("licenseInput").placeholder = "粘贴 OPC1. 离线激活码...";
-  document.getElementById("verifyBtn").textContent = "验签激活";
+  document.getElementById("exportEncryptedBtn").textContent = "🔐 口令加密导出 (.enc)";
+
+  document.getElementById("lblHubTitle").textContent = "🚀 防封进阶资源 & 工程师省心代配";
+  document.getElementById("hubCloudTitle").textContent = "☁️ 合规防封云与住宅网络指引";
+  document.getElementById("hubCloudDesc").textContent = "AWS Bedrock / 谷歌云赠金抵扣与双 ISP 静态家宽选型避坑";
+  document.getElementById("hubServiceTitle").textContent = "🛠️ 嫌配置麻烦？预约工程师 1v1 远程无损代配";
+  document.getElementById("hubServiceDesc").textContent = "AWS Bedrock / Vertex / 多源热切无损代搭（保留 MCP·不通全退）";
+  document.getElementById("hubOfflinePackLink").textContent = "📦 离线全套防封百宝箱（免费领）";
+  document.getElementById("hubSponsorLink").textContent = "⭐ 开源赞赏";
 }
 
 function triggerDownload(text, filename, mimeType = "text/markdown;charset=utf-8") {
@@ -81,7 +104,6 @@ async function runExitNetworkAndEnvCheck() {
   const net = await probePublicExitNetwork({ timeoutMs: 2600 });
 
   if (!net.online) {
-    // Graceful offline fallback — show offline local fingerprint status without synthesizing any exit IP
     const isCnTz = tz.includes("Shanghai") || tz.includes("Chongqing") || utcOffsetMinutes === 480;
     badgeEl.className = isCnTz ? "env-pill warn" : "env-pill safe";
     badgeEl.textContent = tr("📡 离线/仅本地环境指纹检测", "📡 Offline / Local Fingerprint Only");
@@ -146,31 +168,11 @@ async function runExitNetworkAndEnvCheck() {
   }
 }
 
-function updateProBadgeUI(payload) {
-  const badge = document.getElementById("tierBadge");
-  badge.textContent = payload?.p === "*" ? tr("全站通票版", "All-Access Pro") : tr("Pro 无限版", "Pro Unlimited");
-  badge.classList.add("pro");
-  document.getElementById("vaultCapText").textContent = "∞";
-}
-
 async function loadState() {
-  const stored = await chrome.storage.local.get(["opc1_token", "claude_guard_vault"]);
+  const stored = await chrome.storage.local.get(["claude_guard_vault"]);
   vaultList = Array.isArray(stored.claude_guard_vault) ? stored.claude_guard_vault : [];
   document.getElementById("vaultCount").textContent = String(vaultList.length);
-
-  if (stored.opc1_token) {
-    document.getElementById("licenseInput").value = stored.opc1_token;
-    const res = await verifyLicenseUniversal(stored.opc1_token, "claude-guard");
-    if (res.valid) {
-      proActive = true;
-      activeToken = stored.opc1_token;
-      updateProBadgeUI(res.payload);
-      document.getElementById("licenseMsg").textContent = tr(
-        "✅ 已永久解锁无限归档与 AES-256-GCM 加密导出",
-        "✅ Unlimited Vault & Encrypted Export Active",
-      );
-    }
-  }
+  document.getElementById("vaultCapText").textContent = proActive ? "∞" : "∞";
 }
 
 async function captureActiveTab() {
@@ -250,23 +252,14 @@ document.getElementById("exportJsonBtn").addEventListener("click", () => {
 document.getElementById("stageVaultBtn").addEventListener("click", async () => {
   if (!currentChat) return;
   const idx = vaultList.findIndex((x) => x.url === currentChat.url && x.title === currentChat.title);
-  if (idx < 0 && !proActive && vaultList.length >= FREE_VAULT_LIMIT) {
-    document.getElementById("currentStatus").className = "status err";
-    document.getElementById("currentStatus").textContent = tr(
-      `🔒 免费归档容量已满（${FREE_VAULT_LIMIT}/${FREE_VAULT_LIMIT} 场）。请升级下方 Pro（¥15 单品 / ¥39 全站通票）解锁无限本地归档与 AES-256-GCM 加密导出！`,
-      `🔒 Free vault full (${FREE_VAULT_LIMIT}/${FREE_VAULT_LIMIT}). Upgrade to Pro (¥15 / $4.99 or ¥39 / $14.99 All-Access) below for unlimited local archiving & encrypted export!`,
-    );
-    document.getElementById("licenseInput")?.focus();
-    return;
-  }
   if (idx >= 0) vaultList[idx] = currentChat;
   else vaultList.unshift(currentChat);
   await chrome.storage.local.set({ claude_guard_vault: vaultList });
   document.getElementById("vaultCount").textContent = String(vaultList.length);
   document.getElementById("currentStatus").className = "status";
   document.getElementById("currentStatus").textContent = tr(
-    `🛡️ 已存入本地保险箱 (${vaultList.length}/${proActive ? "∞" : FREE_VAULT_LIMIT})`,
-    `🛡️ Saved to local vault (${vaultList.length}/${proActive ? "∞" : FREE_VAULT_LIMIT})`,
+    `🛡️ 已存入本地无限保险箱 (${vaultList.length} / ∞)`,
+    `🛡️ Saved to unlimited local vault (${vaultList.length} / ∞)`,
   );
 });
 
@@ -276,14 +269,6 @@ document.getElementById("exportMigrationBtn").addEventListener("click", () => {
   if (sourceList.length === 0) {
     msgEl.className = "status err";
     msgEl.textContent = tr("保险箱为空，请先点上方存入。", "Vault is empty.");
-    return;
-  }
-  if (!proActive && sourceList.length > FREE_VAULT_LIMIT) {
-    msgEl.className = "status err";
-    msgEl.textContent = tr(
-      "🔒 超出免费容量，请升级下方 Pro（¥15 单品 / ¥39 全站通票）解锁无限归档导出。",
-      "🔒 Upgrade to Pro below for unlimited vault export.",
-    );
     return;
   }
   const bundle = buildMigrationBundle(sourceList);
@@ -297,43 +282,35 @@ document.getElementById("exportMigrationBtn").addEventListener("click", () => {
 
 document.getElementById("exportEncryptedBtn").addEventListener("click", async () => {
   const msgEl = document.getElementById("vaultMsg");
-  if (!proActive) {
+  const sourceList = vaultList.length > 0 ? vaultList : currentChat ? [currentChat] : [];
+  if (sourceList.length === 0) {
     msgEl.className = "status err";
-    msgEl.textContent = tr(
-      "🔒 AES-256-GCM 加密保险箱导出为 Pro 专属功能，请点下方获取 ¥15 单品码或 ¥39 全站通票！",
-      "🔒 AES-256-GCM encrypted vault export requires Pro (¥15 / $4.99 or ¥39 / $14.99 All-Access).",
-    );
-    document.getElementById("licenseInput")?.focus();
+    msgEl.textContent = tr("保险箱为空，请先点上方存入。", "Vault is empty.");
     return;
   }
-  const sourceList = vaultList.length > 0 ? vaultList : currentChat ? [currentChat] : [];
+  const customPass = document.getElementById("vaultPassphraseInput").value.trim();
+  const effectivePass = customPass || generateRandomPassphrase();
   const bundle = buildMigrationBundle(sourceList);
-  const encryptedJson = await encryptVaultMarkdown(bundle.markdownArchive, activeToken);
-  triggerDownload(encryptedJson, `claude-vault-encrypted-${bundle.conversationCount}chats.enc`, "application/json;charset=utf-8");
-  msgEl.className = "status";
-  msgEl.textContent = tr(
-    `🔐 已生成 AES-256-GCM 加密归档包 (${bundle.conversationCount} 场)！`,
-    `🔐 Exported AES-256-GCM encrypted vault (${bundle.conversationCount} chats)!`,
+  const encryptedJson = await encryptVaultMarkdown(bundle.markdownArchive, effectivePass);
+  triggerDownload(
+    encryptedJson,
+    `claude-vault-encrypted-${bundle.conversationCount}chats.enc`,
+    "application/json;charset=utf-8",
   );
-});
-
-document.getElementById("verifyBtn").addEventListener("click", async () => {
-  const token = document.getElementById("licenseInput").value.trim();
-  const msgEl = document.getElementById("licenseMsg");
-  const res = await verifyLicenseUniversal(token, "claude-guard");
-  if (res.valid) {
-    proActive = true;
-    activeToken = token;
-    await chrome.storage.local.set({ opc1_token: token });
-    updateProBadgeUI(res.payload);
-    msgEl.className = "status";
+  msgEl.className = "status";
+  if (customPass) {
     msgEl.textContent = tr(
-      "✅ Ed25519 验签通过！已永久解锁无限本地归档与加密导出！",
-      "✅ Unlimited Vault & Encrypted Export unlocked forever!",
+      `🔐 已用你的自定义口令生成 AES-256-GCM 加密归档包 (${bundle.conversationCount} 场)！`,
+      `🔐 Exported AES-256-GCM encrypted vault (${bundle.conversationCount} chats) with your custom passphrase!`,
     );
   } else {
-    msgEl.className = "status err";
-    msgEl.textContent = `❌ ${res.reason}`;
+    try {
+      await navigator.clipboard.writeText(effectivePass);
+    } catch (_e) {}
+    msgEl.textContent = tr(
+      `🔐 已导出加密包 (${bundle.conversationCount} 场)！本地随机口令（已自动复制，请保存）：${effectivePass}`,
+      `🔐 Exported encrypted vault (${bundle.conversationCount} chats)! Auto-generated passphrase (copied): ${effectivePass}`,
+    );
   }
 });
 

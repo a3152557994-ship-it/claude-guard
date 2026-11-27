@@ -1,17 +1,21 @@
 # Claude Guard (claude-guard)
 
-> 100% Local Claude Environment Ban-Risk Auditor, Claude Code Multi-Provider Switcher (AWS Bedrock / Google Vertex AI / OpenRouter), and Chrome/Edge Manifest V3 Auto-Backup Vault Extension.
+> 100% Free & Open-Source Local Claude Environment Ban-Risk Auditor, Claude Code Multi-Provider Switcher (AWS Bedrock / Google Vertex AI / OpenRouter), 15-Page 2026 Anti-Ban Playbook (PDF/EPUB), and Unlimited Chrome/Edge Manifest V3 Auto-Backup Vault Extension — ¥0 with zero license keys or paywalls.
 
 - **Live Web App & Diagnostic Radar**: https://a3152557994-ship-it.github.io/claude-guard/
-- **Chrome/Edge MV3 Extension Download**: https://a3152557994-ship-it.github.io/claude-guard/downloads/claude-guard-mv3.zip
-- **Claude Code Multi-Provider Switcher Kit**: https://a3152557994-ship-it.github.io/claude-guard/downloads/claude-code-kit.zip
-- **Structured Pricing**: https://a3152557994-ship-it.github.io/claude-guard/pricing.md
-- **Parent Storefront**: https://a3152557994-ship-it.github.io/opc-tools/
+- **Chrome/Edge MV3 Unlimited Extension (Free Direct Download)**: https://a3152557994-ship-it.github.io/claude-guard/downloads/claude-guard-mv3.zip
+- **Claude Code Multi-Provider Switcher Kit (Free Direct Download)**: https://a3152557994-ship-it.github.io/claude-guard/downloads/claude-code-kit.zip
+- **2026 Anti-Ban & Refund Playbook (Full 15-Page PDF & EPUB, ¥0)**: https://a3152557994-ship-it.github.io/claude-guard/claude-anti-ban-playbook-2026.html
+- **Pricing & 1v1 Remote Setup Service**: https://a3152557994-ship-it.github.io/claude-guard/pricing.md
+- **Parent Free Micro-Tools Hub (18 Tools)**: https://a3152557994-ship-it.github.io/opc-tools/
 
-## Core Capabilities
+## Core Capabilities (100% Free & Uncapped)
 1. **10-Second Claude Ban Risk Audit**: Detects Datacenter/Hosting ASN IPs (Cloudflare, DigitalOcean, Vultr, etc.), WebRTC real IP leaks, `Asia/Shanghai` timezone vs IP geolocation mismatches, and Claude Code telemetry exposure (`DISABLE_TELEMETRY=1`).
-2. **Claude Code Zero-Ban Configuration Generator**: Generates `~/.claude/settings.json` and CLI switcher scripts (`cc-switch.sh` / `cc-switch.ps1`) for seamless switching between Official Hardened mode, AWS Bedrock (`CLAUDE_CODE_USE_BEDROCK=1`), Google Cloud Vertex AI (`CLAUDE_CODE_USE_VERTEX=1`), and OpenRouter.
-3. **Manifest V3 Local Conversation & Artifact Vault**: Passively backs up `claude.ai` conversations and code blocks into local browser storage (`chrome.storage.local`) and exports clean Markdown + a 1-click "New Account Context Recovery Handoff Prompt".
+2. **Claude Code Zero-Ban Configuration Generator**: Generates `~/.claude/settings.json` and non-destructive CLI switcher scripts (`cc-switch.sh` / `cc-switch.ps1`) for seamless switching between Official Hardened mode, AWS Bedrock (`CLAUDE_CODE_USE_BEDROCK=1`), Google Cloud Vertex AI (`CLAUDE_CODE_USE_VERTEX=1`), and OpenRouter while preserving `mcpServers` and `hooks`.
+3. **Unlimited Manifest V3 Local Conversation & Artifact Vault**: Passively backs up unlimited `claude.ai` conversations and code blocks into local browser storage (`chrome.storage.local`), exports a 1-click "New Account Context Recovery Handoff Prompt", and supports local AES-256-GCM passphrase encryption.
+
+## Optional Value-Add Services & Contact
+- **1v1 Engineer Remote Lossless Setup & Team Multi-Seat Deployment**: AWS Bedrock / Vertex AI commercial IAM setup + 5-source hot-standby configuration (`3152557994@qq.com` / QQ `3152557994` / `a3152557994@gmail.com`).
 
 ## One-Line CLI Audit & Switcher
 - `curl -fsSL https://a3152557994-ship-it.github.io/claude-guard/install.sh | bash`

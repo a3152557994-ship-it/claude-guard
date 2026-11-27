@@ -167,14 +167,19 @@ test("probePublicExitNetwork detects AWS/DigitalOcean/Vultr/Hetzner datacenter A
   assert.equal(offline.ip, "离线");
 });
 
-test("Commercial & security audit: popup.js uses real probe, zero competitor ads, full 2026 PDF synced (<20MB), and modal supports instant OPC1 unlock", async () => {
+test("Zero-paywall & backend monetization audit: popup.js is 100% free/unlimited, supports custom/random AES-256 passphrase, zero OPC1 paywall, and full 2026 PDF synced (<20MB)", async () => {
   const popupJs = fs.readFileSync(path.join(ROOT, "extension", "popup.js"), "utf8");
+  const popupHtml = fs.readFileSync(path.join(ROOT, "extension", "popup.html"), "utf8");
   assert.equal(/ip:\s*["']local["']/.test(popupJs), false, "popup.js must not hardcode fake ip: 'local'");
   assert.match(popupJs, /probePublicExitNetwork/);
-  assert.equal(/先免费导出清空|Export\s*&\s*clear\s*for\s*free/i.test(popupJs), false, "Must remove vault clear loophole copy");
+  assert.match(popupJs, /const\s+proActive\s*=\s*true/);
+  assert.equal(/FREE_VAULT_LIMIT/.test(popupJs), false, "popup.js must have zero FREE_VAULT_LIMIT cap");
+  assert.equal(/licenseInput|verifyBtn|¥15|¥39/.test(popupHtml), false, "popup.html must remove OPC1 license paywall & ¥15/¥39 buttons");
+  assert.match(popupHtml, /vaultPassphraseInput/, "popup.html must support custom/random AES-256 passphrase input");
+  assert.match(popupHtml, /hubRemoteServiceLink/, "popup.html must include 1v1 remote setup backend entry");
 
-  // AES-256-GCM Pro vault encryption works
-  const encJson = await encryptVaultMarkdown("# Secret Chat", "OPC1.test.sig");
+  // AES-256-GCM local passphrase vault encryption works
+  const encJson = await encryptVaultMarkdown("# Secret Chat", "my-custom-passphrase-2026");
   const parsedEnc = JSON.parse(encJson);
   assert.equal(parsedEnc.format, "CGVAULT1-AES256GCM");
 
@@ -183,19 +188,21 @@ test("Commercial & security audit: popup.js uses real probe, zero competitor ads
   assert.equal(/adspower|nf\.video|proxy-seller|iproyal/i.test(configValues), false, "affiliate-config.js must have zero bare competitor URLs");
   assert.match(MONETIZATION_CONFIG.agentGuardUrl, /agent-guard/);
   assert.match(MONETIZATION_CONFIG.opcToolsHubUrl, /opc-tools/);
-  assert.match(MONETIZATION_CONFIG.bundlePriceText, /¥39\s*\/\s*\$14\.99/);
+  assert.match(MONETIZATION_CONFIG.serviceUrl, /#service/);
+  assert.match(MONETIZATION_CONFIG.softwarePriceText, /¥0/);
 
   for (const rel of ["docs/index.html", "docs/claude-anti-ban-playbook-2026.html", "extension/popup.html", "extension/affiliate-config.js"]) {
     const content = fs.readFileSync(path.join(ROOT, rel), "utf8");
     assert.equal(/adspower\.com|nf\.video|proxy-seller\.com|iproyal\.com/i.test(content), false, `${rel} must not contain bare competitor links`);
+    assert.equal(/¥15\s*单品|¥39\s*全站通票|\$4\.99|\$14\.99/.test(content), false, `${rel} must not contain legacy ¥15/¥39 license paywall copy`);
   }
 
-  // Verify unified checkout modal in docs/index.html
+  // Verify 1v1 remote setup & zero-paywall section in docs/index.html
   const indexHtml = fs.readFileSync(path.join(ROOT, "docs", "index.html"), "utf8");
-  assert.match(indexHtml, /¥39\s*\/\s*\$14\.99/);
+  assert.match(indexHtml, /¥0\s*免费开源免码直下/);
   assert.match(indexHtml, /3152557994@qq\.com/);
   assert.match(indexHtml, /a3152557994@gmail\.com/);
-  assert.match(indexHtml, /modalVerifyBtn/);
+  assert.match(indexHtml, /serviceModal/);
 
   // Verify full 2026 Anti-Ban PDF is synced and < 20MB
   const targetPdf = path.join(ROOT, "docs", "downloads", "Claude-2026-Anti-Ban-Playbook.pdf");
