@@ -966,7 +966,7 @@ a { color: #2563eb; text-decoration: underline; }
     ncx_new = """<?xml version="1.0" encoding="UTF-8"?>
 <ncx xmlns="http://www.daisy.org/z3986/2005/ncx/" version="2005-1">
   <head>
-    <meta name="dtb:uid" content="urn:uuid:20261122-zero-ban-claude-opc-v1"/>
+    <meta name="dtb:uid" content="urn:uuid:20261122-c1a0-4e00-9b4a-c1a0de9a2d01"/>
     <meta name="dtb:depth" content="1"/>
     <meta name="dtb:totalPageCount" content="0"/>
     <meta name="dtb:maxPageNumber" content="0"/>
@@ -990,7 +990,7 @@ a { color: #2563eb; text-decoration: underline; }
     opf_new = """<?xml version="1.0" encoding="UTF-8"?>
 <package xmlns="http://www.idpf.org/2007/opf" version="3.0" unique-identifier="BookId" xml:lang="zh-CN">
   <metadata xmlns:dc="http://purl.org/dc/elements/1.1/">
-    <dc:identifier id="BookId">urn:uuid:20261122-zero-ban-claude-opc-v1</dc:identifier>
+    <dc:identifier id="BookId">urn:uuid:20261122-c1a0-4e00-9b4a-c1a0de9a2d01</dc:identifier>
     <dc:title>不掉号：Claude 防封号、免税订阅与封后退款自救全书 (Zero-Ban Claude 2026 v2.0)</dc:title>
     <dc:creator>阿王写工具 (OPC Studio)</dc:creator>
     <dc:language>zh-CN</dc:language>
